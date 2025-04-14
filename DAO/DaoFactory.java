@@ -1,9 +1,8 @@
 package DAO;
 
 import java.sql.*;
-import java.util.*;
 
-public class DAOFactory {
+public class DaoFactory {
     /**
      * Attributs private pour la connexion JDBC
      */
@@ -12,7 +11,7 @@ public class DAOFactory {
     private String password;
 
     // constructeur
-    public DAOFactory(String url, String username, String password) {
+    public DaoFactory(String url, String username, String password) {
         this.url = url;
         this.username = username;
         this.password = password;
@@ -23,7 +22,7 @@ public class DAOFactory {
      * @param : url, username et password de la base de données
      * @return : objet de la classe DaoFactoru
      */
-    public static DAOFactory getInstance(String database, String username, String password) {
+    public static DaoFactory getInstance(String database, String username, String password) {
         try {
             // chargement driver "com.mysql.cj.jdbc.Driver"
             Class.forName("com.mysql.cj.jdbc.Driver");
@@ -35,7 +34,7 @@ public class DAOFactory {
         url = "jdbc:mysql://localhost:3306/" + database;
 
         // Instancier une instance l'objet de DaoFactory
-        DAOFactory instance = new DAOFactory(url, username,password );
+        DaoFactory instance = new DaoFactory(url, username,password );
         // Retourner cette instance
         return instance;
     }
