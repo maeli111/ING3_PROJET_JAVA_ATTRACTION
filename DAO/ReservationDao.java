@@ -1,0 +1,63 @@
+package DAO;
+
+import Modele.Reservation;
+
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.time.LocalDate;
+import java.util.ArrayList;
+
+public class ReservationDao {
+    private DaoFactory daoFactory;
+
+    // constructeur dépendant de la classe DaoFactory
+    public ReservationDao(DaoFactory daoFactory) {
+        this.daoFactory = daoFactory;
+    }
+
+    /**
+     * Récupérer de la base de données tous les objets des Reservations dans une liste
+     * @return : liste retournée des objets des Reservations récupérés
+     */
+    public ArrayList<Reservation> getAll() {
+        ArrayList<Reservation> listeReservation = new ArrayList<Reservation>();
+
+        try {
+            // connexion
+            Connection connexion = daoFactory.getConnection();;
+            Statement statement = connexion.createStatement();
+
+            ResultSet resultats = statement.executeQuery("select * from reservation");
+
+            // 	Se déplacer sur le prochain enregistrement : retourne false si la fin est atteinte
+            while (resultats.next()) {
+                int id_reservation = resultats.getInt(1);
+                int id_client = resultats.getInt(2);
+                String nom = resultats.getString(3);
+                String prenom = resultats.getString(4);
+                String mail = resultats.getString(5);
+                LocalDate date_reservation = resultats.getDate(6).toLocalDate();
+                LocalDate date_achat = resultats.getDate(7).toLocalDate();
+                int id_attraction = resultats.getInt(8);
+                double prix_total = resultats.getDouble(9);
+                int nb_personne = resultats.getInt(10);
+                int est_archivee = resultats.getInt(11);
+
+
+
+                Reservation reservation = new Reservation(id_reservation,id_client,nom,prenom,mail,date_reservation,date_achat,id_attraction,prix_total,nb_personne,est_archivee);
+
+                listeReservation.add(reservation);
+            }
+        }
+        catch (SQLException e) {
+            //traitement de l'exception
+            e.printStackTrace();
+            System.out.println("Création de la liste de Reservation impossible");
+        }
+
+        return listeReservation;
+    }
+}
