@@ -15,7 +15,7 @@ public class Admin extends Utilisateur{
 
     public int getId_admin(){return id_admin;}
 
-    public int getid_utilisateur() {
+    public int getId_utilisateur() {
         return super.getId_utilisateur();
     }
 
