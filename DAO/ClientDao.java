@@ -54,7 +54,7 @@ public class ClientDao {
         try {
             Connection connexion = daoFactory.getConnection();
 
-            // 1. Ajouter l'utilisateur
+            // On ajoute l'utilisateur
             String sqlUtilisateur = "INSERT INTO utilisateur (email, nom, prenom, mdp) VALUES (?, ?, ?, ?)";
             PreparedStatement psUtilisateur = connexion.prepareStatement(sqlUtilisateur, Statement.RETURN_GENERATED_KEYS);
             psUtilisateur.setString(1, client.getEmail());
@@ -62,28 +62,33 @@ public class ClientDao {
             psUtilisateur.setString(3, client.getPrenom());
             psUtilisateur.setString(4, client.getMdp());
             int lignesUtilisateur = psUtilisateur.executeUpdate();
+            //executeUpdate() retourne le nombre de lignes affectées.
+            //Donc s’il retourne > 0 cela signifie que l’ajout de l'utilisateur a fonctionné
 
             if (lignesUtilisateur > 0) {
+                //on utilise ResultSet pour récupérer la clé primaire (ID) que la base a créée automatiquement
                 ResultSet rsUtilisateur = psUtilisateur.getGeneratedKeys();
                 if (rsUtilisateur.next()) {
+                    //getInt(1) = on lit la 1re colonne cad l'id_utilisateur
                     int idUtilisateurGenere = rsUtilisateur.getInt(1);
+                    //on met à jour l'objet Client avec setid_utilisateur.
                     client.setid_utilisateur(idUtilisateurGenere);
 
-                    // 2. Ajouter le client avec l'ID utilisateur
+                    //On ajoute le client avec l'ID utilisateur
                     String sqlClient = "INSERT INTO client (id_utilisateur, age, type_client, type_membre) VALUES (?, ?, ?, ?)";
                     PreparedStatement psClient = connexion.prepareStatement(sqlClient, Statement.RETURN_GENERATED_KEYS);
                     psClient.setInt(1, client.getid_utilisateur());
                     psClient.setInt(2, client.getage());
-                    psClient.setString(3, client.getType_client());
+                    psClient.setString(3, "nouveau");
                     psClient.setString(4, client.getType_membre());
 
+                    //on vérifie si l’insertion a marché
                     int lignesClient = psClient.executeUpdate();
                     if (lignesClient > 0) {
                         ResultSet rsClient = psClient.getGeneratedKeys();
                         if (rsClient.next()) {
                             int idClientGenere = rsClient.getInt(1);
                             client.setid_client(idClientGenere);
-                            System.out.println("Client ajouté avec ID : " + idClientGenere);
                         }
                     }
                 }
@@ -91,7 +96,6 @@ public class ClientDao {
 
         } catch (SQLException e) {
             e.printStackTrace();
-            System.out.println("Erreur lors de l'ajout du client et de l'utilisateur");
         }
     }
 }
