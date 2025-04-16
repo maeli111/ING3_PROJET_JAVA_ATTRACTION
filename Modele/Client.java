@@ -6,6 +6,13 @@ public class Client extends Utilisateur {
     private String type_client;
     private String type_membre;
 
+    public Client(int id_client, int id_utilisateur, String email, String nom, String prenom, String mdp, int age, String type_client, String type_membre) {
+        super(id_utilisateur, email, nom, prenom, mdp);
+        this.id_client = id_client;
+        this.age = age;
+        this.type_client =type_client;
+        this.type_membre = type_membre;
+    }
 
     public Client(int id_client, int id_utilisateur, int age, String type_client, String type_membre) {
         super(id_utilisateur, "", "", "", "");

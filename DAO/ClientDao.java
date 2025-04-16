@@ -33,7 +33,6 @@ public class ClientDao {
                 String type_client = resultats.getString("type_client");
                 String type_membre = resultats.getString("type_membre");
 
-                // Utilise le constructeur secondaire simplifié
                 Client client = new Client(id_client, id_utilisateur, age, type_client, type_membre);
 
                 listeClients.add(client);
@@ -41,7 +40,6 @@ public class ClientDao {
 
         } catch (SQLException e) {
             e.printStackTrace();
-            System.out.println("Création de la liste de clients impossible");
         }
 
         return listeClients;

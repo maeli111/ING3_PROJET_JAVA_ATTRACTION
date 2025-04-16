@@ -3,6 +3,11 @@ package Modele;
 public class Admin extends Utilisateur{
     private int id_admin;
 
+    public Admin(int id_admin,int id_utilisateur, String email, String nom, String prenom, String mdp){
+        super(id_utilisateur, email, nom, prenom, mdp);
+        this.id_admin=id_admin;
+    }
+
     public Admin(int id_admin, int id_utilisateur){
         super(id_utilisateur, "", "", "", "");
         this.id_admin=id_admin;
@@ -29,8 +34,4 @@ public class Admin extends Utilisateur{
         return super.getMdp();
     }
 
-    // Setter pour l'id admin
-    public void setid_admin(int id_admin) {
-        this.id_admin = id_admin;
-    }
 }
