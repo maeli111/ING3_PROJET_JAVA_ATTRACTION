@@ -52,6 +52,14 @@ public class Client extends Utilisateur {
         this.id_client = id_client;
     }
 
+    public void setAge(int age) {
+        this.age = age;
+    }
+
+    public void setType_client (String type_client) {
+        this.type_client = type_client;
+    }
+
     public void setType_membre(String typeMembre) {
         this.type_membre = typeMembre;
     }

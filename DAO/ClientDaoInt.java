@@ -10,7 +10,6 @@ public interface ClientDaoInt {
      * @return : liste retournée des objets des clients récupérés
      */
     public ArrayList<Client> getAll();
-
-
     public void inscrire(Client client);
+
 }

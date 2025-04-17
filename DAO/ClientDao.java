@@ -1,10 +1,10 @@
 package DAO;
 
 import java.sql.*;
-import java.util.ArrayList;
+import java.util.*;
 import Modele.Client;
 
-public class ClientDao {
+public class ClientDao implements ClientDaoInt{
     private DaoFactory daoFactory;
 
     // Constructeur
@@ -51,21 +51,21 @@ public class ClientDao {
 
             // On ajoute l'utilisateur
             String sqlUtilisateur = "INSERT INTO utilisateur (email, nom, prenom, mdp) VALUES (?, ?, ?, ?)";
-            PreparedStatement psUtilisateur = connexion.prepareStatement(sqlUtilisateur, Statement.RETURN_GENERATED_KEYS);
-            psUtilisateur.setString(1, client.getEmail());
-            psUtilisateur.setString(2, client.getNom());
-            psUtilisateur.setString(3, client.getPrenom());
-            psUtilisateur.setString(4, client.getMdp());
-            int lignesUtilisateur = psUtilisateur.executeUpdate();
+            PreparedStatement pUtilisateur = connexion.prepareStatement(sqlUtilisateur, Statement.RETURN_GENERATED_KEYS);
+            pUtilisateur.setString(1, client.getEmail());
+            pUtilisateur.setString(2, client.getNom());
+            pUtilisateur.setString(3, client.getPrenom());
+            pUtilisateur.setString(4, client.getMdp());
+            int lignesUtilisateur = pUtilisateur.executeUpdate();
             //executeUpdate() retourne le nombre de lignes affectées.
             //Donc s’il retourne > 0 cela signifie que l’ajout de l'utilisateur a fonctionné
 
             if (lignesUtilisateur > 0) {
                 //on utilise ResultSet pour récupérer la clé primaire (ID) que la base a créée automatiquement
-                ResultSet rsUtilisateur = psUtilisateur.getGeneratedKeys();
-                if (rsUtilisateur.next()) {
+                ResultSet rUtilisateur = pUtilisateur.getGeneratedKeys();
+                if (rUtilisateur.next()) {
                     //getInt(1) = on lit la 1re colonne cad l'id_utilisateur
-                    int idUtilisateurGenere = rsUtilisateur.getInt(1);
+                    int idUtilisateurGenere = rUtilisateur.getInt(1);
                     //on met à jour l'objet Client avec setid_utilisateur.
                     client.setid_utilisateur(idUtilisateurGenere);
 
@@ -85,18 +85,18 @@ public class ClientDao {
 
                     //On ajoute le client avec l'ID utilisateur
                     String sqlClient = "INSERT INTO client (id_utilisateur, age, type_client, type_membre) VALUES (?, ?, ?, ?)";
-                    PreparedStatement psClient = connexion.prepareStatement(sqlClient, Statement.RETURN_GENERATED_KEYS);
-                    psClient.setInt(1, client.getid_utilisateur());
-                    psClient.setInt(2, client.getage());
-                    psClient.setString(3, "nouveau");
-                    psClient.setString(4, client.getType_membre());
+                    PreparedStatement pClient = connexion.prepareStatement(sqlClient, Statement.RETURN_GENERATED_KEYS);
+                    pClient.setInt(1, client.getid_utilisateur());
+                    pClient.setInt(2, client.getage());
+                    pClient.setString(3, "nouveau");
+                    pClient.setString(4, client.getType_membre());
 
                     //on vérifie si l’insertion a marché
-                    int lignesClient = psClient.executeUpdate();
+                    int lignesClient = pClient.executeUpdate();
                     if (lignesClient > 0) {
-                        ResultSet rsClient = psClient.getGeneratedKeys();
-                        if (rsClient.next()) {
-                            int idClientGenere = rsClient.getInt(1);
+                        ResultSet rClient = pClient.getGeneratedKeys();
+                        if (rClient.next()) {
+                            int idClientGenere = rClient.getInt(1);
                             client.setid_client(idClientGenere);
                         }
                     }
@@ -106,6 +106,47 @@ public class ClientDao {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    public Client seConnecter(String email, String mdp) {
+        Client client = null;
+
+        try {
+            Connection connexion = daoFactory.getConnection();
+
+            // 1. Récupérer l'utilisateur en fonction de l'email et du mot de passe
+            String sqlUtilisateur = "SELECT * FROM utilisateur WHERE email = ? AND mdp = ?";
+            PreparedStatement pUtilisateur = connexion.prepareStatement(sqlUtilisateur);
+            pUtilisateur.setString(1, email);
+            pUtilisateur.setString(2, mdp);
+            ResultSet rUtilisateur = pUtilisateur.executeQuery();
+
+            if (rUtilisateur.next()) {
+                // On récupère l'id_utilisateur
+                int idUtilisateur = rUtilisateur.getInt("id_utilisateur");
+
+                // on récupère les info du client
+                String sqlClient = "SELECT * FROM client WHERE id_utilisateur = ?";
+                PreparedStatement pClient = connexion.prepareStatement(sqlClient);
+                pClient.setInt(1, idUtilisateur);
+                ResultSet rClient = pClient.executeQuery();
+
+                if (rClient.next()) {
+                    // Créer un objet Client avec les données récupérées
+                    int idClient = rClient.getInt("id_client");
+                    int age = rClient.getInt("age");
+                    String typeClient = rClient.getString("type_client");
+                    String typeMembre = rClient.getString("type_membre");
+
+                    client = new Client(idClient, idUtilisateur, age, typeClient, typeMembre);
+                }
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return client; // en sachant que null si l'utilisateur ou le client n'a pas été trouvé
     }
 
 
