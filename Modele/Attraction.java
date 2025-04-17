@@ -19,11 +19,11 @@ public class Attraction {
         this.nb_reservation=nb_reservation;
     }
 
-    public int getId_attraction(){return id_attraction;}
+    public int getIdAttraction(){return id_attraction;}
     public String getNom(){return nom;}
     public String getDescription(){return description;}
     public double getPrix(){return prix;}
     public int getCapacite(){return capacite;}
-    public String getType_attraction(){return type_attraction;}
-    public int getNb_reservation(){return nb_reservation;}
+    public String getTypeAttraction(){return type_attraction;}
+    public int getNbReservation(){return nb_reservation;}
 }
