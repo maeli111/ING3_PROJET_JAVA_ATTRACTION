@@ -11,5 +11,5 @@ public interface ClientDaoInt {
      */
     public ArrayList<Client> getAll();
     public void inscrire(Client client);
-
+    public void supprimer(int id_client);
 }

@@ -150,6 +150,44 @@ public class ClientDao implements ClientDaoInt{
     }
 
 
+    public void supprimer(int id_client) {
+        try (Connection connexion = daoFactory.getConnection()) {
+            // Étape 1 : récupérer l'id_utilisateur à partir du client
+            String sqlSelect = "SELECT id_utilisateur FROM client WHERE id_client = ?";
+            PreparedStatement pSelect = connexion.prepareStatement(sqlSelect);
+            pSelect.setInt(1, id_client);
+            ResultSet rSet = pSelect.executeQuery();
+
+            if (rSet.next()) {
+                int id_utilisateur = rSet.getInt("id_utilisateur");
+
+                // Étape 2 : supprimer le client
+                String sqlClient = "DELETE FROM client WHERE id_client = ?";
+                PreparedStatement pClient = connexion.prepareStatement(sqlClient);
+                pClient.setInt(1, id_client);
+                int lignesClient = pClient.executeUpdate();
+
+                // Étape 3 : supprimer l'utilisateur si client supprimé
+                if (lignesClient > 0) {
+                    String sqlUtilisateur = "DELETE FROM utilisateur WHERE id_utilisateur = ?";
+                    PreparedStatement pUtilisateur = connexion.prepareStatement(sqlUtilisateur);
+                    pUtilisateur.setInt(1, id_utilisateur);
+                    int lignesUtilisateur = pUtilisateur.executeUpdate();
+
+                    if (lignesUtilisateur > 0) {
+                        System.out.println("Client et utilisateur supprimés avec succès.");
+                    } else {
+                        System.out.println("Client supprimé, mais échec lors de la suppression de l'utilisateur.");
+                    }
+                }
+            } else {
+                System.out.println("Aucun client trouvé avec l'ID fourni.");
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 
 
 }

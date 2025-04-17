@@ -12,5 +12,6 @@ import java.util.*;
 public class Main {
     public static void main(String[] args) {
         DaoFactory daoF = DaoFactory.getInstance("java_attraction", "root", "");
+        ClientDao dao = new ClientDao(daoF);
     }
 }
