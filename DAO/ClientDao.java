@@ -45,10 +45,7 @@ public class ClientDao {
         return listeClients;
     }
 
-    /**
-     * Ajouter un nouveau client dans la base de données
-     */
-    public void ajouter(Client client) {
+    public void inscrire(Client client) {
         try {
             Connection connexion = daoFactory.getConnection();
 
@@ -71,6 +68,20 @@ public class ClientDao {
                     int idUtilisateurGenere = rsUtilisateur.getInt(1);
                     //on met à jour l'objet Client avec setid_utilisateur.
                     client.setid_utilisateur(idUtilisateurGenere);
+
+                    String typeMembre;
+                    int age = client.getage();
+                    if (age < 18) {
+                        typeMembre = "enfant";
+                    } else if (age<25){
+                        typeMembre = "etudiant";
+                    }
+                    else if (age >= 60) {
+                        typeMembre = "senior";
+                    } else {
+                        typeMembre = "adulte";
+                    }
+                    client.setType_membre(typeMembre);
 
                     //On ajoute le client avec l'ID utilisateur
                     String sqlClient = "INSERT INTO client (id_utilisateur, age, type_client, type_membre) VALUES (?, ?, ?, ?)";
@@ -96,4 +107,8 @@ public class ClientDao {
             e.printStackTrace();
         }
     }
+
+
+
+
 }

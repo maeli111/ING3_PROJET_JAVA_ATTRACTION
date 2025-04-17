@@ -51,4 +51,9 @@ public class Client extends Utilisateur {
     public void setid_client(int id_client) {
         this.id_client = id_client;
     }
+
+    public void setType_membre(String typeMembre) {
+        this.type_membre = typeMembre;
+    }
+
 }

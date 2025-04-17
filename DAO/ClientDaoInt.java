@@ -12,5 +12,5 @@ public interface ClientDaoInt {
     public ArrayList<Client> getAll();
 
 
-    public void ajouter(Client client);
+    public void inscrire(Client client);
 }
