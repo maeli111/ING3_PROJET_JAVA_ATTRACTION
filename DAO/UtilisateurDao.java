@@ -1,3 +1,4 @@
+//jsp à quoi y sert
 package DAO;
 
 import Modele.Utilisateur;
@@ -38,9 +39,6 @@ public class UtilisateurDao {
                 String prenom = resultats.getString(4);
                 String mdp = resultats.getString(5);
 
-                Utilisateur utilisateur = new Utilisateur(id_utilisateur,email,nom,prenom,mdp);
-
-                listeUtilisateur.add(utilisateur);
             }
         }
         catch (SQLException e) {
