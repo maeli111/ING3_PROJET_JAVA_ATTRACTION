@@ -189,5 +189,37 @@ public class ClientDao implements ClientDaoInt{
         }
     }
 
+    public String getEmailByIdClient(int idClient) {
+        String email = null;
+
+        try (Connection connexion = daoFactory.getConnection()) {
+            // On récupère d'abord id_utilisateur depuis client
+            String sql1 = "SELECT id_utilisateur FROM client WHERE id_client = ?";
+            PreparedStatement ps1 = connexion.prepareStatement(sql1);
+            ps1.setInt(1, idClient);
+            ResultSet rs1 = ps1.executeQuery();
+
+            if (rs1.next()) {
+                int idUtilisateur = rs1.getInt("id_utilisateur");
+
+                // Maintenant, on récupère l'email depuis utilisateur
+                String sql2 = "SELECT email FROM utilisateur WHERE id_utilisateur = ?";
+                PreparedStatement ps2 = connexion.prepareStatement(sql2);
+                ps2.setInt(1, idUtilisateur);
+                ResultSet rs2 = ps2.executeQuery();
+
+                if (rs2.next()) {
+                    email = rs2.getString("email");
+                }
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return email;
+    }
+
+
 
 }
