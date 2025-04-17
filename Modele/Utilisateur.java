@@ -23,4 +23,9 @@ public abstract class Utilisateur {
     public void setid_utilisateur(int id_utilisateur) {
         this.id_utilisateur= id_utilisateur;
     }
+    public void setEmail(String email) { this.email = email; }
+    public void setNom(String nom) { this.nom = nom; }
+    public void setPrenom(String prenom) { this.prenom = prenom; }
+    public void setMdp(String mdp) { this.mdp = mdp; }
+
 }

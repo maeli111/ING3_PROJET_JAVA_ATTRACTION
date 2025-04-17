@@ -22,6 +22,12 @@ public class Client extends Utilisateur {
         this.type_membre = type_membre;
     }
 
+    // Constructeur vide
+    public Client() {
+        super(0, "", "", "", "");
+    }
+
+
     // Getters
     public int getid_client() { return id_client; }
     public int getage() { return age; }
