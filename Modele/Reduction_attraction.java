@@ -1,14 +1,24 @@
 package Modele;
 
-public class Reduction_attraction {
+public class Reduction_attraction extends Reduction{
     private int id_attraction;
-    private int id_reduction;
 
     public Reduction_attraction(int id_attraction, int id_reduction){
+        super(id_reduction,"",0.0,"");
         this.id_attraction = id_attraction;
-        this.id_reduction = id_reduction;
     }
 
     public int getId_attraction(){return id_attraction;}
-    public int getId_reduction(){return id_reduction;}
+
+    public String getNom() {
+        return super.getNom();
+    }
+
+    public double getPourcentage() {
+        return super.getPourcentage();
+    }
+
+    public String getDescription() {
+        return super.getDescription();
+    }
 }
