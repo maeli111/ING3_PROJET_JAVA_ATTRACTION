@@ -13,4 +13,5 @@ public interface ClientDaoInt {
     public void inscrire(Client client);
     public void supprimer(int id_client);
     public Client seConnecter(String email, String mdp);
+    public String afficherEmailClient(int idClient);
 }

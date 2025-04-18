@@ -2,32 +2,38 @@ package Vue;
 
 import javax.swing.*;
 import java.awt.*;
+import DAO.*;
+import Modele.Client;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class Login extends JFrame {
+
+    private JTextField txtNom, txtPrenom, txtAge, txtEmail;
+    private JPasswordField txtMdp, txtMdpVerification;
+    private DaoFactory daoFactory;
+
     public Login() {
+        daoFactory = new DaoFactory("jdbc:mysql://localhost:3306/java_attraction", "root", "");
+
         setTitle("Login");
         setSize(600, 400);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setLayout(new BorderLayout(10, 10)); // Use BorderLayout
+        setLayout(new BorderLayout(10, 10));
 
-        // Top panel for titles - now split into two panels
         JPanel topPanel = new JPanel(new GridLayout(1, 2)); // One row, two columns
 
-        // Left title panel for "Connexion"
         JPanel leftTitlePanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
         leftTitlePanel.add(new JLabel("Connexion", SwingConstants.CENTER));
 
-        // Right title panel for "Inscription"
         JPanel rightTitlePanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
         rightTitlePanel.add(new JLabel("Inscription", SwingConstants.CENTER));
 
         topPanel.add(leftTitlePanel);
         topPanel.add(rightTitlePanel);
 
-        // Main content panel divided into two halves
         JPanel mainPanel = new JPanel(new GridLayout(1, 2, 10, 10)); // One row, two columns
 
-        // Left panel for login options
         JPanel leftPanel = new JPanel(new GridLayout(4, 1, 10, 10)); // Four sections vertically
         leftPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20)); // Add some padding
 
@@ -45,38 +51,91 @@ public class Login extends JFrame {
         btnGuest.setFont(btnGuest.getFont().deriveFont(Font.ITALIC));
         leftPanel.add(btnGuest);
 
-        // Right panel for registration information
-        JPanel rightPanel = new JPanel(new BorderLayout()); // Changed to BorderLayout
+        JPanel rightPanel = new JPanel(new BorderLayout());
         JPanel formPanel = new JPanel(new GridLayout(7, 2, 10, 10));
         formPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
 
         formPanel.add(new JLabel("Nom :"));
-        formPanel.add(new JTextField());
+        txtNom = new JTextField();
+        formPanel.add(txtNom);
 
         formPanel.add(new JLabel("Prénom :"));
-        formPanel.add(new JTextField());
+        txtPrenom = new JTextField();
+        formPanel.add(txtPrenom);
 
         formPanel.add(new JLabel("Age :"));
-        formPanel.add(new JTextField());
+        txtAge = new JTextField();
+        formPanel.add(txtAge);
 
         formPanel.add(new JLabel("E-mail :"));
-        formPanel.add(new JTextField());
+        txtEmail = new JTextField();
+        formPanel.add(txtEmail);
 
         formPanel.add(new JLabel("Mot de passe :"));
-        formPanel.add(new JPasswordField());
+        txtMdp = new JPasswordField();
+        formPanel.add(txtMdp);
 
         formPanel.add(new JLabel("Vérifier mot de passe :"));
-        formPanel.add(new JPasswordField());
+        txtMdpVerification = new JPasswordField();
+        formPanel.add(txtMdpVerification);
 
         rightPanel.add(formPanel, BorderLayout.CENTER);
 
-        // Panel for the register button
         JPanel registerButtonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
         JButton btnRegister = new JButton("S'inscrire");
+
+        // ActionListener pour l'inscription
+        btnRegister.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String nom = txtNom.getText();
+                String prenom = txtPrenom.getText();
+                String email = txtEmail.getText();
+                String mdp = new String(txtMdp.getPassword());
+                String mdpVerification = new String(txtMdpVerification.getPassword());
+
+                // Vérifier que les mots de passe correspondent
+                if (!mdp.equals(mdpVerification)) {
+                    JOptionPane.showMessageDialog(null, "Les mots de passe ne correspondent pas.", "Erreur", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+
+                // Récupérer l'âge et vérifier s'il est valide
+                int age = 0;
+                try {
+                    age = Integer.parseInt(txtAge.getText());
+                } catch (NumberFormatException ex) {
+                    JOptionPane.showMessageDialog(null, "L'âge doit être un nombre entier.", "Erreur", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+
+                // Créer un nouvel objet Client avec les données
+                Client client = new Client(0, 0, age, "nouveau", "adulte"); // L'ID et l'ID utilisateur seront générés par la base
+                client.setNom(nom);
+                client.setPrenom(prenom);
+                client.setEmail(email);
+                client.setMdp(mdp);
+
+                // Appel de la méthode inscrire de ClientDao
+                ClientDao clientDao = new ClientDao(daoFactory);  // Vous devez initialiser daoFactory
+                clientDao.inscrire(client);
+
+                // Inscription réussie, rediriger vers la page Client
+                JOptionPane.showMessageDialog(null, "Inscription réussie !", "Succès", JOptionPane.INFORMATION_MESSAGE);
+
+                // Fermer la fenêtre de connexion
+                dispose();
+
+                Vue.Client clientPage = new Vue.Client(); // ta classe `Client` actuelle
+                clientPage.setVisible(true); // Ouvre la fenêtre
+                dispose(); // Ferme la fenêtre actuelle (Login)
+
+            }
+        });
+
         registerButtonPanel.add(btnRegister);
         rightPanel.add(registerButtonPanel, BorderLayout.SOUTH);
 
-        // Add panels to the main frame
         add(topPanel, BorderLayout.NORTH);
         add(mainPanel, BorderLayout.CENTER);
         mainPanel.add(leftPanel);
