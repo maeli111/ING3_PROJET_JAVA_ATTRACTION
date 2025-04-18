@@ -220,6 +220,39 @@ public class ClientDao implements ClientDaoInt{
         return email;
     }
 
+    public String afficherEmailClient(int idClient) {
+        String email = null;
+
+        try (Connection connexion = daoFactory.getConnection()) {
+            // Récupérer l'id_utilisateur du client à partir de l'id_client
+            String sqlClient = "SELECT id_utilisateur FROM client WHERE id_client = ?";
+            PreparedStatement pClient = connexion.prepareStatement(sqlClient);
+            pClient.setInt(1, idClient);
+            ResultSet rClient = pClient.executeQuery();
+
+            if (rClient.next()) {
+                // Récupérer l'id_utilisateur
+                int idUtilisateur = rClient.getInt("id_utilisateur");
+
+                // Maintenant, récupérer l'email depuis la table utilisateur
+                String sqlUtilisateur = "SELECT email FROM utilisateur WHERE id_utilisateur = ?";
+                PreparedStatement pUtilisateur = connexion.prepareStatement(sqlUtilisateur);
+                pUtilisateur.setInt(1, idUtilisateur);
+                ResultSet rUtilisateur = pUtilisateur.executeQuery();
+
+                if (rUtilisateur.next()) {
+                    email = rUtilisateur.getString("email");
+                }
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return email; // Retourne l'email, ou null si le client n'a pas été trouvé
+    }
+
+
 
 
 }
