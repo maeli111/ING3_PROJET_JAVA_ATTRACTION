@@ -101,7 +101,7 @@ public class Login extends JFrame {
                 }
 
                 // Récupérer l'âge et vérifier s'il est valide
-                int age = 0;
+                int age;
                 try {
                     age = Integer.parseInt(txtAge.getText());
                 } catch (NumberFormatException ex) {
@@ -109,12 +109,13 @@ public class Login extends JFrame {
                     return;
                 }
 
-                // Créer un nouvel objet Client avec les données
-                Client client = new Client(0, 0, age, "nouveau", "adulte"); // L'ID et l'ID utilisateur seront générés par la base
+
+                Client client = new Client();
                 client.setNom(nom);
                 client.setPrenom(prenom);
                 client.setEmail(email);
                 client.setMdp(mdp);
+                client.setAge(age);
 
                 // Appel de la méthode inscrire de ClientDao
                 ClientDao clientDao = new ClientDao(daoFactory);  // Vous devez initialiser daoFactory
@@ -126,7 +127,7 @@ public class Login extends JFrame {
                 // Fermer la fenêtre de connexion
                 dispose();
 
-                Vue.Client clientPage = new Vue.Client(); // ta classe `Client` actuelle
+                VueClient clientPage = new VueClient(client);
                 clientPage.setVisible(true); // Ouvre la fenêtre
                 dispose(); // Ferme la fenêtre actuelle (Login)
 

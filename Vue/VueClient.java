@@ -2,13 +2,14 @@ package Vue;
 
 import javax.swing.*;
 import java.awt.*;
+import Modele.Client;
 
-public class Client extends JFrame {
-    public Client() {
+public class VueClient extends JFrame {
+    public VueClient(Client client) {
         setTitle("Client");
         setSize(600, 500);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setLayout(new BorderLayout(10, 10)); // Added border layout with gaps
+        setLayout(new BorderLayout(10, 10));
 
         // Top button panel
         JPanel topPanel = new JPanel(new BorderLayout());
@@ -24,34 +25,43 @@ public class Client extends JFrame {
         topPanel.add(rightPanel, BorderLayout.EAST);
 
         // Main content panel
-        JPanel mainPanel = new JPanel(new GridLayout(3, 1, 10, 10)); // Adjusted to 3 rows
+        JPanel mainPanel = new JPanel(new GridLayout(3, 1, 10, 10));
 
         // Personal information panel
-        JPanel infoPanel = new JPanel(new GridLayout(5, 2, 5, 5)); // 5 rows, 2 columns
+        JPanel infoPanel = new JPanel(new GridLayout(5, 2, 5, 5));
         infoPanel.setBorder(BorderFactory.createTitledBorder("Informations personnelles"));
         infoPanel.add(new JLabel("Nom:"));
-        infoPanel.add(new JTextField());
+        JTextField nomField = new JTextField(client.getNom());
+        nomField.setEditable(false);
+        infoPanel.add(nomField);
+
         infoPanel.add(new JLabel("Prénom:"));
-        infoPanel.add(new JTextField());
+        JTextField prenomField = new JTextField(client.getPrenom());
+        prenomField.setEditable(false);
+        infoPanel.add(prenomField);
+
         infoPanel.add(new JLabel("Age:"));
-        infoPanel.add(new JTextField());
+        JTextField ageField = new JTextField(String.valueOf(client.getage()));
+        ageField.setEditable(false);
+        infoPanel.add(ageField);
+
         infoPanel.add(new JLabel("E-mail:"));
-        infoPanel.add(new JTextField());
+        JTextField emailField = new JTextField(client.getEmail());
+        emailField.setEditable(false);
+        infoPanel.add(emailField);
 
         // Reservations label and panels
-        JPanel reservationsPanel = new JPanel(new BorderLayout(10, 10)); // Border layout with gaps
+        JPanel reservationsPanel = new JPanel(new BorderLayout(10, 10));
         JLabel reservationsLabel = new JLabel("Mes réservations:");
-        reservationsLabel.setBorder(BorderFactory.createEmptyBorder(0, 0, 10, 0)); // Add some space below the label
+        reservationsLabel.setBorder(BorderFactory.createEmptyBorder(0, 0, 10, 0));
 
-        // Current reservations panel
         JPanel currentReservationsPanel = new JPanel();
         currentReservationsPanel.setBorder(BorderFactory.createTitledBorder("Réservations en cours"));
 
-        // Reservation history panel
         JPanel reservationHistoryPanel = new JPanel();
         reservationHistoryPanel.setBorder(BorderFactory.createTitledBorder("Historique des réservations"));
 
-        JPanel reservationsInfoPanel = new JPanel(new GridLayout(1, 2, 10, 10)); // Grid layout with gaps
+        JPanel reservationsInfoPanel = new JPanel(new GridLayout(1, 2, 10, 10));
         reservationsInfoPanel.add(currentReservationsPanel);
         reservationsInfoPanel.add(reservationHistoryPanel);
 
@@ -68,7 +78,8 @@ public class Client extends JFrame {
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
-            Client client = new Client();
+            Client c1 = new Client();
+            VueClient client = new VueClient(c1);
             client.setVisible(true);
         });
     }
