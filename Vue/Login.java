@@ -21,6 +21,7 @@ public class Login extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new BorderLayout(10, 10));
 
+        //Partie en haut avec les titres "Connexion" et "Inscription"
         JPanel topPanel = new JPanel(new GridLayout(1, 2)); // One row, two columns
 
         JPanel leftTitlePanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
@@ -32,8 +33,10 @@ public class Login extends JFrame {
         topPanel.add(leftTitlePanel);
         topPanel.add(rightTitlePanel);
 
+        //panneau principal au centre
         JPanel mainPanel = new JPanel(new GridLayout(1, 2, 10, 10)); // One row, two columns
 
+        //colonne de gauche pour le choix du mode de connexion (client/admin/invité)
         JPanel leftPanel = new JPanel(new GridLayout(4, 1, 10, 10)); // Four sections vertically
         leftPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20)); // Add some padding
 
@@ -51,6 +54,7 @@ public class Login extends JFrame {
         btnGuest.setFont(btnGuest.getFont().deriveFont(Font.ITALIC));
         leftPanel.add(btnGuest);
 
+        //colonne de droite pour s'inscrire
         JPanel rightPanel = new JPanel(new BorderLayout());
         JPanel formPanel = new JPanel(new GridLayout(7, 2, 10, 10));
         formPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
@@ -84,20 +88,23 @@ public class Login extends JFrame {
         JPanel registerButtonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
         JButton btnRegister = new JButton("S'inscrire");
 
-        // ActionListener pour l'inscription
+        // action quand on clique sur "s'inscrire"
         btnRegister.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                //on récupère ce que l'utilisateur a écrit
                 String nom = txtNom.getText();
                 String prenom = txtPrenom.getText();
                 String mdp = new String(txtMdp.getPassword());
                 String mdpVerification = new String(txtMdpVerification.getPassword());
 
+                //On vérifie que les mdp soient identiques
                 if (!mdp.equals(mdpVerification)) {
                     JOptionPane.showMessageDialog(null, "Les mots de passe ne correspondent pas.", "Erreur", JOptionPane.ERROR_MESSAGE);
                     return;
                 }
 
+                //On vérifie que l'age est un entier
                 int age;
                 try {
                     age = Integer.parseInt(txtAge.getText());
@@ -106,6 +113,7 @@ public class Login extends JFrame {
                     return;
                 }
 
+                //On vérifie que le mail n'est pas déjà dans la bdd
                 String email = txtEmail.getText();
                 ClientDao clientDao = new ClientDao(daoFactory);
                 if (clientDao.emailExiste(email)) {
@@ -113,6 +121,7 @@ public class Login extends JFrame {
                     return;
                 }
 
+                //Si tout est validé on crée le client et on l'inscrit da,s la bdd
                 Client client = new Client();
                 client.setNom(nom);
                 client.setPrenom(prenom);
