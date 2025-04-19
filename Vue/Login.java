@@ -90,17 +90,14 @@ public class Login extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 String nom = txtNom.getText();
                 String prenom = txtPrenom.getText();
-                String email = txtEmail.getText();
                 String mdp = new String(txtMdp.getPassword());
                 String mdpVerification = new String(txtMdpVerification.getPassword());
 
-                // Vérifier que les mots de passe correspondent
                 if (!mdp.equals(mdpVerification)) {
                     JOptionPane.showMessageDialog(null, "Les mots de passe ne correspondent pas.", "Erreur", JOptionPane.ERROR_MESSAGE);
                     return;
                 }
 
-                // Récupérer l'âge et vérifier s'il est valide
                 int age;
                 try {
                     age = Integer.parseInt(txtAge.getText());
@@ -109,6 +106,12 @@ public class Login extends JFrame {
                     return;
                 }
 
+                String email = txtEmail.getText();
+                ClientDao clientDao = new ClientDao(daoFactory);
+                if (clientDao.emailExiste(email)) {
+                    JOptionPane.showMessageDialog(null, "Cet e-mail est déjà utilisé.", "Erreur", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
 
                 Client client = new Client();
                 client.setNom(nom);
@@ -117,22 +120,14 @@ public class Login extends JFrame {
                 client.setMdp(mdp);
                 client.setAge(age);
 
-                // Appel de la méthode inscrire de ClientDao
-                ClientDao clientDao = new ClientDao(daoFactory);  // Vous devez initialiser daoFactory
                 clientDao.inscrire(client);
-
-                // Inscription réussie, rediriger vers la page Client
                 JOptionPane.showMessageDialog(null, "Inscription réussie !", "Succès", JOptionPane.INFORMATION_MESSAGE);
-
-                // Fermer la fenêtre de connexion
                 dispose();
-
                 VueClient clientPage = new VueClient(client);
-                clientPage.setVisible(true); // Ouvre la fenêtre
-                dispose(); // Ferme la fenêtre actuelle (Login)
-
+                clientPage.setVisible(true);
             }
         });
+
 
         registerButtonPanel.add(btnRegister);
         rightPanel.add(registerButtonPanel, BorderLayout.SOUTH);

@@ -252,6 +252,22 @@ public class ClientDao implements ClientDaoInt{
         return email; // Retourne l'email, ou null si le client n'a pas été trouvé
     }
 
+    public boolean emailExiste(String email) {
+        String sql = "SELECT COUNT(*) FROM utilisateur WHERE email = ?";
+        try (Connection con = daoFactory.getConnection();
+             PreparedStatement stmt = con.prepareStatement(sql)) {
+            stmt.setString(1, email);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1) > 0;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+
 
 
 
