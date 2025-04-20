@@ -78,6 +78,16 @@ public class Login extends JFrame {
         btnGuest.setFont(btnGuest.getFont().deriveFont(Font.ITALIC));
         leftPanel.add(btnGuest);
 
+        btnGuest.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+                dispose(); // Ferme la fenêtre Login
+                Accueil accueil = new Accueil();
+                accueil.setVisible(true);
+            }
+        });
+
         //colonne de droite pour s'inscrire
         JPanel rightPanel = new JPanel(new BorderLayout());
         JPanel formPanel = new JPanel(new GridLayout(7, 2, 10, 10));
