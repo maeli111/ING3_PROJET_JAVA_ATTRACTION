@@ -46,6 +46,18 @@ public class Login extends JFrame {
         JButton btnClient = new JButton("Client");
         leftPanel.add(btnClient);
 
+        btnClient.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Client client = new Client();
+
+                dispose(); // Ferme la fenêtre Login
+                VueConnexionClient vueConnexionClient = new VueConnexionClient();
+                vueConnexionClient.setVisible(true);
+            }
+        });
+
+
         JButton btnGuest = new JButton("Continuer en tant qu'invité");
         btnGuest.setFocusPainted(false);
         btnGuest.setBorderPainted(false);

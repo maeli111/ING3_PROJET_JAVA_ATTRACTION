@@ -122,23 +122,26 @@ public class ClientDao implements ClientDaoInt{
             ResultSet rUtilisateur = pUtilisateur.executeQuery();
 
             if (rUtilisateur.next()) {
-                // On récupère l'id_utilisateur
                 int idUtilisateur = rUtilisateur.getInt("id_utilisateur");
+                String nom = rUtilisateur.getString("nom");
+                String prenom = rUtilisateur.getString("prenom");
+                String emailUser = rUtilisateur.getString("email"); // ou juste email
+                String mdpUser = rUtilisateur.getString("mdp");
 
-                // on récupère les info du client
+                // 2. Récupérer les infos client
                 String sqlClient = "SELECT * FROM client WHERE id_utilisateur = ?";
                 PreparedStatement pClient = connexion.prepareStatement(sqlClient);
                 pClient.setInt(1, idUtilisateur);
                 ResultSet rClient = pClient.executeQuery();
 
                 if (rClient.next()) {
-                    // Créer un objet Client avec les données récupérées
                     int idClient = rClient.getInt("id_client");
                     int age = rClient.getInt("age");
                     String typeClient = rClient.getString("type_client");
                     String typeMembre = rClient.getString("type_membre");
 
-                    client = new Client(idClient, idUtilisateur, age, typeClient, typeMembre);
+                    // Créer le client avec TOUTES les infos
+                    client = new Client(idClient, idUtilisateur, nom, prenom, emailUser, mdpUser, age, typeClient, typeMembre);
                 }
             }
 
@@ -146,8 +149,9 @@ public class ClientDao implements ClientDaoInt{
             e.printStackTrace();
         }
 
-        return client; // en sachant que null si l'utilisateur ou le client n'a pas été trouvé
+        return client;
     }
+
 
 
     public void supprimer(int id_client) {
