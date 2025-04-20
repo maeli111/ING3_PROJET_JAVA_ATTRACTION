@@ -1,7 +1,7 @@
 package DAO;
 
 import Modele.Attraction;
-
+import java.time.*;
 import java.sql.*;
 import java.util.ArrayList;
 
@@ -430,4 +430,48 @@ public class AttractionDao implements AttractionDaoInt {
 
         return nbResa;
     }
+
+    public boolean estDisponible(LocalDate date, int idAttraction) {
+        boolean disponible = true;
+
+        try (Connection connexion = daoFactory.getConnection();
+             PreparedStatement ps = connexion.prepareStatement("SELECT SUM(nb_personne) AS total FROM reservation WHERE date_reservation = ? AND id_attraction = ? AND est_archivee = 0")){
+            // 1. Récupérer le nombre total de personnes réservées pour l’attraction à cette date
+            ps.setDate(1, java.sql.Date.valueOf(date));
+            ps.setInt(2, idAttraction);
+            ResultSet rs = ps.executeQuery();
+
+            int totalReservations = 0;
+            if (rs.next()) {
+                totalReservations = rs.getInt("total");
+            }
+
+            // 2. Récupérer la capacité maximale de l’attraction
+            String sqlCapacite = "SELECT capacite FROM attraction WHERE id_attraction = ?";
+            PreparedStatement ps2 = connexion.prepareStatement(sqlCapacite);
+            ps2.setInt(1, idAttraction);
+            ResultSet rs2 = ps2.executeQuery();
+
+            int capacite = 0;
+            if (rs2.next()) {
+                capacite = rs2.getInt("capacite");
+            }
+
+            // 3. Vérifier si la capacité est atteinte
+            if (totalReservations >= capacite) {
+                disponible = false;
+            }
+
+            rs.close();
+            rs2.close();
+            ps.close();
+            ps2.close();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return disponible;
+    }
+
 }

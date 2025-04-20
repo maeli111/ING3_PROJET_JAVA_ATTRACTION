@@ -1,7 +1,7 @@
 package DAO;
 
 import Modele.Attraction;
-
+import java.time.*;
 import java.util.ArrayList;
 
 public interface AttractionDaoInt {
@@ -25,4 +25,6 @@ public interface AttractionDaoInt {
     int afficherCapacite(int id);
     String afficherTypeAttraction(int id);
     int afficherNbReservation(int id);
+
+    public boolean estDisponible(LocalDate date, int idAttraction);
 }

@@ -1,7 +1,8 @@
 package Controleur;
 
 import DAO.*;
-import Modele.*;
+
+import java.time.*;
 
 import java.util.Scanner;
 
@@ -11,7 +12,7 @@ public class TestMain {
         DaoFactory dao = DaoFactory.getInstance("java_attraction", "root", "");
         AttractionDao attractionDAO = new AttractionDao(dao);
         Scanner scanner = new Scanner(System.in);
-
+/*
         while (true) {
             // Affichage du menu
             System.out.println("\nMenu ");
@@ -206,5 +207,19 @@ public class TestMain {
                     System.out.println("Option invalide. Essayez encore.");
             }
         }
+
+ */
+
+        LocalDate date = LocalDate.of(2025, 4, 20);
+        int idAttraction = 2;
+
+        boolean dispo = attractionDAO.estDisponible(date, idAttraction);
+
+        if (dispo) {
+            System.out.println("Attraction disponible le " + date);
+        } else {
+            System.out.println("Attraction complète le " + date);
+        }
+
     }
 }
