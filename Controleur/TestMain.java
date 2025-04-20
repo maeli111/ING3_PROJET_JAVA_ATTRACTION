@@ -1,6 +1,7 @@
 package Controleur;
 
 import DAO.*;
+import Modele.*;
 
 import java.time.*;
 
@@ -12,7 +13,7 @@ public class TestMain {
         DaoFactory dao = DaoFactory.getInstance("java_attraction", "root", "");
         AttractionDao attractionDAO = new AttractionDao(dao);
         Scanner scanner = new Scanner(System.in);
-/*
+
         while (true) {
             // Affichage du menu
             System.out.println("\nMenu ");
@@ -208,8 +209,8 @@ public class TestMain {
             }
         }
 
- */
 
+/*
         LocalDate date = LocalDate.of(2025, 4, 20);
         int idAttraction = 2;
 
@@ -220,6 +221,8 @@ public class TestMain {
         } else {
             System.out.println("Attraction complète le " + date);
         }
+
+ */
 
     }
 }
