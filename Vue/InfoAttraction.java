@@ -9,31 +9,67 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 
 public class InfoAttraction extends JFrame {
+    // Boutons en haut de la page
+    private JButton accueil = new JButton("Accueil");
+    private JButton informations = new JButton("Informations");
+    private JButton calendrier = new JButton("Calendrier");
+    private JButton compte = new JButton("Compte");
+
+    // Nom du parc
+    private JTextField parc = new JTextField("Palasi Land");
 
     public InfoAttraction(Attraction attraction) {
         setTitle("Informations de l'attraction");
-        setSize(700, 300);
-        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        setSize(900, 600);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
+        setLayout(new BorderLayout());
 
-        // Panel principal avec BorderLayout
+        // === HEADER ===
+        parc.setHorizontalAlignment(JTextField.CENTER);
+        parc.setEditable(false);
+        parc.setFont(new Font("Bodoni MT", Font.BOLD, 32));
+        parc.setBorder(null);
+        parc.setOpaque(false);
+
+        JPanel Pbarre = new JPanel(new BorderLayout());
+
+        JPanel Pnavigation = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 10));
+        Pnavigation.add(accueil);
+        Pnavigation.add(informations);
+        Pnavigation.add(calendrier);
+
+        JPanel Pcompte = new JPanel(new FlowLayout(FlowLayout.RIGHT, 10, 10));
+        Pcompte.add(compte);
+
+        Pbarre.add(Pnavigation, BorderLayout.WEST);
+        Pbarre.add(Pcompte, BorderLayout.EAST);
+
+        JPanel header = new JPanel(new BorderLayout());
+        header.add(Pbarre, BorderLayout.NORTH);
+        header.add(parc, BorderLayout.CENTER);
+
+        add(header, BorderLayout.NORTH);
+
+        // === CONTENU PRINCIPAL ===
         JPanel mainPanel = new JPanel(new BorderLayout());
 
-        // === PHOTO (à gauche) ===
+        // PHOTO à gauche
         JLabel photoLabel = new JLabel();
-        photoLabel.setPreferredSize(new Dimension(250, 250));
+        photoLabel.setPreferredSize(new Dimension(300, 300));
+
         try {
-            // Tu peux ici changer le chemin selon ton image
             BufferedImage img = ImageIO.read(new File("images/" + attraction.getNom() + ".jpg"));
-            Image scaled = img.getScaledInstance(250, 250, Image.SCALE_SMOOTH);
+            Image scaled = img.getScaledInstance(300, 300, Image.SCALE_SMOOTH);
             photoLabel.setIcon(new ImageIcon(scaled));
         } catch (Exception e) {
             photoLabel.setText("Image non trouvée");
             photoLabel.setHorizontalAlignment(SwingConstants.CENTER);
         }
+
         mainPanel.add(photoLabel, BorderLayout.WEST);
 
-        // === INFOS (à droite) ===
+        // INFOS à droite
         JPanel infoPanel = new JPanel();
         infoPanel.setLayout(new GridLayout(5, 1, 10, 10));
 
@@ -51,7 +87,7 @@ public class InfoAttraction extends JFrame {
 
         mainPanel.add(infoPanel, BorderLayout.CENTER);
 
-        add(mainPanel);
+        add(mainPanel, BorderLayout.CENTER);
         setVisible(true);
     }
 }

@@ -19,7 +19,7 @@ public class testPageAttraction {
         }
 
         else {
-            System.out.println("Aucune attraction trouvée avec l'ID 2.");
+            System.out.println("Aucune attraction trouvée avec cet ID");
         }
 
         daoFactory.disconnect(); // Fermer proprement
