@@ -4,6 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 import DAO.*;
 import Modele.Client;
+import Modele.Admin;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -42,6 +43,17 @@ public class Login extends JFrame {
 
         JButton btnAdmin = new JButton("Administrateur");
         leftPanel.add(btnAdmin);
+
+        btnAdmin.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Admin admin = new Admin();
+
+                dispose(); // Ferme la fenêtre Login
+                VueConnexionAdmin vueConnexionAdmin = new VueConnexionAdmin();
+                vueConnexionAdmin.setVisible(true);
+            }
+        });
 
         JButton btnClient = new JButton("Client");
         leftPanel.add(btnClient);

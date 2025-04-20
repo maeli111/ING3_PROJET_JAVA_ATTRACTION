@@ -141,7 +141,7 @@ public class ClientDao implements ClientDaoInt{
                     String typeMembre = rClient.getString("type_membre");
 
                     // Créer le client avec TOUTES les infos
-                    client = new Client(idClient, idUtilisateur, nom, prenom, emailUser, mdpUser, age, typeClient, typeMembre);
+                    client = new Client(idClient, idUtilisateur, emailUser, nom, prenom, mdpUser, age, typeClient, typeMembre);
                 }
             }
 

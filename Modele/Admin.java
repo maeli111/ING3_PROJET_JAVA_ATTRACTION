@@ -13,6 +13,10 @@ public class Admin extends Utilisateur{
         this.id_admin=id_admin;
     }
 
+    public Admin(){
+        super(0,"","","","");
+    }
+
     public int getId_admin(){return id_admin;}
 
     public int getId_utilisateur() {

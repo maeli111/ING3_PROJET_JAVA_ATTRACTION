@@ -40,14 +40,27 @@ public class VueConnexionClient extends JFrame {
         topPanel.add(rightPanel, BorderLayout.EAST);
 
         // Panneau principal (contenu central)
-        JPanel mainPanel = new JPanel(new GridLayout(3, 1, 10, 10));
-        mainPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+        JPanel mainPanel = new JPanel();
+        mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
+        mainPanel.setBorder(BorderFactory.createEmptyBorder(30, 20, 20, 20)); // plus de marge en haut
 
+// Titre PalasiLand
+        JLabel titreLabel = new JLabel("PalasiLand", JLabel.CENTER);
+        titreLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        titreLabel.setFont(new Font("Serif", Font.BOLD, 28));
+        mainPanel.add(titreLabel);
+
+// Texte de bienvenue
         JLabel bienvenuLabel = new JLabel("Se connecter en tant que client", JLabel.CENTER);
+        bienvenuLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         bienvenuLabel.setFont(new Font("Arial", Font.BOLD, 20));
+        mainPanel.add(Box.createRigidArea(new Dimension(0, 10))); // petit espace entre le titre et le texte
         mainPanel.add(bienvenuLabel);
 
+        // Formulaire
+        mainPanel.add(Box.createRigidArea(new Dimension(0, 20))); // espace après le texte
         JPanel formPanel = new JPanel(new GridLayout(2, 2, 10, 10));
+        formPanel.setMaximumSize(new Dimension(400, 80));
 
         JLabel emailLabel = new JLabel("Email :");
         JTextField emailField = new JTextField();
@@ -61,11 +74,11 @@ public class VueConnexionClient extends JFrame {
         formPanel.add(mdpField);
         mainPanel.add(formPanel);
 
-        // Bouton de connexion
+// Bouton de connexion
+        mainPanel.add(Box.createRigidArea(new Dimension(0, 20)));
         JButton btnConnexion = new JButton("Connexion");
-        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-        buttonPanel.add(btnConnexion);
-        mainPanel.add(buttonPanel);
+        btnConnexion.setAlignmentX(Component.CENTER_ALIGNMENT);
+        mainPanel.add(btnConnexion);
 
         // Ajout des panels à la fenêtre
         add(topPanel, BorderLayout.NORTH);
@@ -86,7 +99,7 @@ public class VueConnexionClient extends JFrame {
                 Client clientConnecte = clientDao.seConnecter(email, mdp);
 
                 if (clientConnecte != null) {
-                    JOptionPane.showMessageDialog(null, "Connexion réussie ! Bienvenue, " + email, "Succès", JOptionPane.INFORMATION_MESSAGE);
+                    JOptionPane.showMessageDialog(null, "Connexion réussie ! Bienvenue, " + clientConnecte.getPrenom() + " " + clientConnecte.getNom(), "Succès", JOptionPane.INFORMATION_MESSAGE);
                     dispose();
                     VueClient clientPage = new VueClient(clientConnecte);
                     clientPage.setVisible(true);

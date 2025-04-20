@@ -2,9 +2,11 @@ package Vue;
 
 import javax.swing.*;
 import java.awt.*;
+import Modele.Admin;
 
-public class Admin extends JFrame {
-    public Admin() {
+public class VueAdmin extends JFrame {
+    // Ajout du paramètre Admin dans le constructeur
+    public VueAdmin(Admin admin) {
         setTitle("Administrator");
         setSize(600, 500);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -86,12 +88,5 @@ public class Admin extends JFrame {
 
         add(topPanel, BorderLayout.NORTH);
         add(mainPanel, BorderLayout.CENTER);
-    }
-
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            Admin admin = new Admin();
-            admin.setVisible(true);
-        });
     }
 }
