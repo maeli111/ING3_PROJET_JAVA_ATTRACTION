@@ -31,12 +31,22 @@ public class VueAdmin extends JFrame {
         // Personal information panel
         JPanel infoPanel = new JPanel(new GridLayout(3, 2, 5, 5)); // 3 rows, 2 columns
         infoPanel.setBorder(BorderFactory.createTitledBorder("Informations personnelles"));
+
+        // Utilisation des données de l'objet admin pour afficher les informations
         infoPanel.add(new JLabel("Nom:"));
-        infoPanel.add(new JTextField());
+        JTextField nomField = new JTextField(admin.getNom());  // Récupération du nom de l'administrateur
+        nomField.setEditable(false);  // Rendre le champ non modifiable
+        infoPanel.add(nomField);
+
         infoPanel.add(new JLabel("Prénom:"));
-        infoPanel.add(new JTextField());
+        JTextField prenomField = new JTextField(admin.getPrenom());  // Récupération du prénom
+        prenomField.setEditable(false);  // Rendre le champ non modifiable
+        infoPanel.add(prenomField);
+
         infoPanel.add(new JLabel("E-mail:"));
-        infoPanel.add(new JTextField());
+        JTextField emailField = new JTextField(admin.getEmail());  // Récupération de l'email
+        emailField.setEditable(false);  // Rendre le champ non modifiable
+        infoPanel.add(emailField);
 
         // Modifications label
         JLabel modificationsLabel = new JLabel("Modifications:", SwingConstants.LEFT);
