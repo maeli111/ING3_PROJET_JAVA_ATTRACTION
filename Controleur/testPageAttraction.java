@@ -11,7 +11,7 @@ public class testPageAttraction {
         AttractionDaoInt attractionDAO = new AttractionDao(daoFactory);
 
         // Récupérer une attraction existante
-        Attraction attraction = attractionDAO.chercher(2);
+        Attraction attraction = attractionDAO.chercher(3);
 
         // Afficher dans l'interface
         if (attraction != null) {

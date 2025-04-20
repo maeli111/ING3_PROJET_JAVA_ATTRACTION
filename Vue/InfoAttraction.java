@@ -23,13 +23,8 @@ public class InfoAttraction extends JFrame {
         JLabel photoLabel = new JLabel();
         photoLabel.setPreferredSize(new Dimension(250, 250));
         try {
-            File imageFile = new File("images/" + attraction.getNom() + ".jpg");
-
-            if (!imageFile.exists()) {
-                imageFile = new File("images/attraction.jpg"); // image fallback
-            }
-
-            BufferedImage img = ImageIO.read(imageFile);
+            // Tu peux ici changer le chemin selon ton image
+            BufferedImage img = ImageIO.read(new File("images/" + attraction.getNom() + ".jpg"));
             Image scaled = img.getScaledInstance(250, 250, Image.SCALE_SMOOTH);
             photoLabel.setIcon(new ImageIcon(scaled));
         } catch (Exception e) {
