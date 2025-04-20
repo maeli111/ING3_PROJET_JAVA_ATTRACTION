@@ -123,7 +123,7 @@ public class TestMain {
                                 break;
 
                             case 4:
-                                System.out.print("Nouveau capacite de l'attraction : ");
+                                System.out.print("Nouvelle capacite de l'attraction : ");
                                 int nouvCapacite = scanner.nextInt();
 
                                 // Mise à jour de l'attraction
