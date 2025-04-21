@@ -4,7 +4,7 @@ public class Reduction_attraction extends Reduction{
     private int id_attraction;
 
     public Reduction_attraction(int id_attraction, int id_reduction){
-        super(id_reduction,"",0.0,"");
+        super(id_reduction,"",0,"");
         this.id_attraction = id_attraction;
     }
 
@@ -14,7 +14,7 @@ public class Reduction_attraction extends Reduction{
         return super.getNom();
     }
 
-    public double getPourcentage() {
+    public int getPourcentage() {
         return super.getPourcentage();
     }
 

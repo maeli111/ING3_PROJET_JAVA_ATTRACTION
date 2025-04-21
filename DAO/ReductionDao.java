@@ -34,7 +34,7 @@ public class ReductionDao {
             while (resultats.next()) {
                 int id_reduction = resultats.getInt(1);
                 String nom = resultats.getString(2);
-                double pourcentage = resultats.getDouble(3);
+                int pourcentage = resultats.getInt(3);
                 String description = resultats.getString(4);
 
                 Reduction Reduction = new Reduction(id_reduction,nom,pourcentage,description);
@@ -50,4 +50,68 @@ public class ReductionDao {
 
         return listeReduction;
     }
+
+    public int getPourcentagePremiereVisite(int idClient) {
+        try {
+            Connection connexion = daoFactory.getConnection();
+            Statement statement = connexion.createStatement();
+
+            //On vérifie si le client a déjà une réservation
+            ResultSet resCheck = statement.executeQuery("SELECT COUNT(*) FROM reservation WHERE id_client = " + idClient);
+            if (resCheck.next()) {
+                int count = resCheck.getInt(1);
+                if (count > 0) {
+                    return 0;
+                }
+            }
+
+            // Si première visite, on récupère le pourcentage de la réduction associée
+            ResultSet resReduction = statement.executeQuery("SELECT pourcentage FROM reduction WHERE nom = 'Première visite'");
+            if (resReduction.next()) {
+                return resReduction.getInt("pourcentage");
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.out.println("Erreur lors de la vérification de la première visite.");
+        }
+
+        return 0;
+    }
+
+    public int getPourcentageFidelite(int idClient) {
+        try {
+            Connection connexion = daoFactory.getConnection();
+            Statement statement = connexion.createStatement();
+
+            // On compte le nb total de réservations effectuées par le client
+            String query = "SELECT COUNT(*) AS nb_reservations " +
+                    "FROM reservation " +
+                    "WHERE id_client = " + idClient;
+
+            ResultSet res = statement.executeQuery(query);
+            if (res.next()) {
+                int nbReservations = res.getInt("nb_reservations");
+
+                // Vérifie si c'est un multiple de 5
+                if (nbReservations > 0 && nbReservations % 5 == 0) {
+                    // Récupère la réduction "Fidélité"
+                    ResultSet resReduction = statement.executeQuery(
+                            "SELECT pourcentage FROM reduction WHERE nom = 'Fidélité'"
+                    );
+                    if (resReduction.next()) {
+                        return resReduction.getInt("pourcentage");
+                    }
+                }
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.out.println("Erreur lors de la vérification de la fidélité.");
+        }
+
+        return 0;
+    }
+
+
 }
