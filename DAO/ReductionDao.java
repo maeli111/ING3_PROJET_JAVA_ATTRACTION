@@ -118,15 +118,16 @@ public class ReductionDao {
         }
     }
 
-    public void modifier(Reduction reduction) {
-        String sql = "UPDATE reduction SET nom = ?, pourcentage = ?, description = ? WHERE id_reduction = ?";
+    public void modifier(int ancienId, Reduction reduction) {
+        String sql = "UPDATE reduction SET id_reduction = ?,nom = ?, pourcentage = ?, description = ? WHERE id_reduction = ?";
         try (Connection conn = daoFactory.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 
-            stmt.setString(1, reduction.getNom());
-            stmt.setDouble(2, reduction.getPourcentage());
-            stmt.setString(3, reduction.getDescription());
-            stmt.setInt(4, reduction.getId_reduction());
+            stmt.setString(2, reduction.getNom());
+            stmt.setDouble(3, reduction.getPourcentage());
+            stmt.setString(4, reduction.getDescription());
+            stmt.setInt(1, reduction.getId_reduction());
+            stmt.setInt(5, ancienId);
 
             stmt.executeUpdate();
         } catch (SQLException e) {
