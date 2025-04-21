@@ -27,31 +27,47 @@ public class VueAdminReduction extends JFrame {
         DaoFactory daoFactory = DaoFactory.getInstance("java_attraction", "root", "");
         reductionDao = new ReductionDao(daoFactory);
 
-        // Top Panel avec boutons et titre
+        // --- TOP PANEL ---
         JPanel topPanel = new JPanel(new BorderLayout());
 
+// --- BARRE DE BOUTONS (ligne du haut) ---
+        JPanel buttonBar = new JPanel(new BorderLayout());
+
         JPanel leftPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        leftPanel.add(new JButton("Accueil"));
-        leftPanel.add(new JButton("Informations"));
-        leftPanel.add(new JButton("Calendrier"));
+        JButton accueilButton = new JButton("Accueil");
+        JButton infoButton = new JButton("Informations");
+        JButton calendrierButton = new JButton("Calendrier");
+        leftPanel.add(accueilButton);
+        leftPanel.add(infoButton);
+        leftPanel.add(calendrierButton);
 
         JPanel rightPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-        rightPanel.add(new JButton("Compte"));
+        JButton compteButton = new JButton("Compte");
+        rightPanel.add(compteButton);
 
-        JPanel centerPanel = new JPanel();
-        centerPanel.setLayout(new BoxLayout(centerPanel, BoxLayout.Y_AXIS));
-        centerPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 10, 20));
+// Action du bouton Compte
+        compteButton.addActionListener(e -> {
+            dispose();
+            VueAdmin vueAdmin = new VueAdmin(admin);
+            vueAdmin.setVisible(true);
+        });
 
-        JLabel titreLabel = new JLabel("PalasiLand", JLabel.CENTER);
-        titreLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        buttonBar.add(leftPanel, BorderLayout.WEST);
+        buttonBar.add(rightPanel, BorderLayout.EAST);
+
+// --- TITRE (ligne en dessous, centré sur toute la largeur) ---
+        JPanel titrePanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        JLabel titreLabel = new JLabel("PalasiLand");
         titreLabel.setFont(new Font("Serif", Font.BOLD, 28));
-        centerPanel.add(titreLabel);
+        titrePanel.add(titreLabel);
 
-        topPanel.add(leftPanel, BorderLayout.WEST);
-        topPanel.add(centerPanel, BorderLayout.CENTER);
-        topPanel.add(rightPanel, BorderLayout.EAST);
+// On met les deux dans topPanel
+        topPanel.add(buttonBar, BorderLayout.NORTH);
+        topPanel.add(titrePanel, BorderLayout.CENTER);
 
         add(topPanel, BorderLayout.NORTH);
+
+
 
         // Table des réductions
         String[] columns = {"ID", "Nom", "Pourcentage", "Description"};
