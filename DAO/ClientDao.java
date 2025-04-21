@@ -21,20 +21,23 @@ public class ClientDao implements ClientDaoInt{
 
         try {
             Connection connexion = daoFactory.getConnection();
-            Statement statement = connexion.createStatement();
-
-            // Exécuter la requête SELECT
-            ResultSet resultats = statement.executeQuery("SELECT * FROM client");
+            String sql = "SELECT c.id_client, u.id_utilisateur, u.nom, u.prenom, u.email, u.mdp, c.age, c.type_client, c.type_membre " +
+                    "FROM client c JOIN utilisateur u ON c.id_utilisateur = u.id_utilisateur";
+            PreparedStatement statement = connexion.prepareStatement(sql);
+            ResultSet resultats = statement.executeQuery();
 
             while (resultats.next()) {
                 int id_client = resultats.getInt("id_client");
                 int id_utilisateur = resultats.getInt("id_utilisateur");
+                String nom = resultats.getString("nom");
+                String prenom = resultats.getString("prenom");
+                String email = resultats.getString("email");
+                String mdp = resultats.getString("mdp");
                 int age = resultats.getInt("age");
                 String type_client = resultats.getString("type_client");
                 String type_membre = resultats.getString("type_membre");
 
-                Client client = new Client(id_client, id_utilisateur, age, type_client, type_membre);
-
+                Client client = new Client(id_client, id_utilisateur, email, nom, prenom, mdp, age, type_client, type_membre);
                 listeClients.add(client);
             }
 
@@ -44,6 +47,7 @@ public class ClientDao implements ClientDaoInt{
 
         return listeClients;
     }
+
 
     public void inscrire(Client client) {
         try {
@@ -270,6 +274,121 @@ public class ClientDao implements ClientDaoInt{
         }
         return false;
     }
+
+
+    public void ajouter(Client client) {
+        try (Connection connexion = daoFactory.getConnection()) {
+            // Insertion dans utilisateur
+            String sqlUtilisateur = "INSERT INTO utilisateur (email, nom, prenom, mdp) VALUES (?, ?, ?, ?)";
+            PreparedStatement pUtilisateur = connexion.prepareStatement(sqlUtilisateur, Statement.RETURN_GENERATED_KEYS);
+            pUtilisateur.setString(1, client.getEmail());
+            pUtilisateur.setString(2, client.getNom());
+            pUtilisateur.setString(3, client.getPrenom());
+            pUtilisateur.setString(4, client.getMdp());
+
+            int lignesUtilisateur = pUtilisateur.executeUpdate();
+            if (lignesUtilisateur > 0) {
+                ResultSet rUtilisateur = pUtilisateur.getGeneratedKeys();
+                if (rUtilisateur.next()) {
+                    int idUtilisateur = rUtilisateur.getInt(1);
+                    client.setid_utilisateur(idUtilisateur);
+
+                    // Déterminer type membre
+                    String typeMembre;
+                    int age = client.getage();
+                    if (age < 18) typeMembre = "enfant";
+                    else if (age < 25) typeMembre = "etudiant";
+                    else if (age >= 60) typeMembre = "senior";
+                    else typeMembre = "adulte";
+                    client.setType_membre(typeMembre);
+
+                    // Insertion dans client
+                    String sqlClient = "INSERT INTO client (id_utilisateur, age, type_client, type_membre) VALUES (?, ?, ?, ?)";
+                    PreparedStatement pClient = connexion.prepareStatement(sqlClient, Statement.RETURN_GENERATED_KEYS);
+                    pClient.setInt(1, idUtilisateur);
+                    pClient.setInt(2, age);
+                    pClient.setString(3, client.getType_client());
+                    pClient.setString(4, typeMembre);
+
+                    int lignesClient = pClient.executeUpdate();
+                    if (lignesClient > 0) {
+                        ResultSet rClient = pClient.getGeneratedKeys();
+                        if (rClient.next()) {
+                            int idClient = rClient.getInt(1);
+                            client.setid_client(idClient);
+                        }
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    public void modifier(Client client) {
+        try (Connection connexion = daoFactory.getConnection()) {
+            // Mise à jour de la table utilisateur
+            String sqlUtilisateur = "UPDATE utilisateur SET email = ?, nom = ?, prenom = ?, mdp = ? WHERE id_utilisateur = ?";
+            PreparedStatement pUtilisateur = connexion.prepareStatement(sqlUtilisateur);
+            pUtilisateur.setString(1, client.getEmail());
+            pUtilisateur.setString(2, client.getNom());
+            pUtilisateur.setString(3, client.getPrenom());
+            pUtilisateur.setString(4, client.getMdp());
+            pUtilisateur.setInt(5, client.getid_utilisateur());
+            pUtilisateur.executeUpdate();
+
+            // Mise à jour de la table client
+            String sqlClient = "UPDATE client SET age = ?, type_client = ?, type_membre = ? WHERE id_client = ?";
+            PreparedStatement pClient = connexion.prepareStatement(sqlClient);
+            pClient.setInt(1, client.getage());
+            pClient.setString(2, client.getType_client());
+            pClient.setString(3, client.getType_membre());
+            pClient.setInt(4, client.getid_client());
+            pClient.executeUpdate();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public Client getById(int id_client) {
+        Client client = null;
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+
+        try {
+            // Récupérer la connexion à la base de données
+            conn = daoFactory.getConnection();
+
+            // Requête SQL pour récupérer les informations du client
+            String sql = "SELECT * FROM client INNER JOIN utilisateur ON client.id_utilisateur = utilisateur.id_utilisateur WHERE client.id_client = ?";
+            stmt = conn.prepareStatement(sql);
+            stmt.setInt(1, id_client);
+
+            rs = stmt.executeQuery();
+
+            // Si un client est trouvé, on le crée et on le retourne
+            if (rs.next()) {
+                int id_utilisateur = rs.getInt("id_utilisateur");
+                String email = rs.getString("email");
+                String nom = rs.getString("nom");
+                String prenom = rs.getString("prenom");
+                String mdp = rs.getString("mdp");
+                int age = rs.getInt("age");
+                String type_client = rs.getString("type_client");
+                String type_membre = rs.getString("type_membre");
+
+                // Créer un client avec les données récupérées
+                client = new Client(id_client, id_utilisateur, email, nom, prenom, mdp, age, type_client, type_membre);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return client;
+    }
+
 
 
 

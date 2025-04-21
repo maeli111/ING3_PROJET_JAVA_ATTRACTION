@@ -27,6 +27,15 @@ public class Client extends Utilisateur {
         super(0, "", "", "", "");
     }
 
+    public Client(String nom, String prenom, String email, String mdp, int age, String type_client) {
+        super(0, email, nom, prenom, mdp);
+        this.age = age;
+        this.type_client = type_client;
+        this.type_membre = "nouveau";
+    }
+
+
+
 
     // Getters
     public int getid_client() { return id_client; }
@@ -69,5 +78,7 @@ public class Client extends Utilisateur {
     public void setType_membre(String typeMembre) {
         this.type_membre = typeMembre;
     }
+
+
 
 }

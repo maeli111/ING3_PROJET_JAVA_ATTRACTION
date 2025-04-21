@@ -61,8 +61,6 @@ public class Login extends JFrame {
         btnClient.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                Client client = new Client();
-
                 dispose(); // Ferme la fenêtre Login
                 VueConnexionClient vueConnexionClient = new VueConnexionClient();
                 vueConnexionClient.setVisible(true);

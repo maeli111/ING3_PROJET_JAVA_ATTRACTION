@@ -88,6 +88,15 @@ public class VueAdmin extends JFrame {
         dossiersClientsButton.setForeground(Color.BLUE);
         dossiersClientsButton.setFont(dossiersClientsButton.getFont().deriveFont(Font.ITALIC));
 
+        dossiersClientsButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                dispose(); // Ferme la fenêtre Login
+                VueAdminClient VueAdminClient = new VueAdminClient(admin);
+                VueAdminClient.setVisible(true);
+            }
+        });
+
         JButton attractionDuMoisButton = new JButton("Attraction du mois");
         attractionDuMoisButton.setFocusPainted(false);
         attractionDuMoisButton.setBorderPainted(false);
