@@ -13,6 +13,12 @@ public class Reduction {
         this.description=description;
     }
 
+    public Reduction(String nom, int pourcentage, String description) {
+        this.nom = nom;
+        this.pourcentage = pourcentage;
+        this.description = description;
+    }
+
     public int getId_reduction(){return id_reduction;}
     public String getNom(){return nom;}
     public int getPourcentage(){return pourcentage;}

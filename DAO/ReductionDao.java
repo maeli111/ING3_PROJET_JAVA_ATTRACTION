@@ -2,10 +2,7 @@ package DAO;
 
 import Modele.Reduction;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
 
 public class ReductionDao {
@@ -23,27 +20,21 @@ public class ReductionDao {
     public ArrayList<Reduction> getAll() {
         ArrayList<Reduction> listeReduction = new ArrayList<Reduction>();
 
-        try {
-            // connexion
-            Connection connexion = daoFactory.getConnection();;
-            Statement statement = connexion.createStatement();
+        try (Connection connexion = daoFactory.getConnection();
+             Statement statement = connexion.createStatement()) {
 
-            ResultSet resultats = statement.executeQuery("select * from reduction");
+            ResultSet resultats = statement.executeQuery("SELECT * FROM reduction");
 
-            // 	Se déplacer sur le prochain enregistrement : retourne false si la fin est atteinte
             while (resultats.next()) {
                 int id_reduction = resultats.getInt(1);
                 String nom = resultats.getString(2);
                 int pourcentage = resultats.getInt(3);
                 String description = resultats.getString(4);
 
-                Reduction Reduction = new Reduction(id_reduction,nom,pourcentage,description);
-
-                listeReduction.add(Reduction);
+                Reduction reduction = new Reduction(id_reduction, nom, pourcentage, description);
+                listeReduction.add(reduction);
             }
-        }
-        catch (SQLException e) {
-            //traitement de l'exception
+        } catch (SQLException e) {
             e.printStackTrace();
             System.out.println("Création de la liste de Reductions impossible");
         }
@@ -52,21 +43,22 @@ public class ReductionDao {
     }
 
     public int getPourcentagePremiereVisite(int idClient) {
-        try {
-            Connection connexion = daoFactory.getConnection();
-            Statement statement = connexion.createStatement();
+        String queryCheck = "SELECT COUNT(*) FROM reservation WHERE id_client = ?";
+        String queryReduction = "SELECT pourcentage FROM reduction WHERE nom = 'Première visite'";
 
-            //On vérifie si le client a déjà une réservation
-            ResultSet resCheck = statement.executeQuery("SELECT COUNT(*) FROM reservation WHERE id_client = " + idClient);
-            if (resCheck.next()) {
-                int count = resCheck.getInt(1);
-                if (count > 0) {
-                    return 0;
-                }
+        try (Connection connexion = daoFactory.getConnection();
+             PreparedStatement stmtCheck = connexion.prepareStatement(queryCheck);
+             PreparedStatement stmtReduction = connexion.prepareStatement(queryReduction)) {
+
+            // Vérification si le client a déjà une réservation
+            stmtCheck.setInt(1, idClient);
+            ResultSet resCheck = stmtCheck.executeQuery();
+            if (resCheck.next() && resCheck.getInt(1) > 0) {
+                return 0; // Pas de réduction si le client a déjà réservé
             }
 
-            // Si première visite, on récupère le pourcentage de la réduction associée
-            ResultSet resReduction = statement.executeQuery("SELECT pourcentage FROM reduction WHERE nom = 'Première visite'");
+            // Si c'est une première visite, on récupère la réduction
+            ResultSet resReduction = stmtReduction.executeQuery();
             if (resReduction.next()) {
                 return resReduction.getInt("pourcentage");
             }
@@ -80,25 +72,23 @@ public class ReductionDao {
     }
 
     public int getPourcentageFidelite(int idClient) {
-        try {
-            Connection connexion = daoFactory.getConnection();
-            Statement statement = connexion.createStatement();
+        String queryCountReservations = "SELECT COUNT(*) AS nb_reservations FROM reservation WHERE id_client = ?";
+        String queryFidelite = "SELECT pourcentage FROM reduction WHERE nom = 'Fidélité'";
 
-            // On compte le nb total de réservations effectuées par le client
-            String query = "SELECT COUNT(*) AS nb_reservations " +
-                    "FROM reservation " +
-                    "WHERE id_client = " + idClient;
+        try (Connection connexion = daoFactory.getConnection();
+             PreparedStatement stmtCountReservations = connexion.prepareStatement(queryCountReservations);
+             PreparedStatement stmtFidelite = connexion.prepareStatement(queryFidelite)) {
 
-            ResultSet res = statement.executeQuery(query);
+            // Vérification du nombre de réservations
+            stmtCountReservations.setInt(1, idClient);
+            ResultSet res = stmtCountReservations.executeQuery();
             if (res.next()) {
                 int nbReservations = res.getInt("nb_reservations");
 
-                // Vérifie si c'est un multiple de 5
+                // Vérification si c'est un multiple de 5
                 if (nbReservations > 0 && nbReservations % 5 == 0) {
-                    // Récupère la réduction "Fidélité"
-                    ResultSet resReduction = statement.executeQuery(
-                            "SELECT pourcentage FROM reduction WHERE nom = 'Fidélité'"
-                    );
+                    // On récupère la réduction de fidélité
+                    ResultSet resReduction = stmtFidelite.executeQuery();
                     if (resReduction.next()) {
                         return resReduction.getInt("pourcentage");
                     }
@@ -112,6 +102,50 @@ public class ReductionDao {
 
         return 0;
     }
+
+    public void ajouter(Reduction reduction) {
+        String sql = "INSERT INTO reduction (nom, pourcentage, description) VALUES (?, ?, ?)";
+        try (Connection conn = daoFactory.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setString(1, reduction.getNom());
+            stmt.setDouble(2, reduction.getPourcentage());
+            stmt.setString(3, reduction.getDescription());
+
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void modifier(Reduction reduction) {
+        String sql = "UPDATE reduction SET nom = ?, pourcentage = ?, description = ? WHERE id_reduction = ?";
+        try (Connection conn = daoFactory.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setString(1, reduction.getNom());
+            stmt.setDouble(2, reduction.getPourcentage());
+            stmt.setString(3, reduction.getDescription());
+            stmt.setInt(4, reduction.getId_reduction());
+
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void supprimer(int idReduction) {
+        String sql = "DELETE FROM reduction WHERE id_reduction = ?";
+        try (Connection conn = daoFactory.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setInt(1, idReduction);
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
 
 
 }

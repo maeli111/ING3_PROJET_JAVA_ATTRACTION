@@ -2,12 +2,15 @@ package Vue;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
 import Modele.Admin;
 
 public class VueAdmin extends JFrame {
     // Ajout du paramètre Admin dans le constructeur
     public VueAdmin(Admin admin) {
-        setTitle("Administrator");
+        setTitle("Reduction Administrateur");
         setSize(600, 500);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new BorderLayout(10, 10)); // Added border layout with gaps
@@ -68,6 +71,15 @@ public class VueAdmin extends JFrame {
         reductionsButton.setContentAreaFilled(false);
         reductionsButton.setForeground(Color.BLUE);
         reductionsButton.setFont(reductionsButton.getFont().deriveFont(Font.ITALIC));
+
+        reductionsButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                dispose(); // Ferme la fenêtre Login
+                VueAdminReduction VueAdminReduction = new VueAdminReduction(admin);
+                VueAdminReduction.setVisible(true);
+            }
+        });
 
         JButton dossiersClientsButton = new JButton("Dossiers clients");
         dossiersClientsButton.setFocusPainted(false);
