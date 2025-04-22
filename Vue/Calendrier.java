@@ -195,7 +195,7 @@ public class Calendrier extends JFrame {
                             Attraction attraction = attractionDAO.chercher(idAttraction);
                             if (attraction != null) {
                                 currentFrame.dispose();
-                                new InfoAttraction(attraction).setVisible(true);
+                                new InfoAttraction(attraction, date).setVisible(true);
                             } else {
                                 JOptionPane.showMessageDialog(null, "Aucune attraction trouvée avec l'ID : " + idAttraction);
                             }

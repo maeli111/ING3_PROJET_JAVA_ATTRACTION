@@ -3,6 +3,7 @@ package Controleur;
 import DAO.*;
 import Modele.*;
 import Vue.InfoAttraction;
+import java.time.LocalDate;
 
 public class testPageAttraction {
     public static void main(String[] args) {
@@ -12,10 +13,11 @@ public class testPageAttraction {
 
         // Récupérer une attraction existante
         Attraction attraction = attractionDAO.chercher(3);
+        LocalDate date = LocalDate.of(2025, 4, 25);
 
         // Afficher dans l'interface
         if (attraction != null) {
-            new InfoAttraction(attraction);
+            new InfoAttraction(attraction, date);
         }
 
         else {

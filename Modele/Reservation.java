@@ -28,6 +28,11 @@ public class Reservation {
         this.est_archivee=est_archivee;
     }
 
+    public Reservation(LocalDate date_reservation, int id_attraction){
+        this.date_reservation=date_reservation;
+        this.id_attraction=id_attraction;
+    }
+
     public int getId_reservation(){return id_reservation;}
     public int getId_client(){return id_client;}
     public String getNom(){return nom;}

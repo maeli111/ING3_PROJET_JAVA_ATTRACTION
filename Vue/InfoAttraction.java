@@ -1,12 +1,13 @@
 package Vue;
 
-import Modele.Attraction;
+import Modele.*;
 
 import javax.swing.*;
 import java.awt.*;
 import java.io.File;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
+import java.time.LocalDate;
 
 public class InfoAttraction extends JFrame {
     // Boutons en haut de la page
@@ -18,7 +19,7 @@ public class InfoAttraction extends JFrame {
     // Nom du parc
     private JTextField parc = new JTextField("Palasi Land");
 
-    public InfoAttraction(Attraction attraction) {
+    public InfoAttraction(Attraction attraction, LocalDate date) {
         setTitle("Informations de l'attraction");
         setSize(900, 600);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -73,14 +74,15 @@ public class InfoAttraction extends JFrame {
         JPanel infoPanel = new JPanel();
         infoPanel.setLayout(new GridLayout(5, 1, 10, 10));
 
+        JLabel dateLabel = new JLabel("Date : " + date);
         JLabel nomLabel = new JLabel("Nom : " + attraction.getNom());
         JLabel descLabel = new JLabel("Description : " + attraction.getDescription());
         JLabel prixLabel = new JLabel("Prix : " + attraction.getPrix() + " €");
         JLabel capaciteLabel = new JLabel("Capacité : " + attraction.getCapacite());
-        JLabel reservationLabel = new JLabel("Réservations : " + attraction.getNbReservation());
+        //JLabel reservationLabel = new JLabel("Réservations : " + attraction.getNbReservation());
 
         Font font = new Font("SansSerif", Font.PLAIN, 16);
-        for (JLabel label : new JLabel[]{nomLabel, descLabel, prixLabel, capaciteLabel, reservationLabel}) {
+        for (JLabel label : new JLabel[]{nomLabel, descLabel, prixLabel, capaciteLabel, dateLabel}) {
             label.setFont(font);
             infoPanel.add(label);
         }
@@ -88,6 +90,29 @@ public class InfoAttraction extends JFrame {
         mainPanel.add(infoPanel, BorderLayout.CENTER);
 
         add(mainPanel, BorderLayout.CENTER);
+
+        // === BOUTON RÉSERVER ===
+        JButton reserverBtn = new JButton("Réserver");
+        reserverBtn.setFont(new Font("SansSerif", Font.BOLD, 18));
+        reserverBtn.setBackground(new Color(0, 150, 0)); // Vert
+        reserverBtn.setForeground(Color.WHITE);
+        reserverBtn.setPreferredSize(new Dimension(200, 50));
+
+        reserverBtn.addActionListener(e -> {
+            this.dispose(); // Ferme la fenêtre actuelle
+            // Crée d'abord une réservation vide
+            Reservation nouvelleReservation = new Reservation(date, attraction.getIdAttraction()); // 0=id_client temporaire, 1=nb_personnes par défaut
+            new pageReservation(nouvelleReservation, attraction, date).setVisible(true);// Ouvre la page de réservation
+        });
+
+        // Panel pour le bouton (centré en bas)
+        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        buttonPanel.add(reserverBtn);
+
+        // Ajout au layout principal
+        add(buttonPanel, BorderLayout.SOUTH);
+
+
         setVisible(true);
     }
 }
