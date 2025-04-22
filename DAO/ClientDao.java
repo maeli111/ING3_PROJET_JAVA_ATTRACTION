@@ -389,9 +389,4 @@ public class ClientDao implements ClientDaoInt{
         return client;
     }
 
-
-
-
-
-
 }

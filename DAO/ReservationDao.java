@@ -87,4 +87,31 @@ public class ReservationDao {
         }
     }
 
+    public int genererIdReservationUnique() {
+        int id;
+        boolean existe = true;
+
+        try (Connection conn = daoFactory.getConnection()) {
+            while (existe) {
+                id = (int) (Math.random() * 900000) + 100000; // Génère entre 100000 et 999999
+
+                String sql = "SELECT COUNT(*) FROM reservation WHERE id_reservation = ?";
+                try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+                    stmt.setInt(1, id);
+                    try (ResultSet rs = stmt.executeQuery()) {
+                        if (rs.next()) {
+                            existe = rs.getInt(1) > 0; // Si > 0, l'ID existe déjà
+                        }
+                    }
+                }
+
+                if (!existe) return id;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return -1; // erreur
+    }
+
 }

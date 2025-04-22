@@ -76,12 +76,6 @@ public class pageReservation extends JFrame {
         choixPanel.add(rbInvite);
         formPanel.add(choixPanel);
 
-        // === AFFICHAGE DU STATUT ===
-        JLabel statusLabel = new JLabel("Sélectionnez un type de client");
-        statusLabel.setFont(new Font("SansSerif", Font.BOLD, 16));
-        statusLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-        formPanel.add(statusLabel);
-        formPanel.add(Box.createRigidArea(new Dimension(0, 20)));
 
         // === FORMULAIRE POUR NOUVEAU CLIENT ===
         JPanel formNouveauClient = new JPanel();
@@ -93,6 +87,13 @@ public class pageReservation extends JFrame {
         JTextField nomField = new JTextField(15);
         ligneNom.add(nomLabel, BorderLayout.WEST);
         ligneNom.add(nomField, BorderLayout.CENTER);
+
+        // Ligne PRENOM
+        JPanel lignePrenom = new JPanel(new BorderLayout());
+        JLabel prenomLabel = new JLabel("Prénom :");
+        JTextField prenomField = new JTextField(15);
+        lignePrenom.add(prenomLabel, BorderLayout.WEST);
+        lignePrenom.add(prenomField, BorderLayout.CENTER);
 
         // Ligne EMAIL
         JPanel ligneEmail = new JPanel(new BorderLayout());
@@ -114,17 +115,29 @@ public class pageReservation extends JFrame {
         nbPanelNouveau.add(plusBtnNouveau);
 
         // Actions +/-
+        JLabel prixLabelNouveau = new JLabel("Prix total: " + attraction.getPrix() + " €");
+        prixLabelNouveau.setFont(new Font("SansSerif", Font.BOLD, 14));
+
         plusBtnNouveau.addActionListener(e -> {
             int current = Integer.parseInt(nbPersonneFieldNouveau.getText());
-            if (current < 10) nbPersonneFieldNouveau.setText(String.valueOf(current + 1));
+            if (current < 10) {
+                nbPersonneFieldNouveau.setText(String.valueOf(current + 1));
+                updatePrix(prixLabelNouveau, nbPersonneFieldNouveau, attraction);
+            }
         });
+
         moinsBtnNouveau.addActionListener(e -> {
             int current = Integer.parseInt(nbPersonneFieldNouveau.getText());
-            if (current > 1) nbPersonneFieldNouveau.setText(String.valueOf(current - 1));
+            if (current > 1) {
+                nbPersonneFieldNouveau.setText(String.valueOf(current - 1));
+                updatePrix(prixLabelNouveau, nbPersonneFieldNouveau, attraction);
+            }
         });
 
         // Ajout au panel
         formNouveauClient.add(ligneNom);
+        formNouveauClient.add(Box.createRigidArea(new Dimension(0, 10)));
+        formNouveauClient.add(lignePrenom);
         formNouveauClient.add(Box.createRigidArea(new Dimension(0, 10)));
         formNouveauClient.add(ligneEmail);
         formNouveauClient.add(Box.createRigidArea(new Dimension(0, 10)));
@@ -132,6 +145,8 @@ public class pageReservation extends JFrame {
         ligneNbNouveau.add(nbPersonneLabelNouveau);
         ligneNbNouveau.add(nbPanelNouveau);
         formNouveauClient.add(ligneNbNouveau);
+        formNouveauClient.add(Box.createRigidArea(new Dimension(0, 10)));
+        formNouveauClient.add(prixLabelNouveau);
         formNouveauClient.setVisible(false); // caché par défaut
 
 
@@ -158,13 +173,23 @@ public class pageReservation extends JFrame {
         nbPanelExistant.add(plusBtnExistant);
 
         // Actions +/-
+        JLabel prixLabelExistant = new JLabel("Prix total: " + attraction.getPrix() + " €");
+        prixLabelExistant.setFont(new Font("SansSerif", Font.BOLD, 14));
+
         plusBtnExistant.addActionListener(e -> {
             int current = Integer.parseInt(nbPersonneFieldExistant.getText());
-            if (current < 10) nbPersonneFieldExistant.setText(String.valueOf(current + 1));
+            if (current < 10) {
+                nbPersonneFieldExistant.setText(String.valueOf(current + 1));
+                updatePrix(prixLabelExistant, nbPersonneFieldExistant, attraction);
+            }
         });
+
         moinsBtnExistant.addActionListener(e -> {
             int current = Integer.parseInt(nbPersonneFieldExistant.getText());
-            if (current > 1) nbPersonneFieldExistant.setText(String.valueOf(current - 1));
+            if (current > 1) {
+                nbPersonneFieldExistant.setText(String.valueOf(current - 1));
+                updatePrix(prixLabelExistant, nbPersonneFieldExistant, attraction);
+            }
         });
 
         // Ajout au panel
@@ -174,7 +199,8 @@ public class pageReservation extends JFrame {
         ligneNbExistant.add(nbPersonneLabelExistant);
         ligneNbExistant.add(nbPanelExistant);
         formClientExistant.add(ligneNbExistant);
-
+        formClientExistant.add(Box.createRigidArea(new Dimension(0, 10)));
+        formClientExistant.add(prixLabelExistant);
         formClientExistant.setVisible(false); // caché par défaut
 
         formPanel.add(formClientExistant);
@@ -182,13 +208,11 @@ public class pageReservation extends JFrame {
 
         // === GESTION DES BOUTONS RADIO ===
         rbClient.addActionListener(e -> {
-            statusLabel.setText("ancien");
             formNouveauClient.setVisible(false);
             formClientExistant.setVisible(true);
         });
 
         rbInvite.addActionListener(e -> {
-            statusLabel.setText("nouveau");
             formNouveauClient.setVisible(true);
             formClientExistant.setVisible(false);
         });
@@ -201,17 +225,144 @@ public class pageReservation extends JFrame {
 
         // === ACTION DU BOUTON DE RÉSERVATION ===
         reserverButton.addActionListener(e -> {
-            String typeClient = rbClient.isSelected() ? "ancien" :
-                    rbInvite.isSelected() ? "nouveau" : "non sélectionné";
+            try {
+                DaoFactory daoFactory = DaoFactory.getInstance("java_attraction", "root", "");
+                ReservationDao reservationDao = new ReservationDao(daoFactory);
 
-            JOptionPane.showMessageDialog(this,
-                    "Réservation pour client " + typeClient + "!\n" +
-                            "Attraction: " + attraction.getNom() + "\n" +
-                            "Date: " + date);
+                Reservation nouvelleReservation;
+                int nbPersonnes;
+
+                if (rbClient.isSelected()) {
+                    // CAS CLIENT EXISTANT
+                    int idClient = Integer.parseInt(idField.getText());
+                    nbPersonnes = Integer.parseInt(nbPersonneFieldExistant.getText());
+
+                    nouvelleReservation = creerReservationClientExistant(
+                            idClient, nbPersonnes, attraction, date);
+
+                } else if (rbInvite.isSelected()) {
+                    // CAS NOUVEAU CLIENT
+                    nbPersonnes = Integer.parseInt(nbPersonneFieldNouveau.getText());
+
+                    // Validation des champs
+                    if (nomField.getText().trim().isEmpty() ||
+                            prenomField.getText().trim().isEmpty() ||
+                            emailField.getText().trim().isEmpty()) {
+                        JOptionPane.showMessageDialog(this,
+                                "Veuillez remplir tous les champs pour les nouveaux clients",
+                                "Erreur", JOptionPane.ERROR_MESSAGE);
+                        return;
+                    }
+
+                    nouvelleReservation = creerReservationNouveauClient(
+                            nomField.getText(),
+                            prenomField.getText(),
+                            emailField.getText(),
+                            nbPersonnes,
+                            attraction,
+                            date);
+                } else {
+                    JOptionPane.showMessageDialog(this,
+                            "Veuillez sélectionner un type de client",
+                            "Erreur", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+
+                // Enregistrement en BDD
+                reservationDao.ajouter(nouvelleReservation);
+
+                // Message de confirmation
+                String message = String.format(
+                        "Réservation confirmée !\n" +
+                                "Attraction: %s\n" +
+                                "Date: %s\n" +
+                                "Nombre de personnes: %d\n" +
+                                "Prix total: %.2f €",
+                        attraction.getNom(),
+                        date,
+                        nouvelleReservation.getNb_personne(),
+                        nouvelleReservation.getPrix_total());
+
+                JOptionPane.showMessageDialog(this, message);
+                this.dispose();
+
+            } catch (NumberFormatException ex) {
+                JOptionPane.showMessageDialog(this,
+                        "Veuillez entrer des valeurs numériques valides",
+                        "Erreur", JOptionPane.ERROR_MESSAGE);
+            } catch (IllegalArgumentException ex) {
+                JOptionPane.showMessageDialog(this,
+                        ex.getMessage(),
+                        "Erreur", JOptionPane.ERROR_MESSAGE);
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(this,
+                        "Erreur lors de la réservation: " + ex.getMessage(),
+                        "Erreur", JOptionPane.ERROR_MESSAGE);
+                ex.printStackTrace();
+            }
         });
 
         add(formPanel, BorderLayout.CENTER);
         setVisible(true);
     }
 
+    private void updatePrix(JLabel prixLabel, JTextField nbField, Attraction attraction) {
+        int nb = Integer.parseInt(nbField.getText());
+        double total = nb * attraction.getPrix();
+        prixLabel.setText(String.format("Prix total: %.2f €", total));
+    }
+
+    private Reservation creerReservationClientExistant(int idClient, int nbPersonnes, Attraction attraction, LocalDate date) {
+        DaoFactory daoFactory = DaoFactory.getInstance("java_attraction", "root", "");
+        ClientDao clientDao = new ClientDao(daoFactory);
+        UtilisateurDao utilisateurDao = new UtilisateurDao(daoFactory);
+        ReservationDao reservationDao = new ReservationDao(daoFactory);
+        Client client = clientDao.getById(idClient);
+
+        if (client == null) {
+            throw new IllegalArgumentException("Client introuvable avec l'ID: " + idClient);
+        }
+
+        int idUtilisateur = client.getId_utilisateur(); // Assure-toi que la méthode existe
+        Utilisateur utilisateur = utilisateurDao.getById(idUtilisateur); // Tu dois avoir cette méthode dans UtilisateurDAO
+
+        int idReservationUnique = reservationDao.genererIdReservationUnique(); // appel ici
+
+        return new Reservation(
+                idReservationUnique, // id_reservation (auto-généré)
+                idClient,
+                utilisateur.getNom(),
+                utilisateur.getPrenom(),
+                utilisateur.getEmail(),
+                date, // date de réservation choisie
+                LocalDate.now(), // date d'achat = aujourd'hui
+                attraction.getIdAttraction(),
+                nbPersonnes * attraction.getPrix(), // prix total
+                nbPersonnes,
+                0 // non archivée
+        );
+    }
+
+    private Reservation creerReservationNouveauClient(String nom, String prenom, String email,
+                                                      int nbPersonnes, Attraction attraction,
+                                                      LocalDate date) {
+
+        DaoFactory daoFactory = DaoFactory.getInstance("java_attraction", "root", "");
+        ReservationDao reservationDao = new ReservationDao(daoFactory);
+        int idReservationUnique = reservationDao.genererIdReservationUnique(); // appel ici
+
+        return new Reservation(
+                idReservationUnique, // id_reservation (auto-généré)
+                0, // id_client = 0 pour non enregistré
+                nom,
+                prenom,
+                email,
+                date, // date de réservation choisie
+                LocalDate.now(), // date d'achat = aujourd'hui
+                attraction.getIdAttraction(),
+                nbPersonnes * attraction.getPrix(), // prix total
+                nbPersonnes,
+                0 // non archivée
+        );
+    }
 }
