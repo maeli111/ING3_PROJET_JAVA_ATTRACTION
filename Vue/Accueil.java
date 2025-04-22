@@ -3,7 +3,6 @@ package Vue;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.*;
-import java.io.BufferedReader;
 import java.io.File;
 import javax.imageio.ImageIO;
 
@@ -20,11 +19,11 @@ public class Accueil extends JFrame{
 
     public Accueil(){
         setTitle("Accueil");
-        setSize(900,600);
+        setSize(1250,680);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new BorderLayout());
 
-        //STYLES UTILISES POUR LA PAGE
+
         //couleur pour savoir la page selectionnee
         accueil.setBackground(new Color(255,182,193));
         //style du nom du parc
@@ -34,7 +33,6 @@ public class Accueil extends JFrame{
         //supprimer les bordures des composants + rendre le fond transparent
         parc.setBorder(null);
         parc.setOpaque(false);
-
 
         //barre de navigation
         JPanel Pbarre = new JPanel(new BorderLayout());
@@ -52,7 +50,7 @@ public class Accueil extends JFrame{
         //ajout des 2 panels creer pour les boutons du haut dans le layout
         Pbarre.add(Pnavigation, BorderLayout.WEST);
         Pbarre.add(Pcompte, BorderLayout.EAST);
-        //add(Pbarre, BorderLayout.NORTH);
+
 
         //header avec la barre de navigation et le nom du parc
         JPanel header = new JPanel();
@@ -63,33 +61,87 @@ public class Accueil extends JFrame{
         //ajout de notre header au layout
         add(header, BorderLayout.NORTH);
 
+        //scroll
+        JPanel contenu = new JPanel();
+        contenu.setLayout(new BoxLayout(contenu, BoxLayout.Y_AXIS));
+        contenu.setBorder(BorderFactory.createEmptyBorder(20,30,20,30));
+
 
         //images
         //image de gauche
-        JPanel images = new JPanel(new BorderLayout());
-        try{
-            BufferedImage image1 =ImageIO.read(new File("C:\\wamp64\\www\\ING3_PROJET_JAVA_ATTRACTION\\Vue\\carroussel1.jpg"));
+        JPanel images = new JPanel(new GridLayout(1, 3, 20, 0)); // 1 ligne, 3 colonnes, avec espace horizontal entre les images
+
+        try {
+            BufferedImage image1 = ImageIO.read(new File("C:\\wamp64\\www\\ING3_PROJET_JAVA_ATTRACTION\\Vue\\carroussel1.jpg"));
             Image scaledImg1 = image1.getScaledInstance(300, 300, Image.SCALE_SMOOTH);
             JLabel img1 = new JLabel(new ImageIcon(scaledImg1));
-            images.add(img1, BorderLayout.WEST);
+            img1.setHorizontalAlignment(SwingConstants.CENTER);
+            images.add(img1);
         } catch (Exception e) {
-            System.out.println("Erreur lors du chargement de l'image de gauche : " + e.getMessage());
+            System.out.println("Erreur image 1 : " + e.getMessage());
         }
-        //image de droite
+
         try {
             BufferedImage image2 = ImageIO.read(new File("C:\\wamp64\\www\\ING3_PROJET_JAVA_ATTRACTION\\Vue\\carroussel2.jpg"));
             Image scaledImg2 = image2.getScaledInstance(300, 300, Image.SCALE_SMOOTH);
             JLabel img2 = new JLabel(new ImageIcon(scaledImg2));
-            images.add(img2, BorderLayout.EAST);
+            img2.setHorizontalAlignment(SwingConstants.CENTER);
+            images.add(img2);
         } catch (Exception e) {
-            System.out.println("Erreur lors du chargement de l'image de droite : " + e.getMessage());
+            System.out.println("Erreur image 2 : " + e.getMessage());
         }
 
-        add(images, BorderLayout.CENTER);
+        try {
+            BufferedImage image3 = ImageIO.read(new File("C:\\wamp64\\www\\ING3_PROJET_JAVA_ATTRACTION\\Vue\\carroussel3.jpg"));
+            Image scaledImg3 = image3.getScaledInstance(300, 300, Image.SCALE_SMOOTH);
+            JLabel img3 = new JLabel(new ImageIcon(scaledImg3));
+            img3.setHorizontalAlignment(SwingConstants.CENTER);
+            images.add(img3);
+        } catch (Exception e) {
+            System.out.println("Erreur image 3 : " + e.getMessage());
+        }
 
+
+        contenu.add(images);
+
+        //add(images, BorderLayout.CENTER);
+        contenu.add(images);
+
+
+        //texte d'informations sur le parc
+        JLabel description = new JLabel(
+                "<html><div style='text-align: center;'>"
+                        + "Bienvenue à <b>Palasi Land</b>, l'univers où la magie des attractions<br>"
+                        + "rencontre les rêves de toute la famille !<br><br>"
+                        + "Que vous soyez amateur de sensations fortes, à la recherche d’un moment<br>"
+                        + "de détente ou prêt à embarquer dans des aventures aquatiques rafraîchissantes,<br>"
+                        + "notre parc propose des expériences pour tous les âges, toutes les tailles et toutes les envies !"
+                        + "</div></html>",
+                SwingConstants.CENTER
+        );
+
+        description.setFont(new Font("Bodoni MT", Font.PLAIN, 18));
+        description.setAlignmentX(Component.CENTER_ALIGNMENT);
+        description.setBorder(BorderFactory.createEmptyBorder(20, 0, 20, 0));
+        contenu.add(description);
+
+        //bouton pour + d'informations
+        JButton infos = new JButton("Plus d'informations");
+        infos.setAlignmentX(Component.CENTER_ALIGNMENT);
+        infos.setPreferredSize(new Dimension(150, 40));
+        contenu.add(Box.createRigidArea(new Dimension(0, 20))); // espace
+        contenu.add(infos);
+        contenu.add(Box.createRigidArea(new Dimension(0, 20))); // espace bas
+
+        // ScrollPane
+        JScrollPane scrollPane = new JScrollPane(contenu);
+        scrollPane.setBorder(null);
+        add(scrollPane, BorderLayout.CENTER);
 
     }
 }
 
 //SOURCES :
 //images : https://docs.oracle.com/javase/8/docs/api/index.html?javax/imageio/ImageIO.html
+
+//sauter des lignes dans un JLabel : https://openclassrooms.com/forum/sujet/saut-de-ligne-dans-un-jlabel-89457
