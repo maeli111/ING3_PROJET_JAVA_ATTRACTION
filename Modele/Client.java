@@ -22,6 +22,21 @@ public class Client extends Utilisateur {
         this.type_membre = type_membre;
     }
 
+    // Constructeur vide
+    public Client() {
+        super(0, "", "", "", "");
+    }
+
+    public Client(String nom, String prenom, String email, String mdp, int age, String type_client) {
+        super(0, email, nom, prenom, mdp);
+        this.age = age;
+        this.type_client = type_client;
+        this.type_membre = "nouveau";
+    }
+
+
+
+
     // Getters
     public int getid_client() { return id_client; }
     public int getage() { return age; }
@@ -51,4 +66,17 @@ public class Client extends Utilisateur {
     public void setid_client(int id_client) {
         this.id_client = id_client;
     }
+
+    public void setAge(int age) {
+        this.age = age;
+    }
+
+    public void setType_client (String type_client) {
+        this.type_client = type_client;
+    }
+
+    public void setType_membre(String typeMembre) {
+        this.type_membre = typeMembre;
+    }
+
 }

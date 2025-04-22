@@ -60,8 +60,28 @@ public class pageReservation extends JFrame {
         formPanel.add(titre);
         formPanel.add(Box.createRigidArea(new Dimension(0, 20)));
 
-        // PANEL DE CHAMPS (labels à gauche)
-        JPanel champPanel = new JPanel(new GridLayout(4, 2, 10, 10)); // 4 lignes, 2 colonnes
+        // === CHOIX CLIENT / INVITÉ ===
+        JPanel choixPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        JRadioButton rbClient = new JRadioButton("Client avec un compte");
+        JRadioButton rbInvite = new JRadioButton("Nouveau client");
+        ButtonGroup group = new ButtonGroup();
+        group.add(rbClient);
+        group.add(rbInvite);
+        choixPanel.add(rbClient);
+        choixPanel.add(rbInvite);
+        formPanel.add(choixPanel);
+
+        // === PANEL POUR ID CLIENT ===
+        JPanel idPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        JLabel idLabel = new JLabel("Identifiant client :");
+        JTextField idClientField = new JTextField(10);
+        idPanel.add(idLabel);
+        idPanel.add(idClientField);
+        formPanel.add(idPanel);
+        idPanel.setVisible(false); // caché par défaut
+
+        // === CHAMP POUR INFOS CLIENT ===
+        JPanel champPanel = new JPanel(new GridLayout(3, 2, 10, 10));
 
         JLabel nomLabel = new JLabel("Nom :");
         JTextField nomField = new JTextField();
@@ -74,12 +94,25 @@ public class pageReservation extends JFrame {
 
         champPanel.add(nomLabel);
         champPanel.add(nomField);
-
         champPanel.add(prenomLabel);
         champPanel.add(prenomField);
-
         champPanel.add(mailLabel);
         champPanel.add(mailField);
+
+        champPanel.setVisible(false); // par défaut masqué (sera visible si "invité" sélectionné)
+
+        // Quand on choisit "Client avec un compte"
+        rbClient.addActionListener(e -> {
+            idPanel.setVisible(true);
+            champPanel.setVisible(false);
+        });
+
+        // Quand on choisit "Nouveau client"
+        rbInvite.addActionListener(e -> {
+            idPanel.setVisible(false);
+            champPanel.setVisible(true);
+        });
+
 
         // Nombre de personnes avec boutons + / -
         JLabel nbPersonneLabel = new JLabel("Nombre de personnes :");
@@ -124,11 +157,49 @@ public class pageReservation extends JFrame {
 
         // === ACTION DE VALIDATION ===
         reserverButton.addActionListener(e -> {
-            String nom = nomField.getText().trim();
-            String prenom = prenomField.getText().trim();
-            String mail = mailField.getText().trim();
-            int nbPersonnes;
+            int idClient = 0;
+            String nom = "";
+            String prenom = "";
+            String mail = "";
 
+            DaoFactory daoFactory = DaoFactory.getInstance("java_attraction", "root", "");
+            ClientDao clientDao = new ClientDao(daoFactory);
+
+            if (rbClient.isSelected()) {
+                try {
+                    idClient = Integer.parseInt(idClientField.getText());
+                    Client client = clientDao.getById(idClient);
+
+                    if (client == null) {
+                        JOptionPane.showMessageDialog(this, "Client introuvable.");
+                        return;
+                    }
+
+                    nom = client.getNom();
+                    prenom = client.getPrenom();
+                    mail = client.getEmail();
+
+                } catch (NumberFormatException ex) {
+                    JOptionPane.showMessageDialog(this, "ID client invalide.");
+                    return;
+                }
+            } else if (rbInvite.isSelected()) {
+                nom = nomField.getText().trim();
+                prenom = prenomField.getText().trim();
+                mail = mailField.getText().trim();
+
+                if (nom.isEmpty() || prenom.isEmpty() || mail.isEmpty()) {
+                    JOptionPane.showMessageDialog(this, "Veuillez remplir tous les champs.");
+                    return;
+                }
+
+                idClient = 0;
+            } else {
+                JOptionPane.showMessageDialog(this, "Veuillez sélectionner un type de client.");
+                return;
+            }
+
+            int nbPersonnes;
             try {
                 nbPersonnes = Integer.parseInt(nbPersonneField.getText());
             } catch (NumberFormatException ex) {
@@ -136,31 +207,17 @@ public class pageReservation extends JFrame {
                 return;
             }
 
-            if (nom.isEmpty() || prenom.isEmpty() || mail.isEmpty()) {
-                JOptionPane.showMessageDialog(this, "Veuillez remplir tous les champs.");
-                return;
-            }
-
-            DaoFactory daoFactory = DaoFactory.getInstance("java_attraction", "root", "");
-            AttractionDao attractionDao = new AttractionDao(daoFactory);
-            //Attraction attraction = attractionDao.chercher(reservation.getId_attraction());
-
-            double prix = 0.0;
-            if (attraction != null) {
-                prix = attraction.getPrix();
-            }
-
-            double prixTotal = prix * nbPersonnes;
+            double prixTotal = attraction.getPrix() * nbPersonnes;
 
             Reservation nouvelleReservation = new Reservation(
                     0,
-                    reservation.getId_client(),
+                    idClient,
                     nom,
                     prenom,
                     mail,
-                    reservation.getDate_reservation(),
+                    date,
                     LocalDate.now(),
-                    reservation.getId_attraction(),
+                    attraction.getIdAttraction(),
                     prixTotal,
                     nbPersonnes,
                     0

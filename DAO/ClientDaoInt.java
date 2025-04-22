@@ -11,6 +11,13 @@ public interface ClientDaoInt {
      */
     public ArrayList<Client> getAll();
 
+    public void inscrire(Client client);
 
-    public void ajouter(Client client);
+    public void supprimer(int id_client);
+
+    public Client seConnecter(String email, String mdp);
+
+    public String afficherEmailClient(int idClient);
+
+    public boolean emailExiste(String email);
 }
