@@ -54,13 +54,13 @@ public class pageReservation extends JFrame {
         formPanel.setLayout(new BoxLayout(formPanel, BoxLayout.Y_AXIS));
         formPanel.setBorder(BorderFactory.createEmptyBorder(20, 100, 20, 100));
 
-        JLabel titre = new JLabel("Réserver pour le " + reservation.getDate_reservation());
+        JLabel titre = new JLabel("Réserver l'attraction " + attraction.getNom() + " pour le " + reservation.getDate_reservation());
         titre.setAlignmentX(Component.CENTER_ALIGNMENT);
         titre.setFont(new Font("SansSerif", Font.BOLD, 20));
         formPanel.add(titre);
         formPanel.add(Box.createRigidArea(new Dimension(0, 20)));
 
-// PANEL DE CHAMPS (labels à gauche)
+        // PANEL DE CHAMPS (labels à gauche)
         JPanel champPanel = new JPanel(new GridLayout(4, 2, 10, 10)); // 4 lignes, 2 colonnes
 
         JLabel nomLabel = new JLabel("Nom :");
@@ -81,7 +81,7 @@ public class pageReservation extends JFrame {
         champPanel.add(mailLabel);
         champPanel.add(mailField);
 
-// Nombre de personnes avec boutons + / -
+        // Nombre de personnes avec boutons + / -
         JLabel nbPersonneLabel = new JLabel("Nombre de personnes :");
         JPanel nbPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         JTextField nbPersonneField = new JTextField("1", 2);
@@ -107,7 +107,7 @@ public class pageReservation extends JFrame {
 
         add(formPanel, BorderLayout.CENTER);
 
-// === BOUTONS + et - ===
+        // === BOUTONS + et - ===
         plusBtn.addActionListener(e -> {
             int current = Integer.parseInt(nbPersonneField.getText());
             if (current < 10) {
@@ -122,7 +122,7 @@ public class pageReservation extends JFrame {
             }
         });
 
-// === ACTION DE VALIDATION ===
+        // === ACTION DE VALIDATION ===
         reserverButton.addActionListener(e -> {
             String nom = nomField.getText().trim();
             String prenom = prenomField.getText().trim();
