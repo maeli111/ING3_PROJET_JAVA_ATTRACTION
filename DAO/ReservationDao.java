@@ -2,10 +2,7 @@ package DAO;
 
 import Modele.Reservation;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
@@ -60,4 +57,34 @@ public class ReservationDao {
 
         return listeReservation;
     }
+
+    public void ajouter(Reservation reservation) {
+        try (Connection connexion = daoFactory.getConnection();
+             PreparedStatement ps = connexion.prepareStatement(
+                     "INSERT INTO reservation (id_client, nom, prenom, mail, date_reservation, date_achat, id_attraction, prix_total, nb_personne, est_archivee) " +
+                             "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")) {
+
+            ps.setInt(1, reservation.getId_client());
+            ps.setString(2, reservation.getNom());
+            ps.setString(3, reservation.getPrenom());
+            ps.setString(4, reservation.getMail());
+            ps.setDate(5, java.sql.Date.valueOf(reservation.getDate_reservation()));
+            ps.setDate(6, java.sql.Date.valueOf(reservation.getDate_achat()));
+            ps.setInt(7, reservation.getId_attraction());
+            ps.setDouble(8, reservation.getPrix_total());
+            ps.setInt(9, reservation.getNb_personne());
+            ps.setInt(10, reservation.getEst_archivee());
+
+            ps.executeUpdate();
+
+            ps.close();
+            connexion.close();
+
+            System.out.println("Réservation ajoutée avec succès.");
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.out.println("Erreur lors de l'ajout de la réservation.");
+        }
+    }
+
 }
