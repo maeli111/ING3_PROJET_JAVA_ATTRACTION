@@ -108,7 +108,7 @@ public class Accueil extends JFrame{
         contenu.add(images);
 
 
-        //texte d'informations sur le parc
+        /*//texte d'informations sur le parc
         JLabel description = new JLabel(
                 "<html><div style='text-align: center;'>"
                         + "Bienvenue à <b>Palasi Land</b>, l'univers où la magie des attractions<br>"
@@ -118,7 +118,22 @@ public class Accueil extends JFrame{
                         + "notre parc propose des expériences pour tous les âges, toutes les tailles et toutes les envies !"
                         + "</div></html>",
                 SwingConstants.CENTER
+        );*/
+        //texte d'informations sur le parc
+        JLabel description = new JLabel(
+                "<html><div style='text-align: center;'>"
+                        + "Entrez dans l'univers magique de <b>Palasi Land</b> <br>" +
+                        " là où les légendes anciennes prennent vie et les dieux vous emmènent dans des aventures extraordinaires !<br><br>"
+                        + "Que vous soyez prêt à défier les titans dans des montagnes russes vertigineuses, <br>" +
+                        " plonger dans les profondeurs des océans mystiques ou voyager à travers des terres enchantées. <b><br>" +
+                        "Palasi Land</b> <br>" +
+                        " vous offrera des expériences mythologiques pour tous les courageux aventuriers et aventurières!<br><br>"
+                        + "Venez découvrir les secrets de vos héros préférés, <br>" +
+                        "des créatures mythologiques et des dieux antiques dans un parc où chaque attraction vous plonge dans un conte épique !"
+                        + "</div></html>",
+                SwingConstants.CENTER
         );
+
 
         description.setFont(new Font("Bodoni MT", Font.PLAIN, 18));
         description.setAlignmentX(Component.CENTER_ALIGNMENT);
