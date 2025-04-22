@@ -315,7 +315,6 @@ public class pageReservation extends JFrame {
     private Reservation creerReservationClientExistant(int idClient, int nbPersonnes, Attraction attraction, LocalDate date) {
         DaoFactory daoFactory = DaoFactory.getInstance("java_attraction", "root", "");
         ClientDao clientDao = new ClientDao(daoFactory);
-        UtilisateurDao utilisateurDao = new UtilisateurDao(daoFactory);
         ReservationDao reservationDao = new ReservationDao(daoFactory);
         Client client = clientDao.getById(idClient);
 
@@ -323,17 +322,14 @@ public class pageReservation extends JFrame {
             throw new IllegalArgumentException("Client introuvable avec l'ID: " + idClient);
         }
 
-        int idUtilisateur = client.getId_utilisateur(); // Assure-toi que la méthode existe
-        Utilisateur utilisateur = utilisateurDao.getById(idUtilisateur); // Tu dois avoir cette méthode dans UtilisateurDAO
-
         int idReservationUnique = reservationDao.genererIdReservationUnique(); // appel ici
 
         return new Reservation(
                 idReservationUnique, // id_reservation (auto-généré)
                 idClient,
-                utilisateur.getNom(),
-                utilisateur.getPrenom(),
-                utilisateur.getEmail(),
+                client.getNom(),
+                client.getPrenom(),
+                client.getEmail(),
                 date, // date de réservation choisie
                 LocalDate.now(), // date d'achat = aujourd'hui
                 attraction.getIdAttraction(),

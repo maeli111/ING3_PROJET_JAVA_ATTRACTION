@@ -1,8 +1,7 @@
 //jsp à quoi y sert
 package DAO;
 
-import Modele.Client;
-import Modele.Utilisateur;
+import Modele.*;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -47,32 +46,6 @@ public class UtilisateurDao {
 
         return listeUtilisateur;
     }
-
-    public Utilisateur getById(int id_utilisateur) {
-        Utilisateur utilisateur = null;
-        Connection conn = null;
-        PreparedStatement stmt = null;
-        ResultSet rs = null;
-
-        try {
-            conn = daoFactory.getConnection();
-
-            String sql = "SELECT * FROM utilisateur WHERE id_utilisateur = ?";
-            stmt = conn.prepareStatement(sql);
-            stmt.setInt(1, id_utilisateur);
-
-            rs = stmt.executeQuery();
-
-            if (rs.next()) {
-                String email = rs.getString("email");
-                String nom = rs.getString("nom");
-                String prenom = rs.getString("prenom");
-                String mdp = rs.getString("mdp");
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return utilisateur;
-    }
-
 }
+
+
