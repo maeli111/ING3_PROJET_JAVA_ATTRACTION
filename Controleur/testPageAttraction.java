@@ -48,7 +48,7 @@ public class testPageAttraction {
         AttractionDaoInt attractionDAO = new AttractionDao(daoFactory);
 
         // Récupérer une attraction existante
-        Attraction attraction = attractionDAO.chercher(2);
+        Attraction attraction = attractionDAO.chercher(4);
         LocalDate date = LocalDate.of(2025, 4, 25);
 
         // Afficher dans l'interface

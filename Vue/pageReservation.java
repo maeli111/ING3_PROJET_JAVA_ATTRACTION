@@ -53,6 +53,9 @@ public class pageReservation extends JFrame {
 
 
         // === FORMULAIRE DE RÉSERVATION ===
+        DaoFactory daoFactory = DaoFactory.getInstance("java_attraction", "root", "");
+        AttractionDao attractionDao = new AttractionDao(daoFactory);
+
         JPanel formPanel = new JPanel();
         formPanel.setLayout(new BoxLayout(formPanel, BoxLayout.Y_AXIS));
         formPanel.setBorder(BorderFactory.createEmptyBorder(20, 100, 20, 100));
@@ -120,11 +123,18 @@ public class pageReservation extends JFrame {
 
         plusBtnNouveau.addActionListener(e -> {
             int current = Integer.parseInt(nbPersonneFieldNouveau.getText());
-            if (current < 10) {
+            int placesRestantes = attractionDao.getPlacesDisponibles(date, attraction.getIdAttraction());
+
+            if (current < 10 && current < placesRestantes) {
                 nbPersonneFieldNouveau.setText(String.valueOf(current + 1));
                 updatePrix(prixLabelNouveau, nbPersonneFieldNouveau, attraction);
+            } else if (placesRestantes <= 10) {
+                JOptionPane.showMessageDialog(formPanel,
+                        "Attention : il ne reste que " + placesRestantes + " places disponibles !",
+                        "Places limitées", JOptionPane.WARNING_MESSAGE);
             }
         });
+
 
         moinsBtnNouveau.addActionListener(e -> {
             int current = Integer.parseInt(nbPersonneFieldNouveau.getText());
@@ -178,9 +188,15 @@ public class pageReservation extends JFrame {
 
         plusBtnExistant.addActionListener(e -> {
             int current = Integer.parseInt(nbPersonneFieldExistant.getText());
-            if (current < 10) {
+            int placesRestantes = attractionDao.getPlacesDisponibles(date, attraction.getIdAttraction());
+
+            if (current < 10 && current < placesRestantes) {
                 nbPersonneFieldExistant.setText(String.valueOf(current + 1));
                 updatePrix(prixLabelExistant, nbPersonneFieldExistant, attraction);
+            } else if (placesRestantes <= 10) {
+                JOptionPane.showMessageDialog(formPanel,
+                        "Attention : il ne reste que " + placesRestantes + " places disponibles pour l'attraction " + attraction.getNom()+ " à cette date-ci",
+                        "Places limitées", JOptionPane.WARNING_MESSAGE);
             }
         });
 
@@ -226,7 +242,6 @@ public class pageReservation extends JFrame {
         // === ACTION DU BOUTON DE RÉSERVATION ===
         reserverButton.addActionListener(e -> {
             try {
-                DaoFactory daoFactory = DaoFactory.getInstance("java_attraction", "root", "");
                 ReservationDao reservationDao = new ReservationDao(daoFactory);
 
                 Reservation nouvelleReservation;

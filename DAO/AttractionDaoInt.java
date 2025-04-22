@@ -27,4 +27,5 @@ public interface AttractionDaoInt {
     int afficherNbReservation(int id);
 
     public boolean estDisponible(LocalDate date, int idAttraction);
+    public int getPlacesDisponibles(LocalDate date, int idAttraction);
 }

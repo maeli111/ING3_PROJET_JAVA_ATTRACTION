@@ -474,4 +474,47 @@ public class AttractionDao implements AttractionDaoInt {
         return disponible;
     }
 
+    public int getPlacesDisponibles(LocalDate date, int idAttraction) {
+        int placesDisponibles = 0;
+
+        try (Connection connexion = daoFactory.getConnection()) {
+            // 1. Total réservé
+            PreparedStatement ps = connexion.prepareStatement(
+                    "SELECT SUM(nb_personne) AS total FROM reservation WHERE date_reservation = ? AND id_attraction = ? AND est_archivee = 0"
+            );
+            ps.setDate(1, java.sql.Date.valueOf(date));
+            ps.setInt(2, idAttraction);
+            ResultSet rs = ps.executeQuery();
+
+            int totalReservations = 0;
+            if (rs.next()) {
+                totalReservations = rs.getInt("total");
+            }
+
+            // 2. Capacité max
+            PreparedStatement ps2 = connexion.prepareStatement(
+                    "SELECT capacite FROM attraction WHERE id_attraction = ?"
+            );
+            ps2.setInt(1, idAttraction);
+            ResultSet rs2 = ps2.executeQuery();
+
+            int capacite = 0;
+            if (rs2.next()) {
+                capacite = rs2.getInt("capacite");
+            }
+
+            // 3. Calcul places restantes
+            placesDisponibles = capacite - totalReservations;
+
+            rs.close();
+            rs2.close();
+            ps.close();
+            ps2.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return placesDisponibles;
+    }
+
 }
