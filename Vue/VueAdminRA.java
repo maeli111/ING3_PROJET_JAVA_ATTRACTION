@@ -69,7 +69,7 @@ public class VueAdminRA extends JFrame {
         add(topPanel, BorderLayout.NORTH);
 
         // Table des réductions liées aux attractions
-        String[] columns = {"ID", "Nom", "Pourcentage", "Description"};
+        String[] columns = {"ID", "Nom", "Pourcentage", "Description", "Attractions Concernées"};
         model = new DefaultTableModel(columns, 0) {
             public boolean isCellEditable(int row, int column) {
                 return false;
@@ -125,7 +125,7 @@ public class VueAdminRA extends JFrame {
                     "Sélectionnez les attractions :", listScrollPane
             };
 
-            int res = JOptionPane.showConfirmDialog(null, fields, "Nouvelle réduction liée à des attractions", JOptionPane.OK_CANCEL_OPTION);
+            int res = JOptionPane.showConfirmDialog(null, fields, "Nouvelle réduction qui concerne des attractions", JOptionPane.OK_CANCEL_OPTION);
 
             if (res == JOptionPane.OK_OPTION) {
                 try {
@@ -204,10 +204,10 @@ public class VueAdminRA extends JFrame {
                     "Nom :", nomField,
                     "Pourcentage :", pourcentageField,
                     "Description :", descriptionField,
-                    "Modifier les attractions liées :", listScrollPane
+                    "Modifier les attractions concernées :", listScrollPane
             };
 
-            int res = JOptionPane.showConfirmDialog(null, fields, "Modifier réduction liée à des attractions", JOptionPane.OK_CANCEL_OPTION);
+            int res = JOptionPane.showConfirmDialog(null, fields, "Modifier la réduction liée à des attractions", JOptionPane.OK_CANCEL_OPTION);
             if (res == JOptionPane.OK_OPTION) {
                 try {
                     String newNom = nomField.getText();
@@ -233,7 +233,7 @@ public class VueAdminRA extends JFrame {
                     // Si aucune attraction n'est sélectionnée, on supprime la réduction
                     if (reductionDao.isEmpty(oldId)) {
                         reductionDao.supprimer(oldId);
-                        JOptionPane.showMessageDialog(null, "Réduction supprimée, aucune attraction liée.");
+                        JOptionPane.showMessageDialog(null, "Réduction supprimée, aucune attraction concernée à la réduction.");
                     }
 
                     chargerDonnees();
@@ -255,17 +255,42 @@ public class VueAdminRA extends JFrame {
             int id = (int) model.getValueAt(row, 0);
             int confirm = JOptionPane.showConfirmDialog(null, "Supprimer cette réduction ?", "Confirmer", JOptionPane.YES_NO_OPTION);
             if (confirm == JOptionPane.YES_OPTION) {
-                reductionDao.supprimer(id);
-                chargerDonnees();
+                try {
+                    // Supprimer les associations avec les attractions dans Reduction_Attraction
+                    reductionDao.supprimerLiaisonsAttractions(id);
+
+                    // Supprimer la réduction elle-même
+                    reductionDao.supprimer(id);
+
+                    // Recharger les données
+                    chargerDonnees();
+
+                    JOptionPane.showMessageDialog(null, "Réduction supprimée avec succès.");
+                } catch (Exception ex) {
+                    JOptionPane.showMessageDialog(null, "Erreur lors de la suppression de la réduction.");
+                }
             }
         });
+
     }
 
     private void chargerDonnees() {
         model.setRowCount(0); // Vider le tableau
         ArrayList<Reduction> reductions = reductionDao.getReductionsAvecAttraction();
         for (Reduction r : reductions) {
-            model.addRow(new Object[]{r.getId_reduction(), r.getNom(), r.getPourcentage(), r.getDescription()});
+            // Récupérer les attractions liées à cette réduction
+            ArrayList<Attraction> attractionsLiees = reductionDao.getAttractionsLiees(r.getId_reduction());
+            StringBuilder nomsAttractions = new StringBuilder();
+            for (Attraction a : attractionsLiees) {
+                nomsAttractions.append(a.getNom()).append(", ");
+            }
+            // Enlever la dernière virgule
+            if (nomsAttractions.length() > 0) {
+                nomsAttractions.setLength(nomsAttractions.length() - 2);
+            }
+
+            // Ajouter les informations dans le tableau
+            model.addRow(new Object[]{r.getId_reduction(), r.getNom(), r.getPourcentage(), r.getDescription(), nomsAttractions.toString()});
         }
     }
 
