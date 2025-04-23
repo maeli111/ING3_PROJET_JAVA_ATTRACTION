@@ -65,6 +65,15 @@ public class VueAdmin extends JFrame {
         attractionsButton.setForeground(Color.BLUE);
         attractionsButton.setFont(attractionsButton.getFont().deriveFont(Font.ITALIC));
 
+        attractionsButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                dispose(); // Ferme la fenêtre Login
+                VueAdminAttraction VueAdminAttraction = new VueAdminAttraction(admin);
+                VueAdminAttraction.setVisible(true);
+            }
+        });
+
         JButton reductionsButton = new JButton("Réductions");
         reductionsButton.setFocusPainted(false);
         reductionsButton.setBorderPainted(false);

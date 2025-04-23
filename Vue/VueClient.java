@@ -75,12 +75,4 @@ public class VueClient extends JFrame {
         add(topPanel, BorderLayout.NORTH);
         add(mainPanel, BorderLayout.CENTER);
     }
-
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            Client c1 = new Client();
-            VueClient client = new VueClient(c1);
-            client.setVisible(true);
-        });
-    }
 }

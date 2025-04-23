@@ -23,4 +23,11 @@ public class Attraction {
     public double getPrix(){return prix;}
     public int getCapacite(){return capacite;}
     public String getType_attraction(){return type_attraction;}
+
+    public void setNom(String nom){this.nom = nom;}
+    public void setDescription(String description){this.description = description;}
+    public void setPrix(Double prix){this.prix = prix;}
+    public void setCapacite(int capacite){this.capacite = capacite;}
+    public void setType_attraction(String typeAttraction){this.type_attraction = typeAttraction;}
+
 }
