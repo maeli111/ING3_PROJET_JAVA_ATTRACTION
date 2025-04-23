@@ -15,6 +15,7 @@ public class ReductionDao {
 
     /**
      * Récupérer de la base de données tous les objets des Reductions dans une liste
+     *
      * @return : liste retournée des objets des Reductions récupérés
      */
     public ArrayList<Reduction> getAll() {
@@ -146,7 +147,4 @@ public class ReductionDao {
             e.printStackTrace();
         }
     }
-
-
-
 }
