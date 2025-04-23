@@ -3,6 +3,7 @@ package Vue;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.*;
+import java.awt.event.*;
 import java.io.File;
 import javax.imageio.ImageIO;
 
@@ -22,7 +23,6 @@ public class Accueil extends JFrame{
         setSize(1250,680);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new BorderLayout());
-
 
         //couleur pour savoir la page selectionnee
         accueil.setBackground(new Color(255,182,193));
@@ -101,24 +101,10 @@ public class Accueil extends JFrame{
             System.out.println("Erreur image 3 : " + e.getMessage());
         }
 
-
         contenu.add(images);
-
         //add(images, BorderLayout.CENTER);
-        contenu.add(images);
 
 
-        /*//texte d'informations sur le parc
-        JLabel description = new JLabel(
-                "<html><div style='text-align: center;'>"
-                        + "Bienvenue à <b>Palasi Land</b>, l'univers où la magie des attractions<br>"
-                        + "rencontre les rêves de toute la famille !<br><br>"
-                        + "Que vous soyez amateur de sensations fortes, à la recherche d’un moment<br>"
-                        + "de détente ou prêt à embarquer dans des aventures aquatiques rafraîchissantes,<br>"
-                        + "notre parc propose des expériences pour tous les âges, toutes les tailles et toutes les envies !"
-                        + "</div></html>",
-                SwingConstants.CENTER
-        );*/
         //texte d'informations sur le parc
         JLabel description = new JLabel(
                 "<html><div style='text-align: center;'>"
