@@ -339,7 +339,6 @@ public class testReduc extends JFrame {
         });
 
         // Actions +/- nombre enfants pack famille nombreuse
-
         plusBtnEnfantsFamNb.addActionListener(e -> {
             int current = Integer.parseInt(nbEnfantsFamNbField.getText());
             if (current < 8) {
@@ -408,8 +407,6 @@ public class testReduc extends JFrame {
 
 
 
-
-
         // === BOUTON DE RÉSERVATION ===
         JButton reserverButton = new JButton("Valider la réservation");
         reserverButton.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -438,47 +435,48 @@ public class testReduc extends JFrame {
                     throw new IllegalArgumentException("Il ne reste que " + placesRestantes + " places disponibles");
                 }
 
-                // Calcul du prix (tarif différent pour adultes/enfants)
+                // Calcul du prix brut
                 double prix = attraction.getPrix();
                 double prixTotal = nbAdultes * prix +
                         nbEnfants * prix * 0.7 +
                         nbEtudiants * prix * 0.8 +
                         nbSeniors * prix * 0.6;
 
-                // Création de la réservation
-                Reservation nouvelleReservation = new Reservation(
-                        0, // id_reservation (auto-généré)
-                        idClient,
-                        client.getNom(),
+                // Application de réduction selon les règles
+                ReductionDao reductionDao = new ReductionDao(daoFactory);
+                int nbResa = reductionDao.NbResaClient(idClient);
+
+                int pourcentageReduction = 0;
+                String typeReduction = "";
+
+                if (nbResa == 0) {
+                    pourcentageReduction = reductionDao.getPourcentagePremiereVisite(idClient);
+                    typeReduction = "Première visite";
+                } else if (nbResa >= 10) {
+                    pourcentageReduction = reductionDao.getPourcentageFidelite(idClient);
+                    typeReduction = "Fidélité";
+                }
+
+                double montantReduction = (prixTotal * pourcentageReduction) / 100;
+                double prixFinal = prixTotal - montantReduction;
+
+                // Affichage du message de simulation
+                String message = String.format(
+                        "Simulation de réservation :\n" +
+                                "Client : %s %s\n" +
+                                "Participants : %d (Adultes: %d, Enfants: %d, Étudiants: %d, Seniors: %d)\n" +
+                                "Prix total : %.2f €\n%s",
                         client.getPrenom(),
-                        client.getEmail(),
-                        date,
-                        LocalDate.now(),
-                        attraction.getIdAttraction(),
-                        prixTotal,
+                        client.getNom(),
                         totalPersonnes,
-                        0
+                        nbAdultes, nbEnfants, nbEtudiants, nbSeniors,
+                        prixFinal,
+                        pourcentageReduction > 0 ?
+                                String.format("Réduction \"%s\" appliquée : -%.2f € (%d%%)", typeReduction, montantReduction, pourcentageReduction)
+                                : "Aucune réduction appliquée."
                 );
 
-                // Enregistrement en BDD
-                ReservationDao reservationDao = new ReservationDao(daoFactory);
-                reservationDao.ajouter(nouvelleReservation);
-
-                // Message de confirmation
-                String message = String.format(
-                        "Réservation confirmée !\n" +
-                                "Client: %s %s\n" +
-                                "Adultes: %d | Enfants: %d\n" +
-                                "Prix total: %.2f € (dont %.2f € de réduction enfants)",
-                        client.getPrenom(),
-                        client.getNom(),
-                        nbAdultes,
-                        nbEnfants,
-                        prixTotal,
-                        (nbEnfants * attraction.getPrix() * 0.3));
-
                 JOptionPane.showMessageDialog(this, message);
-                this.dispose();
 
             } catch (NumberFormatException ex) {
                 JOptionPane.showMessageDialog(this,
@@ -490,7 +488,7 @@ public class testReduc extends JFrame {
                         "Erreur", JOptionPane.ERROR_MESSAGE);
             } catch (Exception ex) {
                 JOptionPane.showMessageDialog(this,
-                        "Erreur lors de la réservation: " + ex.getMessage(),
+                        "Erreur lors de la simulation: " + ex.getMessage(),
                         "Erreur", JOptionPane.ERROR_MESSAGE);
                 ex.printStackTrace();
             }

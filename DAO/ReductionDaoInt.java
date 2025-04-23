@@ -2,6 +2,7 @@ package DAO;
 
 import Modele.Reduction;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 public interface ReductionDaoInt {
@@ -13,4 +14,5 @@ public interface ReductionDaoInt {
     public void modifier(int ancienId, Reduction reduction);
     public void supprimer(int idReduction);
     public double getPourcentageById(int idReduction);
+    public int NbResaClient(int idClient) throws SQLException;
 }

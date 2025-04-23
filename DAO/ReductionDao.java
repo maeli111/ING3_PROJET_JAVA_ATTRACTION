@@ -164,4 +164,17 @@ public class ReductionDao {
 
         return pourcentage;
     }
+
+    public int NbResaClient(int idClient) throws SQLException {
+        String query = "SELECT COUNT(DISTINCT id_reservation) FROM reservation WHERE id_client = ?";
+        try (Connection conn = daoFactory.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+            stmt.setInt(1, idClient);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+            return 0;
+        }
+    }
 }
