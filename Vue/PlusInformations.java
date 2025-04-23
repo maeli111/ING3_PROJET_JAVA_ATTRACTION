@@ -2,6 +2,8 @@ package Vue;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.image.*;
 import java.io.File;
 import javax.imageio.ImageIO;
@@ -84,14 +86,22 @@ public class PlusInformations extends JFrame {
         infos.setBorder(BorderFactory.createEmptyBorder(20, 0, 20, 0));
         contenu.add(infos);
 
-        // Ajout du contenu avec scroll
+        // actions sur les boutons
+        accueil.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Accueil accueil1 = new Accueil();
+                accueil1.setVisible(true);
+                dispose();
+            }
+        });
+
+        // contenu avec scroll
         JScrollPane scrollPane = new JScrollPane(contenu);
-        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
-        scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        scrollPane.setBorder(null);
         add(scrollPane, BorderLayout.CENTER);
 
         // Pour tester
         setVisible(true);
     }
-
 }

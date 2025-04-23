@@ -69,7 +69,7 @@ public class Accueil extends JFrame{
 
         //images
         //image de gauche
-        JPanel images = new JPanel(new GridLayout(1, 3, 20, 0)); // 1 ligne, 3 colonnes, avec espace horizontal entre les images
+        JPanel images = new JPanel(new GridLayout(1, 3, 20, 0));
 
         try {
             BufferedImage image1 = ImageIO.read(new File("C:\\wamp64\\www\\ING3_PROJET_JAVA_ATTRACTION\\Vue\\carroussel1.jpg"));
@@ -102,7 +102,6 @@ public class Accueil extends JFrame{
         }
 
         contenu.add(images);
-        //add(images, BorderLayout.CENTER);
 
 
         //texte d'informations sur le parc
@@ -133,6 +132,26 @@ public class Accueil extends JFrame{
         contenu.add(Box.createRigidArea(new Dimension(0, 20))); // espace
         contenu.add(infos);
         contenu.add(Box.createRigidArea(new Dimension(0, 20))); // espace bas
+
+        // action pour le bouton "Plus d'informations"
+        infos.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                new PlusInformations();
+                dispose(); // pour fermer la fenêtre actuelle si tu veux
+            }
+        });
+
+
+        // action pour le bouton "Informations" dans la barre de navigation
+        informations.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                new PlusInformations();
+                dispose(); // optionnel
+            }
+        });
+
 
         // ScrollPane
         JScrollPane scrollPane = new JScrollPane(contenu);
