@@ -75,11 +75,30 @@ public class VueAdmin extends JFrame {
         reductionsButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                dispose(); // Ferme la fenêtre Login
-                VueAdminReduction VueAdminReduction = new VueAdminReduction(admin);
-                VueAdminReduction.setVisible(true);
+                String[] options = {"Réductions clients", "Réductions attractions"};
+                int choix = JOptionPane.showOptionDialog(
+                        null,
+                        "Souhaitez-vous modifier les réductions pour les clients ou les attractions ?",
+                        "Choix du type de réductions",
+                        JOptionPane.DEFAULT_OPTION,
+                        JOptionPane.QUESTION_MESSAGE,
+                        null,
+                        options,
+                        options[0]
+                );
+
+                dispose(); // Ferme la fenêtre actuelle
+
+                if (choix == 0) { // Réductions clients
+                    VueAdminRC vueClient = new VueAdminRC(admin);
+                    vueClient.setVisible(true);
+                } else if (choix == 1) { // Réductions attractions
+                    VueAdminRA vueAttraction = new VueAdminRA(admin);
+                    vueAttraction.setVisible(true);
+                }
             }
         });
+
 
         JButton dossiersClientsButton = new JButton("Dossiers clients");
         dossiersClientsButton.setFocusPainted(false);

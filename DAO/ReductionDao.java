@@ -147,4 +147,61 @@ public class ReductionDao {
             e.printStackTrace();
         }
     }
+
+    public ArrayList<Reduction> getReductionsSansAttraction() {
+        ArrayList<Reduction> liste = new ArrayList<>();
+
+        String sql = "SELECT * FROM Reduction WHERE id_reduction NOT IN (SELECT id_reduction FROM Reduction_Attraction)";
+
+        try (Connection connection = daoFactory.getConnection();
+             PreparedStatement ps = connection.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+
+            while (rs.next()) {
+                int id = rs.getInt("id_reduction");
+                String nom = rs.getString("nom");
+                int pourcentage = rs.getInt("pourcentage");
+                String description = rs.getString("description");
+
+                liste.add(new Reduction(id, nom, pourcentage, description));
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.out.println("Erreur lors de la récupération des réductions sans attraction.");
+        }
+
+        return liste;
+    }
+
+    public ArrayList<Reduction> getReductionsAvecAttraction() {
+        ArrayList<Reduction> liste = new ArrayList<>();
+
+        String sql = "SELECT DISTINCT r.* " +
+                "FROM Reduction r " +
+                "JOIN Reduction_Attraction ra ON r.id_reduction = ra.id_reduction";
+
+        try (Connection connection = daoFactory.getConnection();
+             PreparedStatement ps = connection.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+
+            while (rs.next()) {
+                int id = rs.getInt("id_reduction");
+                String nom = rs.getString("nom");
+                int pourcentage = rs.getInt("pourcentage");
+                String description = rs.getString("description");
+
+                liste.add(new Reduction(id, nom, pourcentage, description));
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.out.println("Erreur lors de la récupération des réductions liées aux attractions.");
+        }
+
+        return liste;
+    }
+
+
+
 }

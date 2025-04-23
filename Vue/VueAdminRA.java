@@ -8,17 +8,16 @@ import Modele.Admin;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
-import java.awt.event.*;
 import java.util.List;
 
-public class VueAdminReduction extends JFrame {
+public class VueAdminRA extends JFrame {
 
     private DefaultTableModel model;
     private JTable table;
     private ReductionDao reductionDao;
 
-    public VueAdminReduction(Admin admin) {
-        setTitle("Réductions - Admin");
+    public VueAdminRA(Admin admin) {
+        setTitle("Réductions liées aux attractions - Admin");
         setSize(900, 500);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -30,7 +29,7 @@ public class VueAdminReduction extends JFrame {
         // --- TOP PANEL ---
         JPanel topPanel = new JPanel(new BorderLayout());
 
-// --- BARRE DE BOUTONS (ligne du haut) ---
+        // --- BARRE DE BOUTONS (ligne du haut) ---
         JPanel buttonBar = new JPanel(new BorderLayout());
 
         JPanel leftPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
@@ -45,7 +44,7 @@ public class VueAdminReduction extends JFrame {
         JButton compteButton = new JButton("Compte");
         rightPanel.add(compteButton);
 
-// Action du bouton Compte
+        // Action du bouton Compte
         compteButton.addActionListener(e -> {
             dispose();
             VueAdmin vueAdmin = new VueAdmin(admin);
@@ -55,21 +54,19 @@ public class VueAdminReduction extends JFrame {
         buttonBar.add(leftPanel, BorderLayout.WEST);
         buttonBar.add(rightPanel, BorderLayout.EAST);
 
-// --- TITRE (ligne en dessous, centré sur toute la largeur) ---
+        // --- TITRE (ligne en dessous, centré sur toute la largeur) ---
         JPanel titrePanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
         JLabel titreLabel = new JLabel("PalasiLand");
         titreLabel.setFont(new Font("Serif", Font.BOLD, 28));
         titrePanel.add(titreLabel);
 
-// On met les deux dans topPanel
+        // On met les deux dans topPanel
         topPanel.add(buttonBar, BorderLayout.NORTH);
         topPanel.add(titrePanel, BorderLayout.CENTER);
 
         add(topPanel, BorderLayout.NORTH);
 
-
-
-        // Table des réductions
+        // Table des réductions liées aux attractions
         String[] columns = {"ID", "Nom", "Pourcentage", "Description"};
         model = new DefaultTableModel(columns, 0) {
             public boolean isCellEditable(int row, int column) {
@@ -184,7 +181,7 @@ public class VueAdminReduction extends JFrame {
 
     private void chargerDonnees() {
         model.setRowCount(0); // Vider le tableau
-        List<Reduction> reductions = reductionDao.getAll();
+        List<Reduction> reductions = reductionDao.getReductionsAvecAttraction();
         for (Reduction r : reductions) {
             model.addRow(new Object[]{r.getId_reduction(), r.getNom(), r.getPourcentage(), r.getDescription()});
         }
