@@ -299,6 +299,24 @@ public class ReductionDao {
         }
     }
 
+    public boolean isEmpty(int id_reduction) {
+        // Requête pour vérifier si des attractions sont liées à cette réduction
+        String query = "SELECT COUNT(*) FROM Reduction_Attraction WHERE id_reduction = ?";
+
+        try (Connection conn = daoFactory.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+            stmt.setInt(1, id_reduction);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1) == 0;  // Si aucune attraction n'est liée, retourne true
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return true;  // Par défaut, retourne true si une erreur se produit
+    }
+
+
 
 
 

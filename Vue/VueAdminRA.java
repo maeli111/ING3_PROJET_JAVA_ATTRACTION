@@ -219,11 +219,21 @@ public class VueAdminRA extends JFrame {
 
                     // Mise à jour des liaisons
                     reductionDao.supprimerLiaisonsAttractions(oldId); // supprime les anciennes liaisons
+
+                    // Liste des attractions sélectionnées
+                    ArrayList<Attraction> selectedAttractions = new ArrayList<>();
                     for (JCheckBox cb : checkBoxes) {
                         if (cb.isSelected()) {
                             Attraction attraction = (Attraction) cb.getClientProperty("attraction");
+                            selectedAttractions.add(attraction);
                             reductionDao.lierReductionAttraction(oldId, attraction.getId_attraction()); // lie l'attraction
                         }
+                    }
+
+                    // Si aucune attraction n'est sélectionnée, on supprime la réduction
+                    if (reductionDao.isEmpty(oldId)) {
+                        reductionDao.supprimer(oldId);
+                        JOptionPane.showMessageDialog(null, "Réduction supprimée, aucune attraction liée.");
                     }
 
                     chargerDonnees();
@@ -232,7 +242,6 @@ public class VueAdminRA extends JFrame {
                 }
             }
         });
-
 
 
         // Action Supprimer
