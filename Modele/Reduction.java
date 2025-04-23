@@ -23,5 +23,6 @@ public class Reduction {
     public String getNom(){return nom;}
     public int getPourcentage(){return pourcentage;}
     public String getDescription(){return description;}
+    public void setId_reduction(int id_reduction){this.id_reduction = id_reduction;}
 
 }

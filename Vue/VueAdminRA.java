@@ -168,32 +168,63 @@ public class VueAdminRA extends JFrame {
             String pourcentage = model.getValueAt(row, 2).toString();
             String description = (String) model.getValueAt(row, 3);
 
-            JTextField idField = new JTextField(String.valueOf(oldId));
             JTextField nomField = new JTextField(nom);
             JTextField pourcentageField = new JTextField(pourcentage);
             JTextField descriptionField = new JTextField(description);
 
+            // Attractions disponibles
+            ArrayList<Attraction> allAttractions = attractionDao.getAll();
+            ArrayList<Attraction> currentAttractions = reductionDao.getAttractionsByReductionId(oldId); // tu dois avoir cette méthode
+
+            JPanel attractionCheckboxPanel = new JPanel();
+            attractionCheckboxPanel.setLayout(new BoxLayout(attractionCheckboxPanel, BoxLayout.Y_AXIS));
+
+            ArrayList<JCheckBox> checkBoxes = new ArrayList<>();
+            for (Attraction attraction : allAttractions) {
+                JCheckBox cb = new JCheckBox(attraction.getNom());
+                cb.putClientProperty("attraction", attraction);
+                if (currentAttractions.contains(attraction)) cb.setSelected(true);
+                checkBoxes.add(cb);
+                attractionCheckboxPanel.add(cb);
+            }
+
+            JScrollPane listScrollPane = new JScrollPane(attractionCheckboxPanel);
+            listScrollPane.setPreferredSize(new Dimension(300, 150));
+
             Object[] fields = {
-                    "ID :", idField,
                     "Nom :", nomField,
                     "Pourcentage :", pourcentageField,
-                    "Description :", descriptionField
+                    "Description :", descriptionField,
+                    "Modifier les attractions liées :", listScrollPane
             };
 
-            int res = JOptionPane.showConfirmDialog(null, fields, "Modifier réduction", JOptionPane.OK_CANCEL_OPTION);
+            int res = JOptionPane.showConfirmDialog(null, fields, "Modifier réduction liée à des attractions", JOptionPane.OK_CANCEL_OPTION);
             if (res == JOptionPane.OK_OPTION) {
                 try {
-                    int newId = Integer.parseInt(idField.getText());
                     String newNom = nomField.getText();
                     int newPourcentage = Integer.parseInt(pourcentageField.getText());
                     String newDesc = descriptionField.getText();
-                    reductionDao.modifier(oldId, new Reduction(newId, newNom, newPourcentage, newDesc));
+
+                    // Mise à jour de la réduction
+                    reductionDao.modifier(oldId, new Reduction(oldId, newNom, newPourcentage, newDesc));
+
+                    // Mise à jour des liaisons
+                    reductionDao.supprimerLiaisonsAttractions(oldId); // à écrire si tu ne l’as pas
+                    for (JCheckBox cb : checkBoxes) {
+                        if (cb.isSelected()) {
+                            Attraction attraction = (Attraction) cb.getClientProperty("attraction");
+                            reductionDao.lierReductionAttraction(oldId, attraction.getId_attraction());
+                        }
+                    }
+
                     chargerDonnees();
                 } catch (Exception ex) {
                     JOptionPane.showMessageDialog(null, "Erreur : données invalides");
                 }
             }
         });
+
+
 
         // Action Supprimer
         supprimer.addActionListener(e -> {

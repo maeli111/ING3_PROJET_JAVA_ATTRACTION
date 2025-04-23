@@ -1,6 +1,6 @@
 package DAO;
 
-import Modele.Reduction;
+import Modele.*;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -105,19 +105,28 @@ public class ReductionDao {
     }
 
     public void ajouter(Reduction reduction) {
-        String sql = "INSERT INTO reduction (nom, pourcentage, description) VALUES (?, ?, ?)";
+        String query = "INSERT INTO Reduction (nom, pourcentage, description) VALUES (?, ?, ?)";
         try (Connection conn = daoFactory.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
+             PreparedStatement stmt = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
 
             stmt.setString(1, reduction.getNom());
-            stmt.setDouble(2, reduction.getPourcentage());
+            stmt.setInt(2, reduction.getPourcentage());
             stmt.setString(3, reduction.getDescription());
 
             stmt.executeUpdate();
+
+            // Récupérer l'ID généré
+            ResultSet rs = stmt.getGeneratedKeys();
+            if (rs.next()) {
+                int idGenere = rs.getInt(1);
+                reduction.setId_reduction(idGenere); // Mets à jour ton objet avec le bon ID
+            }
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
+
 
     public void modifier(int ancienId, Reduction reduction) {
         String sql = "UPDATE reduction SET id_reduction = ?,nom = ?, pourcentage = ?, description = ? WHERE id_reduction = ?";
@@ -202,19 +211,67 @@ public class ReductionDao {
         return liste;
     }
 
-    // Dans ReductionDao
-    public void lierReductionAttraction(int idReduction, int idAttraction) {
-        String sql = "INSERT INTO Reduction_Attraction (id_reduction, id_attraction) VALUES (?, ?)";
+    public void supprimerLiaisonsAttractions(int idReduction) {
+        String sql = "DELETE FROM Reduction_Attraction WHERE id_reduction = ?";
+
         try (Connection conn = daoFactory.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setInt(1, idReduction);
+            stmt.executeUpdate();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    public ArrayList<Attraction> getAttractionsByReductionId(int idReduction) {
+        ArrayList<Attraction> attractions = new ArrayList<>();
+        String sql = "SELECT a.* FROM Attraction a " +
+                "JOIN Reduction_Attraction ra ON a.id_attraction = ra.id_attraction " +
+                "WHERE ra.id_reduction = ?";
+
+        try (Connection conn = daoFactory.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setInt(1, idReduction);
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    Attraction attraction = new Attraction(
+                            rs.getInt("id_attraction"),
+                            rs.getString("nom"),
+                            rs.getString("description"),
+                            rs.getDouble("prix"),
+                            rs.getInt("capacite"),
+                            rs.getString("type_attraction")
+                    );
+                    attractions.add(attraction);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return attractions;
+    }
+
+    public void lierReductionAttraction(int idReduction, int idAttraction) {
+        String sql = "INSERT INTO Reduction_Attraction (id_reduction, id_attraction) VALUES (?, ?)";
+
+        try (Connection conn = daoFactory.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
             stmt.setInt(1, idReduction);
             stmt.setInt(2, idAttraction);
             stmt.executeUpdate();
+
         } catch (SQLException e) {
             e.printStackTrace();
-            System.out.println("Erreur lors de la liaison de la réduction à une attraction.");
         }
     }
+
+
 
 
 
