@@ -202,6 +202,21 @@ public class ReductionDao {
         return liste;
     }
 
+    // Dans ReductionDao
+    public void lierReductionAttraction(int idReduction, int idAttraction) {
+        String sql = "INSERT INTO Reduction_Attraction (id_reduction, id_attraction) VALUES (?, ?)";
+        try (Connection conn = daoFactory.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, idReduction);
+            stmt.setInt(2, idAttraction);
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.out.println("Erreur lors de la liaison de la réduction à une attraction.");
+        }
+    }
+
+
 
 
 }

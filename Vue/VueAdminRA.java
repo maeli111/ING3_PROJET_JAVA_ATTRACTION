@@ -1,20 +1,21 @@
 package Vue;
 
+import DAO.AttractionDao;
 import DAO.ReductionDao;
 import DAO.DaoFactory;
-import Modele.Reduction;
-import Modele.Admin;
+import Modele.*;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
-import java.util.List;
+import java.util.*;
 
 public class VueAdminRA extends JFrame {
 
     private DefaultTableModel model;
     private JTable table;
     private ReductionDao reductionDao;
+    private AttractionDao attractionDao;
 
     public VueAdminRA(Admin admin) {
         setTitle("Réductions liées aux attractions - Admin");
@@ -25,6 +26,7 @@ public class VueAdminRA extends JFrame {
 
         DaoFactory daoFactory = DaoFactory.getInstance("java_attraction", "root", "");
         reductionDao = new ReductionDao(daoFactory);
+        attractionDao = new AttractionDao(daoFactory);
 
         // --- TOP PANEL ---
         JPanel topPanel = new JPanel(new BorderLayout());
@@ -95,32 +97,63 @@ public class VueAdminRA extends JFrame {
         // Charger données
         chargerDonnees();
 
-        // Action Ajouter
         ajouter.addActionListener(e -> {
-            JTextField idField = new JTextField();
             JTextField nomField = new JTextField();
             JTextField pourcentageField = new JTextField();
             JTextField descriptionField = new JTextField();
+
+            // Récupérer la liste des attractions disponibles
+            ArrayList<Attraction> attractions = attractionDao.getAll();
+            JPanel attractionCheckboxPanel = new JPanel();
+            attractionCheckboxPanel.setLayout(new BoxLayout(attractionCheckboxPanel, BoxLayout.Y_AXIS));
+
+            ArrayList<JCheckBox> checkBoxes = new ArrayList<>();
+            for (Attraction attraction : attractions) {
+                JCheckBox cb = new JCheckBox(attraction.getNom());
+                cb.putClientProperty("attraction", attraction);
+                checkBoxes.add(cb);
+                attractionCheckboxPanel.add(cb);
+            }
+
+            JScrollPane listScrollPane = new JScrollPane(attractionCheckboxPanel);
+            listScrollPane.setPreferredSize(new Dimension(300, 150));
+
             Object[] fields = {
-                    "ID :", idField,
                     "Nom :", nomField,
                     "Pourcentage :", pourcentageField,
-                    "Description :", descriptionField
+                    "Description :", descriptionField,
+                    "Sélectionnez les attractions :", listScrollPane
             };
-            int res = JOptionPane.showConfirmDialog(null, fields, "Nouvelle réduction", JOptionPane.OK_CANCEL_OPTION);
+
+            int res = JOptionPane.showConfirmDialog(null, fields, "Nouvelle réduction liée à des attractions", JOptionPane.OK_CANCEL_OPTION);
+
             if (res == JOptionPane.OK_OPTION) {
                 try {
-                    int id = Integer.parseInt(idField.getText());
                     String nom = nomField.getText();
                     int pourcentage = Integer.parseInt(pourcentageField.getText());
                     String description = descriptionField.getText();
-                    reductionDao.ajouter(new Reduction(id, nom, pourcentage, description));
+
+                    Reduction reduction = new Reduction(nom, pourcentage, description);
+                    reductionDao.ajouter(reduction);
+
+                    ArrayList<Attraction> selectedAttractions = new ArrayList<>();
+                    for (JCheckBox cb : checkBoxes) {
+                        if (cb.isSelected()) {
+                            selectedAttractions.add((Attraction) cb.getClientProperty("attraction"));
+                        }
+                    }
+
+                    for (Attraction selectedAttraction : selectedAttractions) {
+                        reductionDao.lierReductionAttraction(reduction.getId_reduction(), selectedAttraction.getId_attraction());
+                    }
+
                     chargerDonnees();
                 } catch (Exception ex) {
                     JOptionPane.showMessageDialog(null, "Erreur : données invalides");
                 }
             }
         });
+
 
         // Action Modifier
         modifier.addActionListener(e -> {
@@ -181,7 +214,7 @@ public class VueAdminRA extends JFrame {
 
     private void chargerDonnees() {
         model.setRowCount(0); // Vider le tableau
-        List<Reduction> reductions = reductionDao.getReductionsAvecAttraction();
+        ArrayList<Reduction> reductions = reductionDao.getReductionsAvecAttraction();
         for (Reduction r : reductions) {
             model.addRow(new Object[]{r.getId_reduction(), r.getNom(), r.getPourcentage(), r.getDescription()});
         }

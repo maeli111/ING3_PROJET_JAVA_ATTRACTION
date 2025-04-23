@@ -99,12 +99,10 @@ public class VueAdminRC extends JFrame {
 
         // Action Ajouter
         ajouter.addActionListener(e -> {
-            JTextField idField = new JTextField();
             JTextField nomField = new JTextField();
             JTextField pourcentageField = new JTextField();
             JTextField descriptionField = new JTextField();
             Object[] fields = {
-                    "ID :", idField,
                     "Nom :", nomField,
                     "Pourcentage :", pourcentageField,
                     "Description :", descriptionField
@@ -112,11 +110,10 @@ public class VueAdminRC extends JFrame {
             int res = JOptionPane.showConfirmDialog(null, fields, "Nouvelle réduction", JOptionPane.OK_CANCEL_OPTION);
             if (res == JOptionPane.OK_OPTION) {
                 try {
-                    int id = Integer.parseInt(idField.getText());
                     String nom = nomField.getText();
                     int pourcentage = Integer.parseInt(pourcentageField.getText());
                     String description = descriptionField.getText();
-                    reductionDao.ajouter(new Reduction(id, nom, pourcentage, description));
+                    reductionDao.ajouter(new Reduction(nom, pourcentage, description));
                     chargerDonnees();
                 } catch (Exception ex) {
                     JOptionPane.showMessageDialog(null, "Erreur : données invalides");
