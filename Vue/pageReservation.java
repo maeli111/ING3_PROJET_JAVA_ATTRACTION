@@ -231,7 +231,12 @@ public class pageReservation extends JFrame {
         rbInvite.addActionListener(e -> {
             formNouveauClient.setVisible(true);
             formClientExistant.setVisible(false);
+
+            JOptionPane.showMessageDialog(this,
+                    "En tant que nouveau client, aucune réduction ne peut être appliquée.\nCréez un compte pour en bénéficier.",
+                    "Information", JOptionPane.INFORMATION_MESSAGE);
         });
+
 
 
         // === BOUTON DE RÉSERVATION ===
