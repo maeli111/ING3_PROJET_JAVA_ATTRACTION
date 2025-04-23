@@ -117,6 +117,19 @@ public class testReduc extends JFrame {
         nbFamNbPanel.add(nbFamNbField);
         nbFamNbPanel.add(plusBtnFamNb);
 
+        // Nommbre d'enfants
+        JPanel nbEnfantsFamNbPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        JLabel nbEnfantsFamNbLabel = new JLabel("Nombre d'enfants (famille nombreuse):");
+        JTextField nbEnfantsFamNbField = new JTextField("3", 2);
+        nbEnfantsFamNbField.setEditable(false);
+        nbEnfantsFamNbField.setHorizontalAlignment(JTextField.CENTER);
+        JButton moinsBtnEnfantsFamNb = new JButton("-");
+        JButton plusBtnEnfantsFamNb = new JButton("+");
+        nbEnfantsFamNbPanel.add(moinsBtnEnfantsFamNb);
+        nbEnfantsFamNbPanel.add(nbEnfantsFamNbField);
+        nbEnfantsFamNbPanel.add(plusBtnEnfantsFamNb);
+
+
 
 
 
@@ -131,15 +144,17 @@ public class testReduc extends JFrame {
             int nbEtudiants = Integer.parseInt(nbEtudiantsField.getText());
             int nbSeniors = Integer.parseInt(nbSeniorsField.getText());
             int nbFam = Integer.parseInt(nbFamField.getText());
-            int nbFamNb = Integer.parseInt(nbFamField.getText());
+            int nbFamNb = Integer.parseInt(nbFamNbField.getText());
+            int nbEnfantsFamNb = Integer.parseInt(nbEnfantsFamNbField.getText());
+            int totalFamNb = nbFamNb * (2 + nbEnfantsFamNb);
 
-            int total = nbAdultes + nbEnfants + nbEtudiants + nbSeniors + 4 * nbFam + 4 * nbFamNb;
+            int total = nbAdultes + nbEnfants + nbEtudiants + nbSeniors + 4 * nbFam + totalFamNb;
 
             int placesRestantes = attractionDao.getPlacesDisponibles(date, attraction.getIdAttraction());
 
             if (total < 10 && total < placesRestantes) {
                 nbAdultesField.setText(String.valueOf(nbAdultes + 1));
-                updatePrixTotal(prixLabel, nbAdultesField, nbEnfantsField, nbEtudiantsField, nbSeniorsField, nbFamField, nbFamNbField, attraction);
+                updatePrixTotal(prixLabel, nbAdultesField, nbEnfantsField, nbEtudiantsField, nbSeniorsField, nbFamField, nbFamNbField, nbEnfantsFamNbField, attraction);
             } else {
                 JOptionPane.showMessageDialog(formPanel,
                         "Vous ne pouvez pas réserver plus de 10 places au total.",
@@ -152,7 +167,7 @@ public class testReduc extends JFrame {
             int current = Integer.parseInt(nbAdultesField.getText());
             if (current > 0) {
                 nbAdultesField.setText(String.valueOf(current - 1));
-                updatePrixTotal(prixLabel, nbAdultesField, nbEnfantsField, nbEtudiantsField, nbSeniorsField, nbFamField, nbFamNbField, attraction);
+                updatePrixTotal(prixLabel, nbAdultesField, nbEnfantsField, nbEtudiantsField, nbSeniorsField, nbFamField, nbFamNbField, nbEnfantsFamNbField, attraction);
             }
         });
 
@@ -163,15 +178,17 @@ public class testReduc extends JFrame {
             int nbEtudiants = Integer.parseInt(nbEtudiantsField.getText());
             int nbSeniors = Integer.parseInt(nbSeniorsField.getText());
             int nbFam = Integer.parseInt(nbFamField.getText());
-            int nbFamNb = Integer.parseInt(nbFamField.getText());
+            int nbFamNb = Integer.parseInt(nbFamNbField.getText());
+            int nbEnfantsFamNb = Integer.parseInt(nbEnfantsFamNbField.getText());
+            int totalFamNb = nbFamNb * (2 + nbEnfantsFamNb);
 
-            int total = nbAdultes + nbEnfants + nbEtudiants + nbSeniors + 4 * nbFam + 4 * nbFamNb;
+            int total = nbAdultes + nbEnfants + nbEtudiants + nbSeniors + 4 * nbFam + totalFamNb;
 
             int placesRestantes = attractionDao.getPlacesDisponibles(date, attraction.getIdAttraction());
 
             if (total < 10 && total < placesRestantes) {
                 nbEnfantsField.setText(String.valueOf(nbEnfants + 1));
-                updatePrixTotal(prixLabel, nbAdultesField, nbEnfantsField, nbEtudiantsField, nbSeniorsField, nbFamField, nbFamNbField, attraction);
+                updatePrixTotal(prixLabel, nbAdultesField, nbEnfantsField, nbEtudiantsField, nbSeniorsField, nbFamField, nbFamNbField, nbEnfantsFamNbField, attraction);
             } else {
                 JOptionPane.showMessageDialog(formPanel,
                         "Vous ne pouvez pas réserver plus de 10 places au total.",
@@ -183,7 +200,7 @@ public class testReduc extends JFrame {
             int current = Integer.parseInt(nbEnfantsField.getText());
             if (current > 0) {
                 nbEnfantsField.setText(String.valueOf(current - 1));
-                updatePrixTotal(prixLabel, nbAdultesField, nbEnfantsField, nbEtudiantsField, nbSeniorsField, nbFamField, nbFamNbField, attraction);
+                updatePrixTotal(prixLabel, nbAdultesField, nbEnfantsField, nbEtudiantsField, nbSeniorsField, nbFamField, nbFamNbField, nbEnfantsFamNbField, attraction);
             }
         });
 
@@ -194,15 +211,17 @@ public class testReduc extends JFrame {
             int nbEtudiants = Integer.parseInt(nbEtudiantsField.getText());
             int nbSeniors = Integer.parseInt(nbSeniorsField.getText());
             int nbFam = Integer.parseInt(nbFamField.getText());
-            int nbFamNb = Integer.parseInt(nbFamField.getText());
+            int nbFamNb = Integer.parseInt(nbFamNbField.getText());
+            int nbEnfantsFamNb = Integer.parseInt(nbEnfantsFamNbField.getText());
+            int totalFamNb = nbFamNb * (2 + nbEnfantsFamNb);
 
-            int total = nbAdultes + nbEnfants + nbEtudiants + nbSeniors + 4 * nbFam + 4 * nbFamNb;
+            int total = nbAdultes + nbEnfants + nbEtudiants + nbSeniors + 4 * nbFam + totalFamNb;
 
             int placesRestantes = attractionDao.getPlacesDisponibles(date, attraction.getIdAttraction());
 
             if (total < 10 && total < placesRestantes) {
                 nbEtudiantsField.setText(String.valueOf(nbEtudiants + 1));
-                updatePrixTotal(prixLabel, nbAdultesField, nbEnfantsField, nbEtudiantsField, nbSeniorsField, nbFamField, nbFamNbField, attraction);
+                updatePrixTotal(prixLabel, nbAdultesField, nbEnfantsField, nbEtudiantsField, nbSeniorsField, nbFamField, nbFamNbField, nbEnfantsFamNbField, attraction);
             } else {
                 JOptionPane.showMessageDialog(formPanel,
                         "Vous ne pouvez pas réserver plus de 10 places au total.",
@@ -214,7 +233,7 @@ public class testReduc extends JFrame {
             int current = Integer.parseInt(nbEtudiantsField.getText());
             if (current > 0) {
                 nbEtudiantsField.setText(String.valueOf(current - 1));
-                updatePrixTotal(prixLabel, nbAdultesField, nbEnfantsField, nbEtudiantsField, nbSeniorsField, nbFamField, nbFamNbField, attraction);
+                updatePrixTotal(prixLabel, nbAdultesField, nbEnfantsField, nbEtudiantsField, nbSeniorsField, nbFamField, nbFamNbField, nbEnfantsFamNbField, attraction);
             }
         });
 
@@ -225,15 +244,17 @@ public class testReduc extends JFrame {
             int nbEtudiants = Integer.parseInt(nbEtudiantsField.getText());
             int nbSeniors = Integer.parseInt(nbSeniorsField.getText());
             int nbFam = Integer.parseInt(nbFamField.getText());
-            int nbFamNb = Integer.parseInt(nbFamField.getText());
+            int nbFamNb = Integer.parseInt(nbFamNbField.getText());
+            int nbEnfantsFamNb = Integer.parseInt(nbEnfantsFamNbField.getText());
+            int totalFamNb = nbFamNb * (2 + nbEnfantsFamNb);
 
-            int total = nbAdultes + nbEnfants + nbEtudiants + nbSeniors + 4 * nbFam + 4 * nbFamNb;
+            int total = nbAdultes + nbEnfants + nbEtudiants + nbSeniors + 4 * nbFam + totalFamNb;
 
             int placesRestantes = attractionDao.getPlacesDisponibles(date, attraction.getIdAttraction());
 
             if (total < 10 && total < placesRestantes) {
                 nbSeniorsField.setText(String.valueOf(nbSeniors + 1));
-                updatePrixTotal(prixLabel, nbAdultesField, nbEnfantsField, nbEtudiantsField, nbSeniorsField, nbFamField, nbFamNbField, attraction);
+                updatePrixTotal(prixLabel, nbAdultesField, nbEnfantsField, nbEtudiantsField, nbSeniorsField, nbFamField, nbFamNbField, nbEnfantsFamNbField, attraction);
             } else {
                 JOptionPane.showMessageDialog(formPanel,
                         "Vous ne pouvez pas réserver plus de 10 places au total.",
@@ -245,7 +266,7 @@ public class testReduc extends JFrame {
             int current = Integer.parseInt(nbSeniorsField.getText());
             if (current > 0) {
                 nbSeniorsField.setText(String.valueOf(current - 1));
-                updatePrixTotal(prixLabel, nbAdultesField, nbEnfantsField, nbEtudiantsField, nbSeniorsField, nbFamField, nbFamNbField, attraction);
+                updatePrixTotal(prixLabel, nbAdultesField, nbEnfantsField, nbEtudiantsField, nbSeniorsField, nbFamField, nbFamNbField, nbEnfantsFamNbField, attraction);
             }
         });
 
@@ -256,15 +277,17 @@ public class testReduc extends JFrame {
             int nbEtudiants = Integer.parseInt(nbEtudiantsField.getText());
             int nbSeniors = Integer.parseInt(nbSeniorsField.getText());
             int nbFam = Integer.parseInt(nbFamField.getText());
-            int nbFamNb = Integer.parseInt(nbFamField.getText());
+            int nbFamNb = Integer.parseInt(nbFamNbField.getText());
+            int nbEnfantsFamNb = Integer.parseInt(nbEnfantsFamNbField.getText());
+            int totalFamNb = nbFamNb * (2 + nbEnfantsFamNb);
 
-            int total = nbAdultes + nbEnfants + nbEtudiants + nbSeniors + 4 * nbFam + 4 * nbFamNb;
+            int total = nbAdultes + nbEnfants + nbEtudiants + nbSeniors + 4 * nbFam + totalFamNb;
 
             int placesRestantes = attractionDao.getPlacesDisponibles(date, attraction.getIdAttraction());
 
             if (total < 10 && total < placesRestantes) {
                 nbFamField.setText(String.valueOf(nbFam + 1));
-                updatePrixTotal(prixLabel, nbAdultesField, nbEnfantsField, nbEtudiantsField, nbSeniorsField, nbFamField, nbFamNbField, attraction);
+                updatePrixTotal(prixLabel, nbAdultesField, nbEnfantsField, nbEtudiantsField, nbSeniorsField, nbFamField, nbFamNbField, nbEnfantsFamNbField, attraction);
             } else {
                 JOptionPane.showMessageDialog(formPanel,
                         "Vous ne pouvez pas réserver plus de 10 places au total.",
@@ -277,7 +300,7 @@ public class testReduc extends JFrame {
 
             if (current > 0) {
                 nbFamField.setText(String.valueOf(current - 1));
-                updatePrixTotal(prixLabel, nbAdultesField, nbEnfantsField, nbEtudiantsField, nbSeniorsField, nbFamField, nbFamNbField, attraction);
+                updatePrixTotal(prixLabel, nbAdultesField, nbEnfantsField, nbEtudiantsField, nbSeniorsField, nbFamField, nbFamNbField, nbEnfantsFamNbField, attraction);
             }
         });
 
@@ -288,15 +311,17 @@ public class testReduc extends JFrame {
             int nbEtudiants = Integer.parseInt(nbEtudiantsField.getText());
             int nbSeniors = Integer.parseInt(nbSeniorsField.getText());
             int nbFam = Integer.parseInt(nbFamField.getText());
-            int nbFamNb = Integer.parseInt(nbFamField.getText());
+            int nbFamNb = Integer.parseInt(nbFamNbField.getText());
+            int nbEnfantsFamNb = Integer.parseInt(nbEnfantsFamNbField.getText());
+            int totalFamNb = nbFamNb * (2 + nbEnfantsFamNb);
 
-            int total = nbAdultes + nbEnfants + nbEtudiants + nbSeniors + 4 * nbFam + 4 * nbFamNb;
+            int total = nbAdultes + nbEnfants + nbEtudiants + nbSeniors + 4 * nbFam + totalFamNb;
 
             int placesRestantes = attractionDao.getPlacesDisponibles(date, attraction.getIdAttraction());
 
             if (total < 10 && total < placesRestantes) {
                 nbFamNbField.setText(String.valueOf(nbFamNb + 1));
-                updatePrixTotal(prixLabel, nbAdultesField, nbEnfantsField, nbEtudiantsField, nbSeniorsField, nbFamField, nbFamNbField, attraction);
+                updatePrixTotal(prixLabel, nbAdultesField, nbEnfantsField, nbEtudiantsField, nbSeniorsField, nbFamField, nbFamNbField, nbEnfantsFamNbField, attraction);
             } else {
                 JOptionPane.showMessageDialog(formPanel,
                         "Vous ne pouvez pas réserver plus de 10 places au total.",
@@ -309,9 +334,31 @@ public class testReduc extends JFrame {
 
             if (current > 0) {
                 nbFamNbField.setText(String.valueOf(current - 1));
-                updatePrixTotal(prixLabel, nbAdultesField, nbEnfantsField, nbEtudiantsField, nbSeniorsField, nbFamField, nbFamNbField, attraction);
+                updatePrixTotal(prixLabel, nbAdultesField, nbEnfantsField, nbEtudiantsField, nbSeniorsField, nbFamField, nbFamNbField, nbEnfantsFamNbField, attraction);
             }
         });
+
+        // Actions +/- nombre enfants pack famille nombreuse
+
+        plusBtnEnfantsFamNb.addActionListener(e -> {
+            int current = Integer.parseInt(nbEnfantsFamNbField.getText());
+            if (current < 8) {
+                nbEnfantsFamNbField.setText(String.valueOf(current + 1));
+                updatePrixTotal(prixLabel, nbAdultesField, nbEnfantsField, nbEtudiantsField, nbSeniorsField, nbFamField, nbFamNbField, nbEnfantsFamNbField, attraction);
+            } else {
+                JOptionPane.showMessageDialog(formPanel, "Maximum 8 enfants par pack famille nombreuse", "Limite atteinte", JOptionPane.WARNING_MESSAGE);
+            }
+        });
+
+        moinsBtnEnfantsFamNb.addActionListener(e -> {
+            int current = Integer.parseInt(nbEnfantsFamNbField.getText());
+            if (current > 3) {
+                nbEnfantsFamNbField.setText(String.valueOf(current - 1));
+                updatePrixTotal(prixLabel, nbAdultesField, nbEnfantsField, nbEtudiantsField, nbSeniorsField, nbFamField, nbFamNbField, nbEnfantsFamNbField, attraction);
+            }
+        });
+
+
 
 
 
@@ -348,6 +395,11 @@ public class testReduc extends JFrame {
         ligneFamNb.add(nbFamNbLabel);
         ligneFamNb.add(nbFamNbPanel);
         formClientExistant.add(ligneFamNb);
+
+        JPanel ligneEnfantsFamNb = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        ligneEnfantsFamNb.add(nbEnfantsFamNbLabel);
+        ligneEnfantsFamNb.add(nbEnfantsFamNbPanel);
+        formClientExistant.add(ligneEnfantsFamNb);
 
         formClientExistant.add(Box.createRigidArea(new Dimension(0, 10)));
         formClientExistant.add(prixLabel);
@@ -449,13 +501,15 @@ public class testReduc extends JFrame {
     }
 
     private void updatePrixTotal(JLabel prixLabel, JTextField nbAdultesField, JTextField nbEnfantsField,
-                                 JTextField nbEtudiantsField, JTextField nbSeniorsField, JTextField nbFamField, JTextField nbFamNbField, Attraction attraction) {
+                                 JTextField nbEtudiantsField, JTextField nbSeniorsField, JTextField nbFamField,
+                                 JTextField nbFamNbField, JTextField nbEnfantsFamNbField, Attraction attraction) {
         int nbAdultes = Integer.parseInt(nbAdultesField.getText());
         int nbEnfants = Integer.parseInt(nbEnfantsField.getText());
         int nbEtudiants = Integer.parseInt(nbEtudiantsField.getText());
         int nbSeniors = Integer.parseInt(nbSeniorsField.getText());
         int nbFam = Integer.parseInt(nbFamField.getText());
         int nbFamNb = Integer.parseInt(nbFamNbField.getText());
+        int nbEnfantsFamNb = Integer.parseInt(nbEnfantsFamNbField.getText());
 
         double prix = attraction.getPrix();
 
@@ -468,19 +522,23 @@ public class testReduc extends JFrame {
         double reducFam = reductionDao.getPourcentageById(2) / 100.0;
         double reducFamNb = reductionDao.getPourcentageById(7) / 100.0;
 
+        // 2 adultes + n enfants pour chaque pack famille nombreuse
+        int totalAdultesFamNb = nbFamNb * 2;
+        int totalEnfantsFamNb = nbFamNb * nbEnfantsFamNb;
+        int totalPersFamNb = totalAdultesFamNb + totalEnfantsFamNb;
 
         double prixTotal = nbAdultes * prix +
                 nbEnfants * prix * (1 - reducEnfant) +
                 nbEtudiants * prix * (1 - reducEtudiant) +
                 nbSeniors * prix * (1 - reducSenior) +
                 4 * nbFam * prix * (1 - reducFam) +
-                4 * nbFamNb * prix * (1 - reducFamNb);
+                totalPersFamNb * nbFamNb * prix * (1 - reducFamNb);
 
-        double totalReduc = nbEnfants * prix * reducEnfant +
+        double totalReduc = nbEnfants  * prix * reducEnfant +
                 nbEtudiants * prix * reducEtudiant +
                 nbSeniors * prix * reducSenior +
                 4 * nbFam * prix * reducFam +
-                4 * nbFamNb * prix * reducFamNb;
+                totalPersFamNb * nbFamNb * prix * reducFamNb;
 
         prixLabel.setText(String.format("Prix total: %.2f € (Réduction totale: %.2f €)", prixTotal, totalReduc));
     }
