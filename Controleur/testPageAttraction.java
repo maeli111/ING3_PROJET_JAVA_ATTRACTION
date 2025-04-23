@@ -3,6 +3,8 @@ package Controleur;
 import DAO.*;
 import Modele.*;
 import Vue.InfoAttraction;
+import Vue.testReduc;
+
 import java.time.LocalDate;
 
 public class testPageAttraction {
@@ -43,12 +45,13 @@ public class testPageAttraction {
 
          */
 
+        /*
         // Connexion à la base
         DaoFactory daoFactory = DaoFactory.getInstance("java_attraction", "root", "");
         AttractionDaoInt attractionDAO = new AttractionDao(daoFactory);
 
         // Récupérer une attraction existante
-        Attraction attraction = attractionDAO.chercher(4);
+        Attraction attraction = attractionDAO.chercher(2);
         LocalDate date = LocalDate.of(2025, 4, 25);
 
         // Afficher dans l'interface
@@ -61,6 +64,28 @@ public class testPageAttraction {
         }
 
         daoFactory.disconnect(); // Fermer proprement
+
+         */
+
+        // Initialisation de la DAO
+        DaoFactory daoFactory = DaoFactory.getInstance("java_attraction", "root", "");
+        AttractionDao attractionDAO = new AttractionDao(daoFactory);
+
+        // Récupération de l'attraction avec l'ID 2
+        Attraction attraction = attractionDAO.chercher(2);
+
+        if (attraction == null) {
+            System.err.println("Attraction avec l'ID 2 introuvable.");
+            return;
+        }
+
+        // Date du jour
+        LocalDate today = LocalDate.now();
+
+        // Lancement de la fenêtre
+        javax.swing.SwingUtilities.invokeLater(() -> {
+            new testReduc(null, attraction, today);
+        });
 
     }
 }

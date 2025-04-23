@@ -172,6 +172,7 @@ public class pageReservation extends JFrame {
 
         // Nombre de personnes (client existant)
         JPanel nbPanelExistant = new JPanel(new FlowLayout(FlowLayout.LEFT));
+
         JLabel nbPersonneLabelExistant = new JLabel("Nombre de personnes :");
         JTextField nbPersonneFieldExistant = new JTextField("1", 2);
         nbPersonneFieldExistant.setEditable(false);
@@ -181,6 +182,7 @@ public class pageReservation extends JFrame {
         nbPanelExistant.add(moinsBtnExistant);
         nbPanelExistant.add(nbPersonneFieldExistant);
         nbPanelExistant.add(plusBtnExistant);
+
 
         // Actions +/-
         JLabel prixLabelExistant = new JLabel("Prix total: " + attraction.getPrix() + " €");
