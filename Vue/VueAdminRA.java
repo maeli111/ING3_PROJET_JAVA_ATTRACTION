@@ -155,7 +155,6 @@ public class VueAdminRA extends JFrame {
         });
 
 
-        // Action Modifier
         modifier.addActionListener(e -> {
             int row = table.getSelectedRow();
             if (row == -1) {
@@ -172,18 +171,28 @@ public class VueAdminRA extends JFrame {
             JTextField pourcentageField = new JTextField(pourcentage);
             JTextField descriptionField = new JTextField(description);
 
-            // Attractions disponibles
-            ArrayList<Attraction> allAttractions = attractionDao.getAll();
-            ArrayList<Attraction> currentAttractions = reductionDao.getAttractionsByReductionId(oldId); // tu dois avoir cette méthode
+            // Attractions liées et non liées
+            ArrayList<Attraction> linkedAttractions = reductionDao.getAttractionsLiees(oldId); // attractions déjà associées
+            ArrayList<Attraction> nonLinkedAttractions = reductionDao.getAttractionsNonLiees(oldId); // attractions non associées
 
             JPanel attractionCheckboxPanel = new JPanel();
             attractionCheckboxPanel.setLayout(new BoxLayout(attractionCheckboxPanel, BoxLayout.Y_AXIS));
 
             ArrayList<JCheckBox> checkBoxes = new ArrayList<>();
-            for (Attraction attraction : allAttractions) {
+
+            // Afficher les attractions déjà liées avec checkbox cochées
+            for (Attraction attraction : linkedAttractions) {
                 JCheckBox cb = new JCheckBox(attraction.getNom());
                 cb.putClientProperty("attraction", attraction);
-                if (currentAttractions.contains(attraction)) cb.setSelected(true);
+                cb.setSelected(true); // Marquer comme liée
+                checkBoxes.add(cb);
+                attractionCheckboxPanel.add(cb);
+            }
+
+            // Afficher les attractions non liées avec checkbox décochées
+            for (Attraction attraction : nonLinkedAttractions) {
+                JCheckBox cb = new JCheckBox(attraction.getNom());
+                cb.putClientProperty("attraction", attraction);
                 checkBoxes.add(cb);
                 attractionCheckboxPanel.add(cb);
             }
@@ -209,11 +218,11 @@ public class VueAdminRA extends JFrame {
                     reductionDao.modifier(oldId, new Reduction(oldId, newNom, newPourcentage, newDesc));
 
                     // Mise à jour des liaisons
-                    reductionDao.supprimerLiaisonsAttractions(oldId); // à écrire si tu ne l’as pas
+                    reductionDao.supprimerLiaisonsAttractions(oldId); // supprime les anciennes liaisons
                     for (JCheckBox cb : checkBoxes) {
                         if (cb.isSelected()) {
                             Attraction attraction = (Attraction) cb.getClientProperty("attraction");
-                            reductionDao.lierReductionAttraction(oldId, attraction.getId_attraction());
+                            reductionDao.lierReductionAttraction(oldId, attraction.getId_attraction()); // lie l'attraction
                         }
                     }
 
@@ -250,4 +259,6 @@ public class VueAdminRA extends JFrame {
             model.addRow(new Object[]{r.getId_reduction(), r.getNom(), r.getPourcentage(), r.getDescription()});
         }
     }
+
+
 }

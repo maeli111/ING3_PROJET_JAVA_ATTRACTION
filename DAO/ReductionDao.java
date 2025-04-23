@@ -226,7 +226,7 @@ public class ReductionDao {
     }
 
 
-    public ArrayList<Attraction> getAttractionsByReductionId(int idReduction) {
+    public ArrayList<Attraction> getAttractionsLiees(int idReduction) {
         ArrayList<Attraction> attractions = new ArrayList<>();
         String sql = "SELECT a.* FROM Attraction a " +
                 "JOIN Reduction_Attraction ra ON a.id_attraction = ra.id_attraction " +
@@ -236,18 +236,17 @@ public class ReductionDao {
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 
             stmt.setInt(1, idReduction);
-            try (ResultSet rs = stmt.executeQuery()) {
-                while (rs.next()) {
-                    Attraction attraction = new Attraction(
-                            rs.getInt("id_attraction"),
-                            rs.getString("nom"),
-                            rs.getString("description"),
-                            rs.getDouble("prix"),
-                            rs.getInt("capacite"),
-                            rs.getString("type_attraction")
-                    );
-                    attractions.add(attraction);
-                }
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                attractions.add(new Attraction(
+                        rs.getInt("id_attraction"),
+                        rs.getString("nom"),
+                        rs.getString("description"),
+                        rs.getDouble("prix"),
+                        rs.getInt("capacite"),
+                        rs.getString("type_attraction")
+                ));
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -255,6 +254,35 @@ public class ReductionDao {
 
         return attractions;
     }
+
+    public ArrayList<Attraction> getAttractionsNonLiees(int idReduction) {
+        ArrayList<Attraction> attractions = new ArrayList<>();
+        String sql = "SELECT * FROM Attraction WHERE id_attraction NOT IN (" +
+                "SELECT id_attraction FROM Reduction_Attraction WHERE id_reduction = ?)";
+
+        try (Connection conn = daoFactory.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setInt(1, idReduction);
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                attractions.add(new Attraction(
+                        rs.getInt("id_attraction"),
+                        rs.getString("nom"),
+                        rs.getString("description"),
+                        rs.getDouble("prix"),
+                        rs.getInt("capacite"),
+                        rs.getString("type_attraction")
+                ));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return attractions;
+    }
+
 
     public void lierReductionAttraction(int idReduction, int idAttraction) {
         String sql = "INSERT INTO Reduction_Attraction (id_reduction, id_attraction) VALUES (?, ?)";
