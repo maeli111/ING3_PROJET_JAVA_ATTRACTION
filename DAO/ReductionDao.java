@@ -146,4 +146,22 @@ public class ReductionDao {
             e.printStackTrace();
         }
     }
+
+    public double getPourcentageById(int idReduction) {
+        double pourcentage = 0.0;
+
+        try (Connection conn = daoFactory.getConnection();
+             PreparedStatement ps = conn.prepareStatement("SELECT pourcentage FROM reduction WHERE id_reduction = ?")) {
+            ps.setInt(1, idReduction);
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                pourcentage = rs.getDouble("pourcentage");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return pourcentage;
+    }
 }

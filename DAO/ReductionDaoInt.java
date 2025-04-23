@@ -12,4 +12,5 @@ public interface ReductionDaoInt {
     public void ajouter(Reduction reduction);
     public void modifier(int ancienId, Reduction reduction);
     public void supprimer(int idReduction);
+    public double getPourcentageById(int idReduction);
 }
