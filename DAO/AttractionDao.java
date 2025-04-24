@@ -8,35 +8,28 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 
-public class AttractionDao {
+public class AttractionDao implements AttractionDaoInt{
     private DaoFactory daoFactory;
 
-    // constructeur dépendant de la classe DaoFactory
     public AttractionDao(DaoFactory daoFactory) {
         this.daoFactory = daoFactory;
     }
 
     /**
-     * Récupérer de la base de données tous les objets des attractions dans une liste
-     * @return : liste retournée des objets des attractions récupérés
+     * C'est une méthode pour récupérer toutes les attractions dans la base de données
+     * return : ArrayList<Attraction> => liste qui contient tous les objets Attraction récupérés
      */
+    @Override
     public ArrayList<Attraction> getAll() {
-        ArrayList<Attraction> listeAttraction = new ArrayList<Attraction>();
+        ArrayList<Attraction> listeAttraction = new ArrayList<>();
 
-        /*
-            Récupérer la liste des attractions de la base de données dans listeattractions
-        */
         try {
-            // connexion
-            Connection connexion = daoFactory.getConnection();;
+            Connection connexion = daoFactory.getConnection();
             Statement statement = connexion.createStatement();
 
-            // récupération des attractions de la base de données avec la requete SELECT
-            ResultSet resultats = statement.executeQuery("select * from attraction");
+            ResultSet resultats = statement.executeQuery("SELECT * FROM attraction");
 
-            // 	Se déplacer sur le prochain enregistrement : retourne false si la fin est atteinte
             while (resultats.next()) {
-                // récupérer les 3 champs de la table attractions dans la base de données
                 int id_attraction = resultats.getInt(1);
                 String nom = resultats.getString(2);
                 String description = resultats.getString(3);
@@ -44,15 +37,11 @@ public class AttractionDao {
                 int capacite = resultats.getInt(5);
                 String type_attraction = resultats.getString(6);
 
-                // instancier un objet de Attraction avec ces 3 champs en paramètres
-                Attraction attraction = new Attraction(id_attraction,nom,description,prix,capacite, type_attraction);
+                Attraction attraction = new Attraction(id_attraction, nom, description, prix, capacite, type_attraction);
 
-                // ajouter ce Attraction à listeattractions
                 listeAttraction.add(attraction);
             }
-        }
-        catch (SQLException e) {
-            //traitement de l'exception
+        } catch (SQLException e) {
             e.printStackTrace();
             System.out.println("Création de la liste d'attractions impossible");
         }
@@ -61,8 +50,10 @@ public class AttractionDao {
     }
 
     /**
-     * Ajouter une attraction dans la base de données
+     * C'est une méthode qui ajoute une attraction à la base de données
+     * paramètre attraction : c'est l'attraction à ajouter dans la bdd
      */
+    @Override
     public void ajouter(Attraction attraction) {
         String requete = "INSERT INTO attraction (nom, description, prix, capacite, type_attraction) VALUES ('" +
                 attraction.getNom() + "', '" +
@@ -81,8 +72,10 @@ public class AttractionDao {
     }
 
     /**
-     * Modifier une attraction existante
+     * C'est une méthode qui modifie une attraction existante dans la bdd
+     * paramètre attraction : objet Attraction qui va être modifé
      */
+    @Override
     public void modifier(Attraction attraction) {
         String requete = "UPDATE attraction SET " +
                 "nom = '" + attraction.getNom() + "', " +
@@ -102,8 +95,10 @@ public class AttractionDao {
     }
 
     /**
-     * Supprimer une attraction
+     * C4est une méthode pour supprimer une attraction de la bdd
+     * paramètre idAttraction : identifiant de l'attraction que l'on veut supprimer
      */
+    @Override
     public void supprimer(int idAttraction) {
         String requete = "DELETE FROM attraction WHERE id_attraction = " + idAttraction;
 
@@ -117,8 +112,11 @@ public class AttractionDao {
     }
 
     /**
-     * Obtenir une attraction par son ID
+     * C'est une méthode qui récupére une attraction avec son identifiant
+     * paramètre id : identifiant de l'attraction que l'on cherche
+     * return Attraction : objet Attraction si on la trouve, ou null si on ne la trouve pas
      */
+    @Override
     public Attraction getById(int id) {
         String requete = "SELECT * FROM attraction WHERE id_attraction = " + id;
         try (Connection connexion = daoFactory.getConnection();
@@ -141,5 +139,4 @@ public class AttractionDao {
         }
         return null;
     }
-
 }

@@ -5,7 +5,7 @@ import Modele.Admin;
 import java.sql.*;
 import java.util.ArrayList;
 
-public class AdminDao {
+public class AdminDao implements AdminDaoInt {
     private DaoFactory daoFactory;
 
     /**
@@ -20,6 +20,7 @@ public class AdminDao {
      * Cette méthode permet de récupérer tous les administrateurs dans la base de données
      * return : une ArrayList contenant tous les objets Admin récupérés
      */
+    @Override
     public ArrayList<Admin> getAll() {
         // On initialise la liste d'administrateurs à retourner
         ArrayList<Admin> listeAdmin = new ArrayList<Admin>();
@@ -52,6 +53,7 @@ public class AdminDao {
      * paramètres email : email et mot de passe entrées par l’utilisateur
      * return : un objet Admin si les identifiants existent et qu’il s’agit bien d’un administrateur, sinon null
      */
+    @Override
     public Admin connexionAdmin(String email, String mdp) {
         Admin adminConnecte = null;
 
