@@ -149,7 +149,7 @@ public class VueAccueil extends JFrame{
             @Override
             public void actionPerformed(ActionEvent e) {
                 new VuePlusInfos();
-                dispose(); // optionnel
+                dispose();
             }
         });
 
@@ -160,7 +160,15 @@ public class VueAccueil extends JFrame{
         add(scrollPane, BorderLayout.CENTER);
 
     }
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(() -> {
+            VueAccueil VueAccueil = new VueAccueil();
+            VueAccueil.setVisible(true);
+        });
+    }
+
 }
+
 
 //SOURCES :
 //images : https://docs.oracle.com/javase/8/docs/api/index.html?javax/imageio/ImageIO.html

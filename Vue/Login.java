@@ -179,10 +179,5 @@ public class Login extends JFrame {
         mainPanel.add(rightPanel);
     }
 
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            Login login = new Login();
-            login.setVisible(true);
-        });
-    }
+
 }
