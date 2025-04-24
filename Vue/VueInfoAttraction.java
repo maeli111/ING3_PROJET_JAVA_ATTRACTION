@@ -21,7 +21,7 @@ public class VueInfoAttraction extends JFrame {
     // Nom du parc
     private JTextField parc = new JTextField("Palasi Land");
 
-    public VueInfoAttraction(Attraction attraction, LocalDate date) {
+    public VueInfoAttraction(Attraction attraction, LocalDate date, Client client, Admin admin) {
         setTitle("Informations de l'attraction");
         setSize(900, 600);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -47,7 +47,7 @@ public class VueInfoAttraction extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 dispose();
-                VueAccueil accueil = new VueAccueil();
+                VueAccueil accueil = new VueAccueil(client, admin);
                 accueil.setVisible(true);
             }
         });
@@ -56,7 +56,7 @@ public class VueInfoAttraction extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 dispose();
-                VuePlusInfos infos = new VuePlusInfos();
+                VuePlusInfos infos = new VuePlusInfos(client, admin);
                 infos.setVisible(true);
             }
         });
@@ -65,7 +65,7 @@ public class VueInfoAttraction extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 dispose();
-                VueCalendrier vueCalendrier = new VueCalendrier();
+                VueCalendrier vueCalendrier = new VueCalendrier(client, admin);
                 vueCalendrier.setVisible(true);
             }
         });

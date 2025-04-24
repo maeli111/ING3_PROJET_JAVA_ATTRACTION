@@ -20,7 +20,7 @@ public class VueCalendrier extends JFrame {
     private JTextField parc = new JTextField("Palasi Land");
 
     private JPanel calendarPanel;
-    private JPanel detailsPanel; // Ajouté : panneau pour afficher les attractions
+    private JPanel detailsPanel;
 
     private JLabel moisLabel;
     private YearMonth currentMonth;
@@ -28,14 +28,22 @@ public class VueCalendrier extends JFrame {
     private final YearMonth minMonth = YearMonth.now();
     private final YearMonth maxMonth = YearMonth.of(2026, 4); // Avril 2026
 
-    public VueCalendrier() {
+    // ➕ Ajout : Attributs pour client et admin
+    private Client client;
+    private Admin admin;
+
+    public VueCalendrier(Client client, Admin admin) {
+        // ➕ Initialisation des attributs
+        this.client = client;
+        this.admin = admin;
+
         setTitle("Calendrier des Attractions");
-        setSize(1000, 600); // Agrandi un peu pour le panneau droit
+        setSize(1000, 600);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new BorderLayout());
         setLocationRelativeTo(null);
 
-        // === HEADER ===
+        // HEADER
         parc.setHorizontalAlignment(JTextField.CENTER);
         parc.setEditable(false);
         parc.setFont(new Font("Bodoni MT", Font.BOLD, 32));
@@ -49,43 +57,31 @@ public class VueCalendrier extends JFrame {
         Pnavigation.add(informations);
         Pnavigation.add(calendrier);
 
-        accueil.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                VueAccueil vueAccueil = new VueAccueil();
-                vueAccueil.setVisible(true);
-                dispose();
-            }
+        accueil.addActionListener(e -> {
+            VueAccueil vueAccueil = new VueAccueil(client, admin);
+            vueAccueil.setVisible(true);
+            dispose();
         });
 
-        informations.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                VuePlusInfos vuePlusInfos = new VuePlusInfos();
-                vuePlusInfos.setVisible(true);
-                dispose();
-            }
+        informations.addActionListener(e -> {
+            VuePlusInfos vuePlusInfos = new VuePlusInfos(client, admin);
+            vuePlusInfos.setVisible(true);
+            dispose();
         });
 
-        calendrier.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                VueCalendrier vueCalendrier = new VueCalendrier();
-                vueCalendrier.setVisible(true);
-                dispose();
-            }
+        calendrier.addActionListener(e -> {
+            VueCalendrier vueCalendrier = new VueCalendrier(client, admin);
+            vueCalendrier.setVisible(true);
+            dispose();
         });
 
         JPanel Pcompte = new JPanel(new FlowLayout(FlowLayout.RIGHT, 10, 10));
         Pcompte.add(compte);
 
-        compte.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                VueLogin vueLogin = new VueLogin();
-                vueLogin.setVisible(true);
-                dispose();
-            }
+        compte.addActionListener(e -> {
+            VueLogin vueLogin = new VueLogin();
+            vueLogin.setVisible(true);
+            dispose();
         });
 
         Pbarre.add(Pnavigation, BorderLayout.WEST);
@@ -96,14 +92,13 @@ public class VueCalendrier extends JFrame {
         header.add(parc, BorderLayout.CENTER);
         add(header, BorderLayout.NORTH);
 
-        // === CONTENU CALENDRIER + DETAILS ===
+        // CONTENU
         currentMonth = YearMonth.now();
-
         JPanel mainPanel = new JPanel(new BorderLayout());
 
         // Calendrier
         JPanel wrapper = new JPanel(new BorderLayout());
-        wrapper.setBorder(BorderFactory.createEmptyBorder(10, 20, 20, 10)); // Un peu de marge à droite
+        wrapper.setBorder(BorderFactory.createEmptyBorder(10, 20, 20, 10));
 
         JPanel topPanel = new JPanel(new BorderLayout());
         JButton prevButton = new JButton("←");
@@ -134,21 +129,18 @@ public class VueCalendrier extends JFrame {
 
         calendarPanel = new JPanel(new GridLayout(0, 7, 5, 5));
         wrapper.add(calendarPanel, BorderLayout.CENTER);
-
         mainPanel.add(wrapper, BorderLayout.CENTER);
 
-        // === PANEL DROIT POUR LES DÉTAILS ===
+        // ➕ Panel de droite pour les détails
         detailsPanel = new JPanel();
         detailsPanel.setLayout(new BoxLayout(detailsPanel, BoxLayout.Y_AXIS));
         detailsPanel.setBorder(BorderFactory.createTitledBorder("Attractions disponibles"));
-        detailsPanel.setPreferredSize(new Dimension(300, 0)); // Largeur fixe
+        detailsPanel.setPreferredSize(new Dimension(300, 0));
 
         mainPanel.add(detailsPanel, BorderLayout.EAST);
-
         add(mainPanel, BorderLayout.CENTER);
 
-        updateCalendar(); // Initial load
-
+        updateCalendar();
         setVisible(true);
     }
 
@@ -174,7 +166,7 @@ public class VueCalendrier extends JFrame {
         for (int day = 1; day <= daysInMonth; day++) {
             JButton dayButton = new JButton(String.valueOf(day));
             LocalDate dateClicked = currentMonth.atDay(day);
-            dayButton.addActionListener(new DayClickListener(dateClicked, this)); // "this" si tu es dans la classe de ta JFrame
+            dayButton.addActionListener(new DayClickListener(dateClicked));
             calendarPanel.add(dayButton);
         }
 
@@ -184,11 +176,9 @@ public class VueCalendrier extends JFrame {
 
     private class DayClickListener implements ActionListener {
         private final LocalDate date;
-        private final JFrame currentFrame;
 
-        public DayClickListener(LocalDate date, JFrame frame) {
+        public DayClickListener(LocalDate date) {
             this.date = date;
-            this.currentFrame = frame;
         }
 
         @Override
@@ -201,18 +191,12 @@ public class VueCalendrier extends JFrame {
             detailsPanel.add(titre);
             detailsPanel.add(Box.createRigidArea(new Dimension(0, 10)));
 
-            String url = "jdbc:mysql://localhost:3306/java_attraction";
-            String user = "root";
-            String password = "";
-
             DaoFactory daoFactory = DaoFactory.getInstance("java_attraction", "root", "");
             AttractionDaoInt attractionDAO = new AttractionDao(daoFactory);
-
             boolean found = false;
 
             try {
-                Class.forName("com.mysql.cj.jdbc.Driver");
-                Connection connexion = DriverManager.getConnection(url, user, password);
+                Connection connexion = DriverManager.getConnection("jdbc:mysql://localhost:3306/java_attraction", "root", "");
                 PreparedStatement ps = connexion.prepareStatement("SELECT id_attraction, nom FROM attraction");
                 ResultSet rs = ps.executeQuery();
 
@@ -220,7 +204,6 @@ public class VueCalendrier extends JFrame {
                     int idAttraction = rs.getInt("id_attraction");
                     String nomAttraction = rs.getString("nom");
 
-                    // Vérifie si l’attraction est disponible ce jour-là
                     if (attractionDAO.estDisponible(date, idAttraction)) {
                         found = true;
 
@@ -230,8 +213,8 @@ public class VueCalendrier extends JFrame {
                         btn.addActionListener(ev -> {
                             Attraction attraction = attractionDAO.chercher(idAttraction);
                             if (attraction != null) {
-                                currentFrame.dispose();
-                                new VueInfoAttraction(attraction, date).setVisible(true);
+                                dispose();
+                                new VueInfoAttraction(attraction, date, client, admin).setVisible(true);
                             } else {
                                 JOptionPane.showMessageDialog(null, "Aucune attraction trouvée avec l'ID : " + idAttraction);
                             }
@@ -260,5 +243,4 @@ public class VueCalendrier extends JFrame {
             detailsPanel.repaint();
         }
     }
-
 }

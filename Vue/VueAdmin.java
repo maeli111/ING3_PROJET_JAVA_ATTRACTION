@@ -5,7 +5,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import Modele.Admin;
+import Modele.*;
 
 public class VueAdmin extends JFrame {
     private JButton accueil = new JButton("Accueil");
@@ -39,19 +39,19 @@ public class VueAdmin extends JFrame {
         // ----------- LISTENERS des boutons de navigation -----------
 
         accueil.addActionListener(e -> {
-            VueAccueil vueAccueil = new VueAccueil();
+            VueAccueil vueAccueil = new VueAccueil(null, admin);
             vueAccueil.setVisible(true);
             dispose();
         });
 
         informations.addActionListener(e -> {
-            VuePlusInfos vuePlusInfos = new VuePlusInfos();
+            VuePlusInfos vuePlusInfos = new VuePlusInfos(null,admin);
             vuePlusInfos.setVisible(true);
             dispose();
         });
 
         calendrier.addActionListener(e -> {
-            VueCalendrier vueCalendrier = new VueCalendrier();
+            VueCalendrier vueCalendrier = new VueCalendrier(null, admin);
             vueCalendrier.setVisible(true);
             dispose();
         });

@@ -1,5 +1,6 @@
 package Vue;
 
+import Modele.*;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -18,7 +19,7 @@ public class VuePlusInfos extends JFrame {
     //nom du parc
     private JTextField parc = new JTextField("Palasi Land");
 
-    public VuePlusInfos() {
+    public VuePlusInfos(Client client, Admin admin) {
         setTitle("Plus d'informations");
         setSize(1250, 680);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -61,7 +62,7 @@ public class VuePlusInfos extends JFrame {
         calendrier.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                VueCalendrier vueCalendrier = new VueCalendrier();
+                VueCalendrier vueCalendrier = new VueCalendrier(client, admin);
                 vueCalendrier.setVisible(true);
                 dispose();
             }
@@ -175,7 +176,7 @@ public class VuePlusInfos extends JFrame {
         accueil.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                VueAccueil accueil1 = new VueAccueil();
+                VueAccueil accueil1 = new VueAccueil(client, admin);
                 accueil1.setVisible(true);
                 dispose();
             }

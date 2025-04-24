@@ -63,19 +63,19 @@ public class VueLogin extends JFrame {
         // ----------- ACTIONS DES BOUTONS DU HEADER -----------
 
         accueil.addActionListener(e -> {
-            VueAccueil vueAccueil = new VueAccueil();
+            VueAccueil vueAccueil = new VueAccueil(null,null);
             vueAccueil.setVisible(true);
             dispose();
         });
 
         informations.addActionListener(e -> {
-            VuePlusInfos vuePlusInfos = new VuePlusInfos();
+            VuePlusInfos vuePlusInfos = new VuePlusInfos(null, null);
             vuePlusInfos.setVisible(true);
             dispose();
         });
 
         calendrier.addActionListener(e -> {
-            VueCalendrier vueCalendrier = new VueCalendrier();
+            VueCalendrier vueCalendrier = new VueCalendrier(null,null);
             vueCalendrier.setVisible(true);
             dispose();
         });
@@ -112,7 +112,7 @@ public class VueLogin extends JFrame {
         btnGuest.setFont(btnGuest.getFont().deriveFont(Font.ITALIC));
         btnGuest.addActionListener(e -> {
             dispose();
-            VueAccueil accueilGuest = new VueAccueil();
+            VueAccueil accueilGuest = new VueAccueil(null,null);
             accueilGuest.setVisible(true);
         });
 

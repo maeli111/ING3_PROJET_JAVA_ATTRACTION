@@ -22,7 +22,7 @@ public class VueClient extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 dispose(); // Ferme la fenêtre actuelle
-                VueAccueil accueil = new VueAccueil(); // Crée une nouvelle instance de VueAccueil
+                VueAccueil accueil = new VueAccueil(client, null); // Crée une nouvelle instance de VueAccueil
                 accueil.setVisible(true); // Affiche la fenêtre
             }
         });
@@ -33,7 +33,7 @@ public class VueClient extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 dispose(); // Ferme la fenêtre actuelle
-                VuePlusInfos infos = new VuePlusInfos(); // Crée une nouvelle instance de VueAccueil
+                VuePlusInfos infos = new VuePlusInfos(client, null); // Crée une nouvelle instance de VueAccueil
                 infos.setVisible(true); // Affiche la fenêtre
             }
         });
@@ -44,7 +44,7 @@ public class VueClient extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 dispose(); // Ferme la fenêtre actuelle
-                VueCalendrier vueCalendrier= new VueCalendrier(); // Crée une nouvelle instance de VueAccueil
+                VueCalendrier vueCalendrier= new VueCalendrier(client, null); // Crée une nouvelle instance de VueAccueil
                 vueCalendrier.setVisible(true); // Affiche la fenêtre
             }
         });

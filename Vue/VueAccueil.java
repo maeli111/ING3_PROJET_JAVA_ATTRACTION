@@ -1,5 +1,6 @@
 package Vue;
 
+import Modele.*;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.*;
@@ -18,7 +19,7 @@ public class VueAccueil extends JFrame{
     private JTextField parc = new JTextField("Palasi Land");
 
 
-    public VueAccueil(){
+    public VueAccueil(Client client, Admin admin){
         setTitle("Accueil");
         setSize(1250,680);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -50,16 +51,24 @@ public class VueAccueil extends JFrame{
         compte.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                VueLogin vueLogin = new VueLogin();
-                vueLogin.setVisible(true);
-                dispose();
+                if (client == null && admin == null) {
+                    new VueLogin().setVisible(true);
+                    dispose();
+                } else if (client != null && admin == null) {
+                    new VueClient(client).setVisible(true);
+                    dispose();
+                } else if (client == null && admin != null) {
+                    new VueAdmin(admin).setVisible(true);
+                    dispose();
+                }
+
             }
         });
 
         calendrier.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                VueCalendrier vueCalendrier = new VueCalendrier();
+                VueCalendrier vueCalendrier = new VueCalendrier(client, admin);
                 vueCalendrier.setVisible(true);
                 dispose();
             }
@@ -157,7 +166,7 @@ public class VueAccueil extends JFrame{
         infos.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                new VuePlusInfos();
+                new VuePlusInfos(client, admin);
                 dispose(); // pour fermer la fenêtre actuelle si tu veux
             }
         });
@@ -167,7 +176,7 @@ public class VueAccueil extends JFrame{
         informations.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                new VuePlusInfos();
+                new VuePlusInfos(client, admin);
                 dispose();
             }
         });
@@ -178,12 +187,6 @@ public class VueAccueil extends JFrame{
         scrollPane.setBorder(null);
         add(scrollPane, BorderLayout.CENTER);
 
-    }
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            VueAccueil VueAccueil = new VueAccueil();
-            VueAccueil.setVisible(true);
-        });
     }
 
 }
