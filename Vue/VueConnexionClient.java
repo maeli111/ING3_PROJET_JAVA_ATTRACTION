@@ -29,9 +29,39 @@ public class VueConnexionClient extends JFrame {
         JPanel topPanel = new JPanel(new BorderLayout());
 
         JPanel leftPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        leftPanel.add(new JButton("Accueil"));
-        leftPanel.add(new JButton("Informations"));
-        leftPanel.add(new JButton("Calendrier"));
+
+        JButton btnAccueil = new JButton("Accueil");
+        btnAccueil.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                dispose(); // Ferme la fenêtre actuelle
+                VueAccueil accueil = new VueAccueil(); // Crée une nouvelle instance de VueAccueil
+                accueil.setVisible(true); // Affiche la fenêtre
+            }
+        });
+        leftPanel.add(btnAccueil);
+
+        JButton btnInfo = new JButton("Informations");
+        btnInfo.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                dispose(); // Ferme la fenêtre actuelle
+                VuePlusInfos infos = new VuePlusInfos(); // Crée une nouvelle instance de VueAccueil
+                infos.setVisible(true); // Affiche la fenêtre
+            }
+        });
+        leftPanel.add(btnInfo);
+
+        JButton btnCalendrier = new JButton("Informations");
+        btnInfo.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                dispose(); // Ferme la fenêtre actuelle
+                //VuePlusInfos infos = new VuePlusInfos(); // Crée une nouvelle instance de VueAccueil
+                //infos.setVisible(true); // Affiche la fenêtre
+            }
+        });
+        leftPanel.add(btnCalendrier);
 
         JPanel rightPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         rightPanel.add(new JButton("Compte"));
