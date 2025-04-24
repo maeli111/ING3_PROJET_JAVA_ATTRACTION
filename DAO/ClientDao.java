@@ -13,9 +13,10 @@ public class ClientDao implements ClientDaoInt{
     }
 
     /**
-     * Récupérer de la base de données tous les objets des clients dans une liste
-     * @return liste des clients
+     * Récupérer de la bdd tous les objets des clients dans une liste
+     * return liste des clients
      */
+    @Override
     public ArrayList<Client> getAll() {
         ArrayList<Client> listeClients = new ArrayList<>();
 
@@ -49,6 +50,12 @@ public class ClientDao implements ClientDaoInt{
     }
 
 
+    /**
+     * Cette méthode inscrit un nv client en 2 étapes : insertion dans utilisateur, puis dans client
+     * Le type de membre est calculé à partir de l'âge
+     * paramètre client
+     */
+    @Override
     public void inscrire(Client client) {
         try {
             Connection connexion = daoFactory.getConnection();
@@ -112,13 +119,21 @@ public class ClientDao implements ClientDaoInt{
         }
     }
 
+    /**
+     * Cette méthode permet à un client de se connecter en vérifiant l'email et le mdp
+     *
+     * paramètre email et mdp du client
+     * return Client si les identifiants sont vérifiés, sinon null.
+     */
+
+    @Override
     public Client seConnecter(String email, String mdp) {
         Client client = null;
 
         try {
             Connection connexion = daoFactory.getConnection();
 
-            // 1. Récupérer l'utilisateur en fonction de l'email et du mot de passe
+            // 1. Récupérer l'utilisateur en fonction de l'email et du mdp
             String sqlUtilisateur = "SELECT * FROM utilisateur WHERE email = ? AND mdp = ?";
             PreparedStatement pUtilisateur = connexion.prepareStatement(sqlUtilisateur);
             pUtilisateur.setString(1, email);
@@ -144,7 +159,7 @@ public class ClientDao implements ClientDaoInt{
                     String typeClient = rClient.getString("type_client");
                     String typeMembre = rClient.getString("type_membre");
 
-                    // Créer le client avec TOUTES les infos
+                    // Puis on crée le client avec TOUTES les infos
                     client = new Client(idClient, idUtilisateur, emailUser, nom, prenom, mdpUser, age, typeClient, typeMembre);
                 }
             }
@@ -157,10 +172,15 @@ public class ClientDao implements ClientDaoInt{
     }
 
 
+    /**
+     * Supprime un client et son utilisateur associé dans la bdd
+     * paramètre id_client : L'identifiant du client que l'on veut supprimer
+     */
 
+    @Override
     public void supprimer(int id_client) {
         try (Connection connexion = daoFactory.getConnection()) {
-            // Étape 1 : récupérer l'id_utilisateur à partir du client
+            // On récupère l'id_utilisateur à partir du client
             String sqlSelect = "SELECT id_utilisateur FROM client WHERE id_client = ?";
             PreparedStatement pSelect = connexion.prepareStatement(sqlSelect);
             pSelect.setInt(1, id_client);
@@ -169,13 +189,13 @@ public class ClientDao implements ClientDaoInt{
             if (rSet.next()) {
                 int id_utilisateur = rSet.getInt("id_utilisateur");
 
-                // Étape 2 : supprimer le client
+                // on supprime le client
                 String sqlClient = "DELETE FROM client WHERE id_client = ?";
                 PreparedStatement pClient = connexion.prepareStatement(sqlClient);
                 pClient.setInt(1, id_client);
                 int lignesClient = pClient.executeUpdate();
 
-                // Étape 3 : supprimer l'utilisateur si client supprimé
+                // On supprime l'utilisateur si client supprimé
                 if (lignesClient > 0) {
                     String sqlUtilisateur = "DELETE FROM utilisateur WHERE id_utilisateur = ?";
                     PreparedStatement pUtilisateur = connexion.prepareStatement(sqlUtilisateur);
@@ -197,6 +217,13 @@ public class ClientDao implements ClientDaoInt{
         }
     }
 
+    /**
+     * Cette méthode récupère le mail d’un client avec son ID
+     * paramètre idClient
+     * return email du client, ou null si non trouvé
+     */
+
+    @Override
     public String getEmailByIdClient(int idClient) {
         String email = null;
 
@@ -228,38 +255,13 @@ public class ClientDao implements ClientDaoInt{
         return email;
     }
 
-    public String afficherEmailClient(int idClient) {
-        String email = null;
 
-        try (Connection connexion = daoFactory.getConnection()) {
-            // Récupérer l'id_utilisateur du client à partir de l'id_client
-            String sqlClient = "SELECT id_utilisateur FROM client WHERE id_client = ?";
-            PreparedStatement pClient = connexion.prepareStatement(sqlClient);
-            pClient.setInt(1, idClient);
-            ResultSet rClient = pClient.executeQuery();
-
-            if (rClient.next()) {
-                // Récupérer l'id_utilisateur
-                int idUtilisateur = rClient.getInt("id_utilisateur");
-
-                // Maintenant, récupérer l'email depuis la table utilisateur
-                String sqlUtilisateur = "SELECT email FROM utilisateur WHERE id_utilisateur = ?";
-                PreparedStatement pUtilisateur = connexion.prepareStatement(sqlUtilisateur);
-                pUtilisateur.setInt(1, idUtilisateur);
-                ResultSet rUtilisateur = pUtilisateur.executeQuery();
-
-                if (rUtilisateur.next()) {
-                    email = rUtilisateur.getString("email");
-                }
-            }
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        return email; // Retourne l'email, ou null si le client n'a pas été trouvé
-    }
-
+    /**
+     * Cette méthode vérifie si un mail est déjà utilisé dans la bdd
+     * paramètre email
+     * return true si l'email existe, false sinon
+     */
+    @Override
     public boolean emailExiste(String email) {
         String sql = "SELECT COUNT(*) FROM utilisateur WHERE email = ?";
         try (Connection con = daoFactory.getConnection();
@@ -275,10 +277,14 @@ public class ClientDao implements ClientDaoInt{
         return false;
     }
 
+    /**
+     * Cette méthode ajoute un nv client à la bdd
+     * paramètre client => L'objet Client que l'on va ajouter
+     */
 
+    @Override
     public void ajouter(Client client) {
         try (Connection connexion = daoFactory.getConnection()) {
-            // Insertion dans utilisateur
             String sqlUtilisateur = "INSERT INTO utilisateur (email, nom, prenom, mdp) VALUES (?, ?, ?, ?)";
             PreparedStatement pUtilisateur = connexion.prepareStatement(sqlUtilisateur, Statement.RETURN_GENERATED_KEYS);
             pUtilisateur.setString(1, client.getEmail());
@@ -293,7 +299,7 @@ public class ClientDao implements ClientDaoInt{
                     int idUtilisateur = rUtilisateur.getInt(1);
                     client.setid_utilisateur(idUtilisateur);
 
-                    // Déterminer type membre
+                    // On défini le type membre avec l'age
                     String typeMembre;
                     int age = client.getage();
                     if (age < 18) typeMembre = "enfant";
@@ -302,7 +308,6 @@ public class ClientDao implements ClientDaoInt{
                     else typeMembre = "adulte";
                     client.setType_membre(typeMembre);
 
-                    // Insertion dans client
                     String sqlClient = "INSERT INTO client (id_utilisateur, age, type_client, type_membre) VALUES (?, ?, ?, ?)";
                     PreparedStatement pClient = connexion.prepareStatement(sqlClient, Statement.RETURN_GENERATED_KEYS);
                     pClient.setInt(1, idUtilisateur);
@@ -325,7 +330,11 @@ public class ClientDao implements ClientDaoInt{
         }
     }
 
-
+    /**
+     * Cette méthode modifie les infos d’un client dans les tables utilisateur et client
+     * paramètre client
+     */
+    @Override
     public void modifier(Client client) {
         try (Connection connexion = daoFactory.getConnection()) {
             // Mise à jour de la table utilisateur
@@ -352,6 +361,12 @@ public class ClientDao implements ClientDaoInt{
         }
     }
 
+    /**
+     * Cette méthode récupère un client spécifique à partir de son ID
+     * paramètre id_client
+     * return => L'objet Client correspondant à l’ID, ou null si non trouvé
+     */
+    @Override
     public Client getById(int id_client) {
         Client client = null;
         Connection conn = null;
@@ -359,17 +374,14 @@ public class ClientDao implements ClientDaoInt{
         ResultSet rs = null;
 
         try {
-            // Récupérer la connexion à la base de données
             conn = daoFactory.getConnection();
 
-            // Requête SQL pour récupérer les informations du client
             String sql = "SELECT * FROM client INNER JOIN utilisateur ON client.id_utilisateur = utilisateur.id_utilisateur WHERE client.id_client = ?";
             stmt = conn.prepareStatement(sql);
             stmt.setInt(1, id_client);
 
             rs = stmt.executeQuery();
 
-            // Si un client est trouvé, on le crée et on le retourne
             if (rs.next()) {
                 int id_utilisateur = rs.getInt("id_utilisateur");
                 String email = rs.getString("email");
@@ -380,7 +392,6 @@ public class ClientDao implements ClientDaoInt{
                 String type_client = rs.getString("type_client");
                 String type_membre = rs.getString("type_membre");
 
-                // Créer un client avec les données récupérées
                 client = new Client(id_client, id_utilisateur, email, nom, prenom, mdp, age, type_client, type_membre);
             }
         } catch (SQLException e) {
@@ -388,10 +399,5 @@ public class ClientDao implements ClientDaoInt{
         }
         return client;
     }
-
-
-
-
-
 
 }
