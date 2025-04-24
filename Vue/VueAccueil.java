@@ -47,6 +47,16 @@ public class VueAccueil extends JFrame{
         JPanel Pcompte = new JPanel(new FlowLayout(FlowLayout.RIGHT, 10, 10));
         Pcompte.add(compte);
 
+        compte.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                VueLogin vueLogin = new VueLogin();
+                vueLogin.setVisible(true);
+                dispose();
+            }
+        });
+
+
         //ajout des 2 panels creer pour les boutons du haut dans le layout
         Pbarre.add(Pnavigation, BorderLayout.WEST);
         Pbarre.add(Pcompte, BorderLayout.EAST);
@@ -72,7 +82,7 @@ public class VueAccueil extends JFrame{
         JPanel images = new JPanel(new GridLayout(1, 3, 20, 0));
 
         try {
-            BufferedImage image1 = ImageIO.read(new File("C:\\wamp64\\www\\ING3_PROJET_JAVA_ATTRACTION\\Vue\\carroussel1.jpg"));
+            BufferedImage image1 = ImageIO.read(new File("C:\\wamp64\\www\\TP8_ING3\\ING3_PROJET_JAVA_ATTRACTION\\Vue\\carroussel1.jpg"));
             Image scaledImg1 = image1.getScaledInstance(300, 300, Image.SCALE_SMOOTH);
             JLabel img1 = new JLabel(new ImageIcon(scaledImg1));
             img1.setHorizontalAlignment(SwingConstants.CENTER);
@@ -82,7 +92,7 @@ public class VueAccueil extends JFrame{
         }
 
         try {
-            BufferedImage image2 = ImageIO.read(new File("C:\\wamp64\\www\\ING3_PROJET_JAVA_ATTRACTION\\Vue\\carroussel2.jpg"));
+            BufferedImage image2 = ImageIO.read(new File("C:\\wamp64\\www\\TP8_ING3\\ING3_PROJET_JAVA_ATTRACTION\\Vue\\carroussel2.jpg"));
             Image scaledImg2 = image2.getScaledInstance(300, 300, Image.SCALE_SMOOTH);
             JLabel img2 = new JLabel(new ImageIcon(scaledImg2));
             img2.setHorizontalAlignment(SwingConstants.CENTER);
@@ -92,7 +102,7 @@ public class VueAccueil extends JFrame{
         }
 
         try {
-            BufferedImage image3 = ImageIO.read(new File("C:\\wamp64\\www\\ING3_PROJET_JAVA_ATTRACTION\\Vue\\carroussel3.jpg"));
+            BufferedImage image3 = ImageIO.read(new File("C:\\wamp64\\www\\TP8_ING3\\ING3_PROJET_JAVA_ATTRACTION\\Vue\\carroussel3.jpg"));
             Image scaledImg3 = image3.getScaledInstance(300, 300, Image.SCALE_SMOOTH);
             JLabel img3 = new JLabel(new ImageIcon(scaledImg3));
             img3.setHorizontalAlignment(SwingConstants.CENTER);

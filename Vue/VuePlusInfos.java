@@ -49,6 +49,15 @@ public class VuePlusInfos extends JFrame {
         JPanel Pcompte = new JPanel(new FlowLayout(FlowLayout.RIGHT, 10, 10));
         Pcompte.add(compte);
 
+        compte.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                VueLogin vueLogin = new VueLogin();
+                vueLogin.setVisible(true);
+                dispose();
+            }
+        });
+
         //ajout des 2 panels creer pour les boutons du haut dans le layout
         Pbarre.add(Pnavigation, BorderLayout.WEST);
         Pbarre.add(Pcompte, BorderLayout.EAST);

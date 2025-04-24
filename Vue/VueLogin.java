@@ -8,13 +8,13 @@ import Modele.Admin;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class Login extends JFrame {
+public class VueLogin extends JFrame {
 
     private JTextField txtNom, txtPrenom, txtAge, txtEmail;
     private JPasswordField txtMdp, txtMdpVerification;
     private DaoFactory daoFactory;
 
-    public Login() {
+    public VueLogin() {
         daoFactory = new DaoFactory("jdbc:mysql://localhost:3306/java_attraction", "root", "");
 
         setTitle("Login");
