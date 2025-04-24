@@ -58,6 +58,15 @@ public class VuePlusInfos extends JFrame {
             }
         });
 
+        calendrier.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                VueCalendrier vueCalendrier = new VueCalendrier();
+                vueCalendrier.setVisible(true);
+                dispose();
+            }
+        });
+
         //ajout des 2 panels creer pour les boutons du haut dans le layout
         Pbarre.add(Pnavigation, BorderLayout.WEST);
         Pbarre.add(Pcompte, BorderLayout.EAST);

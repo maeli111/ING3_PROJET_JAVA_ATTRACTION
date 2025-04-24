@@ -64,7 +64,16 @@ public class VueConnexionClient extends JFrame {
         leftPanel.add(btnCalendrier);
 
         JPanel rightPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-        rightPanel.add(new JButton("Compte"));
+        JButton btnCompte = new JButton("Compte");
+        btnCompte.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                dispose(); // Ferme la fenêtre actuelle
+                VueLogin vueLogin= new VueLogin(); // Crée une nouvelle instance de VueAccueil
+                vueLogin.setVisible(true); // Affiche la fenêtre
+            }
+        });
+        rightPanel.add(btnCompte);
 
         topPanel.add(leftPanel, BorderLayout.WEST);
         topPanel.add(rightPanel, BorderLayout.EAST);

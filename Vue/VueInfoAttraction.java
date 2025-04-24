@@ -4,6 +4,8 @@ import Modele.*;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.File;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -40,8 +42,45 @@ public class VueInfoAttraction extends JFrame {
         Pnavigation.add(informations);
         Pnavigation.add(calendrier);
 
+        // Gestion des actions des boutons
+        accueil.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                dispose();
+                VueAccueil accueil = new VueAccueil();
+                accueil.setVisible(true);
+            }
+        });
+
+        informations.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                dispose();
+                VuePlusInfos infos = new VuePlusInfos();
+                infos.setVisible(true);
+            }
+        });
+
+        calendrier.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                dispose();
+                VueCalendrier vueCalendrier = new VueCalendrier();
+                vueCalendrier.setVisible(true);
+            }
+        });
+
         JPanel Pcompte = new JPanel(new FlowLayout(FlowLayout.RIGHT, 10, 10));
         Pcompte.add(compte);
+
+        compte.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                dispose();
+                VueLogin vueLogin = new VueLogin();
+                vueLogin.setVisible(true);
+            }
+        });
 
         Pbarre.add(Pnavigation, BorderLayout.WEST);
         Pbarre.add(Pcompte, BorderLayout.EAST);
@@ -79,7 +118,6 @@ public class VueInfoAttraction extends JFrame {
         JLabel descLabel = new JLabel("Description : " + attraction.getDescription());
         JLabel prixLabel = new JLabel("Prix : " + attraction.getPrix() + " €");
         JLabel capaciteLabel = new JLabel("Capacité : " + attraction.getCapacite());
-        //JLabel reservationLabel = new JLabel("Réservations : " + attraction.getNbReservation());
 
         Font font = new Font("SansSerif", Font.PLAIN, 16);
         for (JLabel label : new JLabel[]{nomLabel, descLabel, prixLabel, capaciteLabel, dateLabel}) {
@@ -101,8 +139,8 @@ public class VueInfoAttraction extends JFrame {
         reserverBtn.addActionListener(e -> {
             this.dispose(); // Ferme la fenêtre actuelle
             // Crée d'abord une réservation vide
-            Reservation nouvelleReservation = new Reservation(date, attraction.getId_attraction()); // 0=id_client temporaire, 1=nb_personnes par défaut
-            new VuePageReservation(nouvelleReservation, attraction, date).setVisible(true);// Ouvre la page de réservation
+            Reservation nouvelleReservation = new Reservation(date, attraction.getId_attraction());
+            new VuePageReservation(nouvelleReservation, attraction, date).setVisible(true);
         });
 
         // Panel pour le bouton (centré en bas)
@@ -111,7 +149,6 @@ public class VueInfoAttraction extends JFrame {
 
         // Ajout au layout principal
         add(buttonPanel, BorderLayout.SOUTH);
-
 
         setVisible(true);
     }
