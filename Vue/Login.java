@@ -81,7 +81,7 @@ public class Login extends JFrame {
             public void actionPerformed(ActionEvent e) {
 
                 dispose(); // Ferme la fenêtre Login
-                Accueil accueil = new Accueil();
+                VueAccueil accueil = new VueAccueil();
                 accueil.setVisible(true);
             }
         });
