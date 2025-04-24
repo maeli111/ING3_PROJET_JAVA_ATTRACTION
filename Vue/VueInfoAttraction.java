@@ -76,9 +76,17 @@ public class VueInfoAttraction extends JFrame {
         compte.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                dispose();
-                VueLogin vueLogin = new VueLogin();
-                vueLogin.setVisible(true);
+                if (client == null && admin == null) {
+                    new VueLogin().setVisible(true);
+                    dispose();
+                } else if (client != null && admin == null) {
+                    new VueClient(client).setVisible(true);
+                    dispose();
+                } else if (client == null && admin != null) {
+                    new VueAdmin(admin).setVisible(true);
+                    dispose();
+                }
+
             }
         });
 

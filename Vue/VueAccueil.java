@@ -166,7 +166,8 @@ public class VueAccueil extends JFrame{
         infos.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                new VuePlusInfos(client, admin);
+                VuePlusInfos vuePlusInfos = new VuePlusInfos(client, admin);
+                vuePlusInfos.setVisible(true);
                 dispose(); // pour fermer la fenêtre actuelle si tu veux
             }
         });
@@ -176,10 +177,12 @@ public class VueAccueil extends JFrame{
         informations.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                new VuePlusInfos(client, admin);
+                VuePlusInfos vuePlusInfos = new VuePlusInfos(client, admin);
+                vuePlusInfos.setVisible(true);
                 dispose();
             }
         });
+
 
 
         // ScrollPane

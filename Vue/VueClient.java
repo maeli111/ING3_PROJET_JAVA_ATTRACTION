@@ -39,7 +39,7 @@ public class VueClient extends JFrame {
         });
         leftPanel.add(btnInfo);
 
-        JButton btnCalendrier = new JButton("Informations");
+        JButton btnCalendrier = new JButton("Calendrier");
         btnCalendrier.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
