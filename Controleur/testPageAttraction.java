@@ -45,14 +45,14 @@ public class testPageAttraction {
 
          */
 
-        /*
+
         // Connexion à la base
         DaoFactory daoFactory = DaoFactory.getInstance("java_attraction", "root", "");
         AttractionDaoInt attractionDAO = new AttractionDao(daoFactory);
 
         // Récupérer une attraction existante
-        Attraction attraction = attractionDAO.chercher(2);
-        LocalDate date = LocalDate.of(2025, 4, 25);
+        Attraction attraction = attractionDAO.chercher(3);
+        LocalDate date = LocalDate.of(2025, 5, 24);
 
         // Afficher dans l'interface
         if (attraction != null) {
@@ -65,8 +65,8 @@ public class testPageAttraction {
 
         daoFactory.disconnect(); // Fermer proprement
 
-         */
 
+/*
         // Initialisation de la DAO
         DaoFactory daoFactory = DaoFactory.getInstance("java_attraction", "root", "");
         AttractionDao attractionDAO = new AttractionDao(daoFactory);
@@ -86,6 +86,8 @@ public class testPageAttraction {
         javax.swing.SwingUtilities.invokeLater(() -> {
             new testReduc(null, attraction, today);
         });
+
+ */
 
     }
 }
