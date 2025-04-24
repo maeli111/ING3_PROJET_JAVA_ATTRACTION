@@ -2,6 +2,7 @@ package DAO;
 
 import Modele.Attraction;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 
 public interface AttractionDaoInt {
@@ -19,4 +20,10 @@ public interface AttractionDaoInt {
 
     /// C'est une méthode qui récupére une attraction avec son identifiant
     public Attraction getById(int id);
+
+    public Attraction chercher(int id);
+
+    public boolean estDisponible(LocalDate date, int idAttraction);
+
+    public int getPlacesDisponibles(LocalDate date, int idAttraction);
 }

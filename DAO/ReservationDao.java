@@ -9,7 +9,9 @@ import java.sql.Statement;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
-public class ReservationDao {
+import java.sql.*;
+
+public class ReservationDao implements ReservationDaoInt{
     private DaoFactory daoFactory;
 
     // constructeur dépendant de la classe DaoFactory
@@ -59,5 +61,61 @@ public class ReservationDao {
         }
 
         return listeReservation;
+    }
+
+    public void ajouter(Reservation reservation) {
+        try (Connection connexion = daoFactory.getConnection();
+             PreparedStatement ps = connexion.prepareStatement(
+                     "INSERT INTO reservation (id_client, nom, prenom, mail, date_reservation, date_achat, id_attraction, prix_total, nb_personne, est_archivee) " +
+                             "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")) {
+
+            ps.setInt(1, reservation.getId_client());
+            ps.setString(2, reservation.getNom());
+            ps.setString(3, reservation.getPrenom());
+            ps.setString(4, reservation.getMail());
+            ps.setDate(5, java.sql.Date.valueOf(reservation.getDate_reservation()));
+            ps.setDate(6, java.sql.Date.valueOf(reservation.getDate_achat()));
+            ps.setInt(7, reservation.getId_attraction());
+            ps.setDouble(8, reservation.getPrix_total());
+            ps.setInt(9, reservation.getNb_personne());
+            ps.setInt(10, reservation.getEst_archivee());
+
+            ps.executeUpdate();
+
+            ps.close();
+            connexion.close();
+
+            System.out.println("Réservation ajoutée avec succès.");
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.out.println("Erreur lors de l'ajout de la réservation.");
+        }
+    }
+
+    public int genererIdReservationUnique() {
+        int id;
+        boolean existe = true;
+
+        try (Connection conn = daoFactory.getConnection()) {
+            while (existe) {
+                id = (int) (Math.random() * 900000) + 100000; // Génère entre 100000 et 999999
+
+                String sql = "SELECT COUNT(*) FROM reservation WHERE id_reservation = ?";
+                try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+                    stmt.setInt(1, id);
+                    try (ResultSet rs = stmt.executeQuery()) {
+                        if (rs.next()) {
+                            existe = rs.getInt(1) > 0; // Si > 0, l'ID existe déjà
+                        }
+                    }
+                }
+
+                if (!existe) return id;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return -1; // erreur
     }
 }
