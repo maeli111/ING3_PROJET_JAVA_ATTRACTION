@@ -56,11 +56,6 @@ public class VueAdmin extends JFrame {
             dispose();
         });
 
-        compte.addActionListener(e -> {
-            VueLogin vueLogin = new VueLogin();
-            vueLogin.setVisible(true);
-            dispose();
-        });
 
         // ----------- PANEL PRINCIPAL -----------
 

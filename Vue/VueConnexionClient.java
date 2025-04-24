@@ -53,12 +53,12 @@ public class VueConnexionClient extends JFrame {
         leftPanel.add(btnInfo);
 
         JButton btnCalendrier = new JButton("Informations");
-        btnInfo.addActionListener(new ActionListener() {
+        btnCalendrier.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 dispose(); // Ferme la fenêtre actuelle
-                //VuePlusInfos infos = new VuePlusInfos(); // Crée une nouvelle instance de VueAccueil
-                //infos.setVisible(true); // Affiche la fenêtre
+                VueCalendrier vueCalendrier= new VueCalendrier(); // Crée une nouvelle instance de VueAccueil
+                vueCalendrier.setVisible(true); // Affiche la fenêtre
             }
         });
         leftPanel.add(btnCalendrier);
