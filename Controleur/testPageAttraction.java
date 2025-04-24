@@ -2,8 +2,7 @@ package Controleur;
 
 import DAO.*;
 import Modele.*;
-import Vue.InfoAttraction;
-import Vue.testReduc;
+import Vue.*;
 
 import java.time.LocalDate;
 
@@ -45,7 +44,7 @@ public class testPageAttraction {
 
          */
 
-
+/*
         // Connexion à la base
         DaoFactory daoFactory = DaoFactory.getInstance("java_attraction", "root", "");
         AttractionDaoInt attractionDAO = new AttractionDao(daoFactory);
@@ -65,6 +64,8 @@ public class testPageAttraction {
 
         daoFactory.disconnect(); // Fermer proprement
 
+
+ */
 
 /*
         // Initialisation de la DAO
@@ -88,6 +89,13 @@ public class testPageAttraction {
         });
 
  */
+        DaoFactory daoFactory = DaoFactory.getInstance("java_attraction", "root", "");
+        AttractionDaoInt attractionDao = new AttractionDao(daoFactory);
+        Attraction attraction = attractionDao.chercher(3); // ou un autre ID valide
+        VueReservation view = new VueReservation();
+        LocalDate date = LocalDate.now().plusDays(1);
+
+        new ControleurReservation(view, attraction, date);
 
     }
 }

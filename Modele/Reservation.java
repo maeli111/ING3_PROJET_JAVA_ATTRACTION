@@ -33,6 +33,7 @@ public class Reservation {
         this.id_attraction=id_attraction;
     }
 
+
     public int getId_reservation(){return id_reservation;}
     public int getId_client(){return id_client;}
     public String getNom(){return nom;}
@@ -44,4 +45,6 @@ public class Reservation {
     public double getPrix_total(){return prix_total;}
     public int getNb_personne(){return nb_personne;}
     public int getEst_archivee(){return est_archivee;}
+
+
 }

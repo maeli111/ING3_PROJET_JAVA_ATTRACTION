@@ -267,7 +267,6 @@ public class pageReservation extends JFrame {
         // Nombre de personnes (client existant)
         JPanel nbPanelExistant = new JPanel(new FlowLayout(FlowLayout.LEFT));
 
-        JLabel nbPersonneLabelExistant = new JLabel("Nombre de personnes :");
         JTextField nbPersonneFieldExistant = new JTextField("1", 2);
         nbPersonneFieldExistant.setEditable(false);
         nbPersonneFieldExistant.setHorizontalAlignment(JTextField.CENTER);
@@ -555,7 +554,6 @@ public class pageReservation extends JFrame {
 
 
 
-
         // === GESTION DES BOUTONS RADIO ===
         rbClient.addActionListener(e -> {
             formNouveauClient.setVisible(false);
@@ -770,53 +768,4 @@ public class pageReservation extends JFrame {
         prixLabel.setText(String.format("Prix total: %.2f € (Réduction totale: %.2f €)", prixTotal, totalReduc));
     }
 
-    private Reservation creerReservationClientExistant(int idClient, int nbPersonnes, Attraction attraction, LocalDate date) {
-        DaoFactory daoFactory = DaoFactory.getInstance("java_attraction", "root", "");
-        ClientDao clientDao = new ClientDao(daoFactory);
-        ReservationDao reservationDao = new ReservationDao(daoFactory);
-        Client client = clientDao.getById(idClient);
-
-        if (client == null) {
-            throw new IllegalArgumentException("Client introuvable avec l'ID: " + idClient);
-        }
-
-        int idReservationUnique = reservationDao.genererIdReservationUnique(); // appel ici
-
-        return new Reservation(
-                idReservationUnique, // id_reservation (auto-généré)
-                idClient,
-                client.getNom(),
-                client.getPrenom(),
-                client.getEmail(),
-                date, // date de réservation choisie
-                LocalDate.now(), // date d'achat = aujourd'hui
-                attraction.getIdAttraction(),
-                nbPersonnes * attraction.getPrix(), // prix total
-                nbPersonnes,
-                0 // non archivée
-        );
-    }
-
-    private Reservation creerReservationNouveauClient(String nom, String prenom, String email,
-                                                      int nbPersonnes, Attraction attraction,
-                                                      LocalDate date) {
-
-        DaoFactory daoFactory = DaoFactory.getInstance("java_attraction", "root", "");
-        ReservationDao reservationDao = new ReservationDao(daoFactory);
-        int idReservationUnique = reservationDao.genererIdReservationUnique(); // appel ici
-
-        return new Reservation(
-                idReservationUnique, // id_reservation (auto-généré)
-                0, // id_client = 0 pour non enregistré
-                nom,
-                prenom,
-                email,
-                date, // date de réservation choisie
-                LocalDate.now(), // date d'achat = aujourd'hui
-                attraction.getIdAttraction(),
-                nbPersonnes * attraction.getPrix(), // prix total
-                nbPersonnes,
-                0 // non archivée
-        );
-    }
 }
