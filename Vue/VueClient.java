@@ -56,6 +56,20 @@ public class VueClient extends JFrame {
         topPanel.add(leftPanel, BorderLayout.WEST);
         topPanel.add(rightPanel, BorderLayout.EAST);
 
+        // === BOUTON DECONNEXION EN BAS À DROITE ===
+        JPanel bottomPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        JButton btnDeconnexion = new JButton("Déconnexion");
+
+        btnDeconnexion.addActionListener(e -> {
+            dispose(); // Ferme la fenêtre actuelle
+            VueAccueil vueAccueil = new VueAccueil(null, null); // Redirige vers l'accueil sans session
+            vueAccueil.setVisible(true);
+        });
+
+        bottomPanel.add(btnDeconnexion);
+        add(bottomPanel, BorderLayout.SOUTH);
+
+
         // Main content panel
         JPanel mainPanel = new JPanel(new GridLayout(3, 1, 10, 10));
 

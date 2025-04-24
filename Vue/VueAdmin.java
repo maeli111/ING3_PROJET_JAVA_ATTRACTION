@@ -56,6 +56,20 @@ public class VueAdmin extends JFrame {
             dispose();
         });
 
+        // === BOUTON DECONNEXION EN BAS À DROITE ===
+        JPanel bottomPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        JButton btnDeconnexion = new JButton("Déconnexion");
+
+        btnDeconnexion.addActionListener(e -> {
+            dispose(); // Ferme la fenêtre actuelle
+            VueAccueil vueAccueil = new VueAccueil(null, null); // Redirige vers l'accueil sans session
+            vueAccueil.setVisible(true);
+        });
+
+        bottomPanel.add(btnDeconnexion);
+        add(bottomPanel, BorderLayout.SOUTH);
+
+
 
         // ----------- PANEL PRINCIPAL -----------
 
