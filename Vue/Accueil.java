@@ -107,14 +107,15 @@ public class Accueil extends JFrame{
         //texte d'informations sur le parc
         JLabel description = new JLabel(
                 "<html><div style='text-align: center;'>"
-                        + "Entrez dans l'univers magique de <b>Palasi Land</b> <br>" +
-                        " là où les légendes anciennes prennent vie et les dieux vous emmènent dans des aventures extraordinaires !<br><br>"
-                        + "Que vous soyez prêt à défier les titans dans des montagnes russes vertigineuses, <br>" +
-                        " plonger dans les profondeurs des océans mystiques ou voyager à travers des terres enchantées. <b><br>" +
-                        "Palasi Land</b> <br>" +
-                        " vous offrera des expériences mythologiques pour tous les courageux aventuriers et aventurières!<br><br>"
-                        + "Venez découvrir les secrets de vos héros préférés, <br>" +
-                        "des créatures mythologiques et des dieux antiques dans un parc où chaque attraction vous plonge dans un conte épique !"
+                        + "Entrez dans l'univers magique de <b>Palasi Land</b> <br>"
+                        + "là où les légendes anciennes prennent vie et où les dieux vous entraînent dans des aventures extraordinaires !<br><br>"
+                        + "Que vous soyez prêt à défier les titans dans des montagnes russes vertigineuses,<br>"
+                        + "plonger dans les profondeurs des océans mystiques ou voyager à travers des terres enchantées,<br><br>"
+                        + "<b>Palasi Land</b> vous offrira des expériences mythologiques<br>"
+                        + "pour tous les courageux aventuriers et aventurières, petits et grands !<br><br>"
+                        + "Venez découvrir et percer les secrets de vos héros préférés,<br>"
+                        + "rencontrer des créatures légendaires, passer un moment inoubliable avec des dieux antiques<br>"
+                        + "dans un parc où chaque attraction vous plonge au cœur d’un conte épique !"
                         + "</div></html>",
                 SwingConstants.CENTER
         );

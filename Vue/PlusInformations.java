@@ -35,6 +35,7 @@ public class PlusInformations extends JFrame {
         parc.setBorder(null);
         parc.setOpaque(false);
 
+
         //barre de navigation
         JPanel Pbarre = new JPanel(new BorderLayout());
 
@@ -66,25 +67,91 @@ public class PlusInformations extends JFrame {
         contenu.setLayout(new BoxLayout(contenu, BoxLayout.Y_AXIS));
         contenu.setBorder(BorderFactory.createEmptyBorder(20, 30, 20, 30));
 
-        JLabel infos = new JLabel(
+        /*JLabel infos = new JLabel(
                 "<html><div style='text-align: center;'>"
-                        + "<b>Palasi Land</b> est un parc d'attraction destiné aux plus jeunes comme aux plus grands,<br>"
-                        + "là où les légendes anciennes prennent vie et où les dieux vous entraînent dans des aventures extraordinaires !<br><br>"
-                        + "Que vous soyez prêt à défier les titans dans des montagnes russes vertigineuses,<br>"
-                        + "plonger dans les profondeurs des océans mystiques ou voyager à travers des terres enchantées,<br><br>"
-                        + "<b>Palasi Land</b> vous offrira des expériences mythologiques<br>"
-                        + "pour tous les courageux aventuriers et aventurières, petits et grands !<br><br>"
-                        + "Venez découvrir et percer les secrets de vos héros préférés,<br>"
-                        + "rencontrer des créatures légendaires, passer un moment inoubliable avec des dieux antiques<br>"
-                        + "dans un parc où chaque attraction vous plonge au cœur d’un conte épique !"
+                        + "<b>Palasi Land</b> est un parc d'attraction destiné aux plus jeunes comme aux plus grands<br>"
+                        + "Palasi Land vous offre un choix varié d'attractions, <br>"
+                        + "en passant par quatre attractions à sensations fortes comme Titan's Fury, Colère de Zeus, Hydra Coaster, Labyrinthe du minotaure" +
+                        "trois attractions aquatiques comme Odysée des mers, Cascade d'Atlantide, Sirènes en furie" +
+                        "deux manèges familiaux comme Carrousel d'Olympe, Petite aventure de Pégase" +
+                        "deux manèges intéractifs comme Arène d'Arès, Mission Oracles" +
+                        "ou encore deux attractions plus mystérieuses comme La Malédiction de Méduse, Les portes d'Hadès"+
+                        "Les tarifs de nos attractions ....<b> A COMPLETER </b>"
+                        + "Le système de réduction ....<b> A COMPLETER </b>"
+                        + "</div></html>",
+                SwingConstants.CENTER
+        );*/
+
+        JLabel infos = new JLabel(
+                "<html><div style='text-align: center; font-family: Arial; font-size: 12px;'>"
+                        + "<b>Palasi Land</b> est un parc d'attractions destiné aux plus jeunes comme aux plus grands !<br>"
+                        + "Venez vivre des moments inoubliables en famille ou entre amis dans un univers mythologique et fantastique! <br><br>"
+
+                        + "🎢 <b>Palasi Land</b> vous offre un choix varié d’attractions, pour tous les goûts. <br><br>"
+                        + " En passant par quatre attractions à sensations fortes, trois attractions aquatiques, <br>"
+                        +" deux manèges familiaux, deux manèges intéractifs et deux attractions plus mystérieuses <br><br>"
+
+                        + "<b>🌪️ Sensations fortes :</b><br>"
+                        + "• Titan's Fury - 8€<br>"
+                        + "• Colère de Zeus - 6€<br>"
+                        + "• Hydra Coaster - 7€<br>"
+                        + "• Labyrinthe du Minotaure - 8€<br><br>"
+
+                        + "<b>🌊 Attractions aquatiques :</b><br>"
+                        + "• Odyssée des Mers - 5€<br>"
+                        + "• Cascade d'Atlantide - 6€<br>"
+                        + "• Sirènes en Furie - 6€<br><br>"
+
+                        + "<b>🎠 Manèges familiaux :</b><br>"
+                        + "• Carrousel d’Olympe - 4€<br>"
+                        + "• Petite Aventure de Pégase - 4€<br><br>"
+
+                        + "<b>🕹️ Manèges interactifs :</b><br>"
+                        + "• Arène d’Arès - 6€<br>"
+                        + "• Mission Oracles - 7€<br><br>"
+
+                        + "<b>🌀 Attractions mystérieuses :</b><br>"
+                        + "• La Malédiction de Méduse - 5€<br>"
+                        + "• Les Portes d’Hadès - 6€<br><br>"
+
+                        + "<b>💸 Tarifs réduits :</b><br>"
+                        + "Profitez de réductions spéciales selon votre profil de visiteur !<br>"
+                        + "Découvrez-les dans le tableau ci-dessous ⬇️<br><br>"
+
                         + "</div></html>",
                 SwingConstants.CENTER
         );
+
+
 
         infos.setFont(new Font("Bodoni MT", Font.PLAIN, 18));
         infos.setAlignmentX(Component.CENTER_ALIGNMENT);
         infos.setBorder(BorderFactory.createEmptyBorder(20, 0, 20, 0));
         contenu.add(infos);
+
+        // tableau de reductions
+        String[] colonnes = {"Réductions","Pourcentage", "Description"};
+        Object[][] infosReduc={
+                {"Première visite", "15%", "Pour les nouveaux utilisateurs à la réservation de leur 1ère attraction"},
+                {"Pack famille", "25%", "Pour les familles avec 2 adultes et 2 enfants"},
+                {"Fidélité", "15%", "Pour les clients ayant réservé 5 attractions ou plus"},
+                {"Client enfant", "25%", "Pour les enfants de moins de 18 ans"},
+                {"Client sénior", "15%", "Pour les adultes de plus de 60 ans"},
+                {"Client étudiant", "20%", "Pour les étudiants entre 18 et 25 ans"},
+                {"Famille nombreuse", "30%", "Pour les familles de 2 adultes et plus de 3 enfants"},
+                {"Pâques","10%","Pour les fêtes, profitez de -10% sur certaines attractions"}
+        };
+        JTable reductions = new JTable(infosReduc, colonnes);
+        reductions.setFillsViewportHeight(true);
+        //reductions.setPreferredScrollableViewportSize(new Dimension(1000, 160)); // optionnel
+
+        JScrollPane tableauScroll = new JScrollPane(reductions);
+        tableauScroll.setAlignmentX(Component.CENTER_ALIGNMENT); // centrer dans le contenu
+        tableauScroll.setBorder(BorderFactory.createEmptyBorder(10, 0, 20, 0));
+
+        // ajout du tableau dans le contenu
+        contenu.add(tableauScroll);
+
 
         // actions sur les boutons
         accueil.addActionListener(new ActionListener() {
