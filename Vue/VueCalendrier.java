@@ -49,8 +49,44 @@ public class VueCalendrier extends JFrame {
         Pnavigation.add(informations);
         Pnavigation.add(calendrier);
 
+        accueil.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                VueAccueil vueAccueil = new VueAccueil();
+                vueAccueil.setVisible(true);
+                dispose();
+            }
+        });
+
+        informations.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                VuePlusInfos vuePlusInfos = new VuePlusInfos();
+                vuePlusInfos.setVisible(true);
+                dispose();
+            }
+        });
+
+        calendrier.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                VueCalendrier vueCalendrier = new VueCalendrier();
+                vueCalendrier.setVisible(true);
+                dispose();
+            }
+        });
+
         JPanel Pcompte = new JPanel(new FlowLayout(FlowLayout.RIGHT, 10, 10));
         Pcompte.add(compte);
+
+        compte.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                VueLogin vueLogin = new VueLogin();
+                vueLogin.setVisible(true);
+                dispose();
+            }
+        });
 
         Pbarre.add(Pnavigation, BorderLayout.WEST);
         Pbarre.add(Pcompte, BorderLayout.EAST);

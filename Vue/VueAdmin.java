@@ -8,136 +8,142 @@ import java.awt.event.ActionListener;
 import Modele.Admin;
 
 public class VueAdmin extends JFrame {
-    // Ajout du paramètre Admin dans le constructeur
+    private JButton accueil = new JButton("Accueil");
+    private JButton informations = new JButton("Informations");
+    private JButton calendrier = new JButton("Calendrier");
+    private JButton compte = new JButton("Compte");
+
     public VueAdmin(Admin admin) {
-        setTitle("Reduction Administrateur");
+        setTitle("Réduction Administrateur");
         setSize(600, 500);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setLayout(new BorderLayout(10, 10)); // Added border layout with gaps
+        setLayout(new BorderLayout(10, 10));
 
-        // Top button panel
-        JPanel topPanel = new JPanel(new BorderLayout());
-        JPanel leftPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        leftPanel.add(new JButton("Accueil"));
-        leftPanel.add(new JButton("Informations"));
-        leftPanel.add(new JButton("Calendrier"));
+        // ----------- HEADER avec les boutons de navigation -----------
 
-        JPanel rightPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-        rightPanel.add(new JButton("Compte"));
+        JPanel header = new JPanel(new BorderLayout());
 
-        topPanel.add(leftPanel, BorderLayout.WEST);
-        topPanel.add(rightPanel, BorderLayout.EAST);
+        JPanel Pnavigation = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 10));
+        Pnavigation.add(accueil);
+        Pnavigation.add(informations);
+        Pnavigation.add(calendrier);
 
-        // Main content panel
-        JPanel mainPanel = new JPanel(new BorderLayout(10, 10)); // Border layout with gaps
+        JPanel Pcompte = new JPanel(new FlowLayout(FlowLayout.RIGHT, 10, 10));
+        Pcompte.add(compte);
 
-        // Personal information panel
-        JPanel infoPanel = new JPanel(new GridLayout(3, 2, 5, 5)); // 3 rows, 2 columns
+        header.add(Pnavigation, BorderLayout.WEST);
+        header.add(Pcompte, BorderLayout.EAST);
+
+        add(header, BorderLayout.NORTH);
+
+        // ----------- LISTENERS des boutons de navigation -----------
+
+        accueil.addActionListener(e -> {
+            VueAccueil vueAccueil = new VueAccueil();
+            vueAccueil.setVisible(true);
+            dispose();
+        });
+
+        informations.addActionListener(e -> {
+            VuePlusInfos vuePlusInfos = new VuePlusInfos();
+            vuePlusInfos.setVisible(true);
+            dispose();
+        });
+
+        calendrier.addActionListener(e -> {
+            VueCalendrier vueCalendrier = new VueCalendrier();
+            vueCalendrier.setVisible(true);
+            dispose();
+        });
+
+        compte.addActionListener(e -> {
+            VueLogin vueLogin = new VueLogin();
+            vueLogin.setVisible(true);
+            dispose();
+        });
+
+        // ----------- PANEL PRINCIPAL -----------
+
+        JPanel mainPanel = new JPanel(new BorderLayout(10, 10));
+
+        JPanel infoPanel = new JPanel(new GridLayout(3, 2, 5, 5));
         infoPanel.setBorder(BorderFactory.createTitledBorder("Informations personnelles"));
 
-        // Utilisation des données de l'objet admin pour afficher les informations
         infoPanel.add(new JLabel("Nom:"));
-        JTextField nomField = new JTextField(admin.getNom());  // Récupération du nom de l'administrateur
-        nomField.setEditable(false);  // Rendre le champ non modifiable
+        JTextField nomField = new JTextField(admin.getNom());
+        nomField.setEditable(false);
         infoPanel.add(nomField);
 
         infoPanel.add(new JLabel("Prénom:"));
-        JTextField prenomField = new JTextField(admin.getPrenom());  // Récupération du prénom
-        prenomField.setEditable(false);  // Rendre le champ non modifiable
+        JTextField prenomField = new JTextField(admin.getPrenom());
+        prenomField.setEditable(false);
         infoPanel.add(prenomField);
 
         infoPanel.add(new JLabel("E-mail:"));
-        JTextField emailField = new JTextField(admin.getEmail());  // Récupération de l'email
-        emailField.setEditable(false);  // Rendre le champ non modifiable
+        JTextField emailField = new JTextField(admin.getEmail());
+        emailField.setEditable(false);
         infoPanel.add(emailField);
 
-        // Modifications label
-        JLabel modificationsLabel = new JLabel("Modifications:", SwingConstants.LEFT);
-        modificationsLabel.setBorder(BorderFactory.createEmptyBorder(0, 0, 5, 10)); // Add some space to the right
+        // ----------- BOUTONS DE GESTION -----------
 
-        // Management panels
-        JPanel managementPanel = new JPanel(new GridLayout(4, 1, 5, 5)); // 4 rows with reduced gap
+        JLabel modificationsLabel = new JLabel("Modifications:", SwingConstants.LEFT);
+        modificationsLabel.setBorder(BorderFactory.createEmptyBorder(0, 0, 5, 10));
+
+        JPanel managementPanel = new JPanel(new GridLayout(4, 1, 5, 5));
 
         JButton attractionsButton = new JButton("Attractions");
-        attractionsButton.setFocusPainted(false);
-        attractionsButton.setBorderPainted(false);
-        attractionsButton.setContentAreaFilled(false);
-        attractionsButton.setForeground(Color.BLUE);
-        attractionsButton.setFont(attractionsButton.getFont().deriveFont(Font.ITALIC));
-
-        attractionsButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                dispose(); // Ferme la fenêtre Login
-                VueAdminAttraction VueAdminAttraction = new VueAdminAttraction(admin);
-                VueAdminAttraction.setVisible(true);
-            }
-        });
-
         JButton reductionsButton = new JButton("Réductions");
-        reductionsButton.setFocusPainted(false);
-        reductionsButton.setBorderPainted(false);
-        reductionsButton.setContentAreaFilled(false);
-        reductionsButton.setForeground(Color.BLUE);
-        reductionsButton.setFont(reductionsButton.getFont().deriveFont(Font.ITALIC));
-
-        reductionsButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                String[] options = {"Réductions clients", "Réductions attractions"};
-                int choix = JOptionPane.showOptionDialog(
-                        null,
-                        "Souhaitez-vous modifier les réductions pour les clients ou les attractions ?",
-                        "Choix du type de réductions",
-                        JOptionPane.DEFAULT_OPTION,
-                        JOptionPane.QUESTION_MESSAGE,
-                        null,
-                        options,
-                        options[0]
-                );
-
-                dispose(); // Ferme la fenêtre actuelle
-
-                if (choix == 0) { // Réductions clients
-                    VueAdminRC vueClient = new VueAdminRC(admin);
-                    vueClient.setVisible(true);
-                } else if (choix == 1) { // Réductions attractions
-                    VueAdminRA vueAttraction = new VueAdminRA(admin);
-                    vueAttraction.setVisible(true);
-                }
-            }
-        });
-
-
         JButton dossiersClientsButton = new JButton("Dossiers clients");
-        dossiersClientsButton.setFocusPainted(false);
-        dossiersClientsButton.setBorderPainted(false);
-        dossiersClientsButton.setContentAreaFilled(false);
-        dossiersClientsButton.setForeground(Color.BLUE);
-        dossiersClientsButton.setFont(dossiersClientsButton.getFont().deriveFont(Font.ITALIC));
+        JButton attractionDuMoisButton = new JButton("Attraction du mois");
 
-        dossiersClientsButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                dispose(); // Ferme la fenêtre Login
-                VueAdminClient VueAdminClient = new VueAdminClient(admin);
-                VueAdminClient.setVisible(true);
+        JButton[] btns = {attractionsButton, reductionsButton, dossiersClientsButton, attractionDuMoisButton};
+        for (JButton btn : btns) {
+            btn.setFocusPainted(false);
+            btn.setBorderPainted(false);
+            btn.setContentAreaFilled(false);
+            btn.setForeground(Color.BLUE);
+            btn.setFont(btn.getFont().deriveFont(Font.ITALIC));
+            managementPanel.add(btn);
+        }
+
+        attractionsButton.addActionListener(e -> {
+            dispose();
+            VueAdminAttraction vueAdminAttraction = new VueAdminAttraction(admin);
+            vueAdminAttraction.setVisible(true);
+        });
+
+        reductionsButton.addActionListener(e -> {
+            String[] options = {"Réductions clients", "Réductions attractions"};
+            int choix = JOptionPane.showOptionDialog(
+                    null,
+                    "Souhaitez-vous modifier les réductions pour les clients ou les attractions ?",
+                    "Choix du type de réductions",
+                    JOptionPane.DEFAULT_OPTION,
+                    JOptionPane.QUESTION_MESSAGE,
+                    null,
+                    options,
+                    options[0]
+            );
+
+            dispose();
+
+            if (choix == 0) {
+                VueAdminRC vueClient = new VueAdminRC(admin);
+                vueClient.setVisible(true);
+            } else if (choix == 1) {
+                VueAdminRA vueAttraction = new VueAdminRA(admin);
+                vueAttraction.setVisible(true);
             }
         });
 
-        JButton attractionDuMoisButton = new JButton("Attraction du mois");
-        attractionDuMoisButton.setFocusPainted(false);
-        attractionDuMoisButton.setBorderPainted(false);
-        attractionDuMoisButton.setContentAreaFilled(false);
-        attractionDuMoisButton.setForeground(Color.BLUE);
-        attractionDuMoisButton.setFont(attractionDuMoisButton.getFont().deriveFont(Font.ITALIC));
+        dossiersClientsButton.addActionListener(e -> {
+            dispose();
+            VueAdminClient vueAdminClient = new VueAdminClient(admin);
+            vueAdminClient.setVisible(true);
+        });
 
-        managementPanel.add(attractionsButton);
-        managementPanel.add(reductionsButton);
-        managementPanel.add(dossiersClientsButton);
-        managementPanel.add(attractionDuMoisButton);
+        // Pas d’action définie pour "Attraction du mois" ici, tu peux l'ajouter si besoin
 
-        // Add panels to main panel
         JPanel leftPanelWithLabel = new JPanel(new BorderLayout());
         leftPanelWithLabel.add(modificationsLabel, BorderLayout.NORTH);
         leftPanelWithLabel.add(managementPanel, BorderLayout.CENTER);
@@ -145,7 +151,6 @@ public class VueAdmin extends JFrame {
         mainPanel.add(infoPanel, BorderLayout.NORTH);
         mainPanel.add(leftPanelWithLabel, BorderLayout.CENTER);
 
-        add(topPanel, BorderLayout.NORTH);
         add(mainPanel, BorderLayout.CENTER);
     }
 }
