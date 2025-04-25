@@ -181,7 +181,7 @@ public class VueLogin extends JFrame {
             clientDao.inscrire(client);
             JOptionPane.showMessageDialog(null, "Inscription réussie !", "Succès", JOptionPane.INFORMATION_MESSAGE);
             VueClient vueClient = new VueClient(client);
-            ControleurClient controleurClient = new ControleurClient(vueClient, client);
+            new ControleurClient(vueClient, client);
             vueClient.setVisible(true);
             dispose();
         });

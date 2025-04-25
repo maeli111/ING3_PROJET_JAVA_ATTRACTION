@@ -2,24 +2,27 @@ package Vue;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-
-import Modele.*;
+import Modele.Admin;
 
 public class VueAdmin extends JFrame {
     private JButton accueil = new JButton("Accueil");
     private JButton informations = new JButton("Informations");
     private JButton calendrier = new JButton("Calendrier");
     private JButton compte = new JButton("Compte");
+    private JButton btnDeconnexion = new JButton("Déconnexion");
+
+    private JButton attractionsButton = new JButton("Attractions");
+    private JButton reductionsButton = new JButton("Réductions");
+    private JButton dossiersClientsButton = new JButton("Dossiers clients");
+    private JButton attractionDuMoisButton = new JButton("Attraction du mois");
 
     public VueAdmin(Admin admin) {
-        setTitle("Réduction Administrateur");
+        setTitle("Infos Administrateur");
         setSize(600, 500);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new BorderLayout(10, 10));
 
-        // ----------- HEADER avec les boutons de navigation -----------
+        // ----------- HEADER -----------
 
         JPanel header = new JPanel(new BorderLayout());
 
@@ -33,45 +36,9 @@ public class VueAdmin extends JFrame {
 
         header.add(Pnavigation, BorderLayout.WEST);
         header.add(Pcompte, BorderLayout.EAST);
-
         add(header, BorderLayout.NORTH);
 
-        // ----------- LISTENERS des boutons de navigation -----------
-
-        accueil.addActionListener(e -> {
-            VueAccueil vueAccueil = new VueAccueil(null, admin);
-            vueAccueil.setVisible(true);
-            dispose();
-        });
-
-        informations.addActionListener(e -> {
-            VuePlusInfos vuePlusInfos = new VuePlusInfos(null,admin);
-            vuePlusInfos.setVisible(true);
-            dispose();
-        });
-
-        calendrier.addActionListener(e -> {
-            VueCalendrier vueCalendrier = new VueCalendrier(null, admin);
-            vueCalendrier.setVisible(true);
-            dispose();
-        });
-
-        // === BOUTON DECONNEXION EN BAS À DROITE ===
-        JPanel bottomPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-        JButton btnDeconnexion = new JButton("Déconnexion");
-
-        btnDeconnexion.addActionListener(e -> {
-            dispose(); // Ferme la fenêtre actuelle
-            VueAccueil vueAccueil = new VueAccueil(null, null); // Redirige vers l'accueil sans session
-            vueAccueil.setVisible(true);
-        });
-
-        bottomPanel.add(btnDeconnexion);
-        add(bottomPanel, BorderLayout.SOUTH);
-
-
-
-        // ----------- PANEL PRINCIPAL -----------
+        // ----------- MAIN -----------
 
         JPanel mainPanel = new JPanel(new BorderLayout(10, 10));
 
@@ -93,18 +60,10 @@ public class VueAdmin extends JFrame {
         emailField.setEditable(false);
         infoPanel.add(emailField);
 
-        // ----------- BOUTONS DE GESTION -----------
-
         JLabel modificationsLabel = new JLabel("Modifications:", SwingConstants.LEFT);
         modificationsLabel.setBorder(BorderFactory.createEmptyBorder(0, 0, 5, 10));
 
         JPanel managementPanel = new JPanel(new GridLayout(4, 1, 5, 5));
-
-        JButton attractionsButton = new JButton("Attractions");
-        JButton reductionsButton = new JButton("Réductions");
-        JButton dossiersClientsButton = new JButton("Dossiers clients");
-        JButton attractionDuMoisButton = new JButton("Attraction du mois");
-
         JButton[] btns = {attractionsButton, reductionsButton, dossiersClientsButton, attractionDuMoisButton};
         for (JButton btn : btns) {
             btn.setFocusPainted(false);
@@ -115,51 +74,30 @@ public class VueAdmin extends JFrame {
             managementPanel.add(btn);
         }
 
-        attractionsButton.addActionListener(e -> {
-            dispose();
-            VueAdminAttraction vueAdminAttraction = new VueAdminAttraction(admin);
-            vueAdminAttraction.setVisible(true);
-        });
-
-        reductionsButton.addActionListener(e -> {
-            String[] options = {"Réductions clients", "Réductions attractions"};
-            int choix = JOptionPane.showOptionDialog(
-                    null,
-                    "Souhaitez-vous modifier les réductions pour les clients ou les attractions ?",
-                    "Choix du type de réductions",
-                    JOptionPane.DEFAULT_OPTION,
-                    JOptionPane.QUESTION_MESSAGE,
-                    null,
-                    options,
-                    options[0]
-            );
-
-            dispose();
-
-            if (choix == 0) {
-                VueAdminRC vueReducClient = new VueAdminRC(admin);
-                vueReducClient.setVisible(true);
-            } else if (choix == 1) {
-                VueAdminRA vueAttraction = new VueAdminRA(admin);
-                vueAttraction.setVisible(true);
-            }
-        });
-
-        dossiersClientsButton.addActionListener(e -> {
-            dispose();
-            VueAdminClient vueAdminClient = new VueAdminClient(admin);
-            vueAdminClient.setVisible(true);
-        });
-
-        // Pas d’action définie pour "Attraction du mois" ici, tu peux l'ajouter si besoin
-
         JPanel leftPanelWithLabel = new JPanel(new BorderLayout());
         leftPanelWithLabel.add(modificationsLabel, BorderLayout.NORTH);
         leftPanelWithLabel.add(managementPanel, BorderLayout.CENTER);
 
         mainPanel.add(infoPanel, BorderLayout.NORTH);
         mainPanel.add(leftPanelWithLabel, BorderLayout.CENTER);
-
         add(mainPanel, BorderLayout.CENTER);
+
+        // ----------- FOOTER -----------
+
+        JPanel bottomPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        bottomPanel.add(btnDeconnexion);
+        add(bottomPanel, BorderLayout.SOUTH);
     }
+
+    // ===== GETTERS =====
+    public JButton getAccueilButton() { return accueil; }
+    public JButton getInformationsButton() { return informations; }
+    public JButton getCalendrierButton() { return calendrier; }
+    public JButton getCompteButton() { return compte; }
+    public JButton getDeconnexionButton() { return btnDeconnexion; }
+
+    public JButton getAttractionsButton() { return attractionsButton; }
+    public JButton getReductionsButton() { return reductionsButton; }
+    public JButton getDossiersClientsButton() { return dossiersClientsButton; }
+    public JButton getAttractionDuMoisButton() { return attractionDuMoisButton; }
 }

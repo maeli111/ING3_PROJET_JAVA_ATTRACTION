@@ -5,6 +5,7 @@ import DAO.AttractionDao;
 import DAO.AttractionDaoInt;
 import DAO.DaoFactory;
 import Modele.*;
+import Controleur.*;
 
 import javax.swing.*;
 import java.awt.*;
@@ -98,7 +99,9 @@ public class VueCalendrier extends JFrame {
                 vueClient.setVisible(true);
                 dispose();
             } else if (client == null && admin != null) {
-                new VueAdmin(admin).setVisible(true);
+                VueAdmin vueAdmin = new VueAdmin(admin);
+                ControleurAdmin controleurAdmin = new ControleurAdmin(vueAdmin, admin);
+                vueAdmin.setVisible(true);
                 dispose();
             }
         });

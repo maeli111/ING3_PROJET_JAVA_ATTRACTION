@@ -4,6 +4,7 @@ import DAO.ReductionDao;
 import DAO.DaoFactory;
 import Modele.Reduction;
 import Modele.Admin;
+import Controleur.*;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -48,6 +49,7 @@ public class VueAdminRC extends JFrame {
         compteButton.addActionListener(e -> {
             dispose();
             VueAdmin vueAdmin = new VueAdmin(admin);
+            ControleurAdmin controleurAdmin = new ControleurAdmin(vueAdmin, admin);
             vueAdmin.setVisible(true);
         });
 

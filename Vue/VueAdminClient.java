@@ -4,6 +4,7 @@ import DAO.ClientDao;
 import DAO.DaoFactory;
 import Modele.Admin;
 import Modele.Client;
+import Controleur.*;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -42,9 +43,10 @@ import java.util.ArrayList;
 
             // Action du bouton Compte
             compteButton.addActionListener(e -> {
-                dispose();
                 VueAdmin vueAdmin = new VueAdmin(admin);
+                ControleurAdmin controleurAdmin = new ControleurAdmin(vueAdmin, admin);
                 vueAdmin.setVisible(true);
+                dispose();
             });
 
             buttonBar.add(leftPanel, BorderLayout.WEST);

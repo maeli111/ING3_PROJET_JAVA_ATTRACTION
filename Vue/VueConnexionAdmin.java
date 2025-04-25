@@ -3,6 +3,7 @@ package Vue;
 import DAO.AdminDao;
 import DAO.DaoFactory;
 import Modele.Admin;
+import Controleur.*;
 
 import javax.swing.*;
 import java.awt.*;
@@ -141,8 +142,9 @@ public class VueConnexionAdmin extends JFrame {
                 if (adminConnecte != null) {
                     JOptionPane.showMessageDialog(null, "Connexion réussie ! Bienvenue, " + adminConnecte.getPrenom() + " " + adminConnecte.getNom(), "Succès", JOptionPane.INFORMATION_MESSAGE);
                     dispose();
-                    VueAdmin adminPage = new VueAdmin(adminConnecte);
-                    adminPage.setVisible(true);
+                    VueAdmin vueAdmin = new VueAdmin(adminConnecte);
+                    new ControleurAdmin(vueAdmin, adminConnecte);
+                    vueAdmin.setVisible(true);
                 } else {
                     JOptionPane.showMessageDialog(null, "Email ou mot de passe incorrect.", "Échec de connexion", JOptionPane.ERROR_MESSAGE);
                 }

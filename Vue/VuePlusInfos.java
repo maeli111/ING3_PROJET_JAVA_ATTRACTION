@@ -1,6 +1,6 @@
 package Vue;
 
-import Controleur.ControleurClient;
+import Controleur.*;
 import Modele.*;
 import javax.swing.*;
 import java.awt.*;
@@ -59,11 +59,13 @@ public class VuePlusInfos extends JFrame {
                     dispose();
                 } else if (client != null && admin == null) {
                     VueClient vueClient = new VueClient(client);
-                    ControleurClient controleurClient = new ControleurClient(vueClient, client);
+                    new ControleurClient(vueClient, client);
                     vueClient.setVisible(true);
                     dispose();
                 } else if (client == null && admin != null) {
-                    new VueAdmin(admin).setVisible(true);
+                    VueAdmin vueAdmin = new VueAdmin(admin);
+                    new ControleurAdmin(vueAdmin, admin);
+                    vueAdmin.setVisible(true);
                     dispose();
                 }
 

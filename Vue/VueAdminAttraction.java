@@ -1,5 +1,6 @@
 package Vue;
 
+import Controleur.*;
 import DAO.AttractionDao;
 import DAO.DaoFactory;
 import Modele.Admin;
@@ -40,9 +41,10 @@ public class VueAdminAttraction extends JFrame {
         JButton compteButton = new JButton("Compte");
         rightPanel.add(compteButton);
         compteButton.addActionListener(e -> {
-            dispose();
             VueAdmin vueAdmin = new VueAdmin(admin);
+            ControleurAdmin controleurAdmin = new ControleurAdmin(vueAdmin, admin);
             vueAdmin.setVisible(true);
+            dispose();
         });
 
         buttonBar.add(leftPanel, BorderLayout.WEST);
