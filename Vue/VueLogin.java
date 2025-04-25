@@ -2,13 +2,7 @@ package Vue;
 
 import javax.swing.*;
 import java.awt.*;
-
-import Controleur.ControleurClient;
 import DAO.*;
-import Modele.Client;
-import Modele.Admin;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 public class VueLogin extends JFrame {
 
@@ -22,52 +16,11 @@ public class VueLogin extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new BorderLayout(10, 10));
 
-        // ----------- HEADER avec les boutons de navigation -----------
-
-        JPanel header = new JPanel(new BorderLayout());
-
-        JPanel Pnavigation = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 10));
-        JButton accueil = new JButton("Accueil");
-        JButton informations = new JButton("Informations");
-        JButton calendrier = new JButton("Calendrier");
-        Pnavigation.add(accueil);
-        Pnavigation.add(informations);
-        Pnavigation.add(calendrier);
-
-        JPanel Pcompte = new JPanel(new FlowLayout(FlowLayout.RIGHT, 10, 10));
-        JButton compte = new JButton("Compte");
-        Pcompte.add(compte);
-
-        header.add(Pnavigation, BorderLayout.WEST);
-        header.add(Pcompte, BorderLayout.EAST);
-
-        // ----------- ACTIONS DES BOUTONS DU HEADER -----------
-
-        accueil.addActionListener(e -> {
-            VueAccueil vueAccueil = new VueAccueil(null,null);
-            vueAccueil.setVisible(true);
-            dispose();
-        });
-
-        informations.addActionListener(e -> {
-            VuePlusInfos vuePlusInfos = new VuePlusInfos(null, null);
-            vuePlusInfos.setVisible(true);
-            dispose();
-        });
-
-        calendrier.addActionListener(e -> {
-            VueCalendrier vueCalendrier = new VueCalendrier(null,null);
-            vueCalendrier.setVisible(true);
-            dispose();
-        });
 
         // ----------- PANNEAU CENTRAL -----------
 
         JPanel mainPanel = new JPanel(new BorderLayout()); // On garde BorderLayout pour avoir la partie supérieure fixe
         add(mainPanel, BorderLayout.CENTER);
-
-        // Ajouter le header au top
-        mainPanel.add(header, BorderLayout.NORTH);
 
         // ----------- BOUTONS VERTICAUX CENTRÉS EN BAS -----------
 

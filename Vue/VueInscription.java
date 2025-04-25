@@ -25,12 +25,6 @@ public class VueInscription extends JFrame {
         JPanel header = new JPanel(new BorderLayout());
 
         JPanel Pnavigation = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 10));
-        JButton accueil = new JButton("Accueil");
-        JButton informations = new JButton("Informations");
-        JButton calendrier = new JButton("Calendrier");
-        Pnavigation.add(accueil);
-        Pnavigation.add(informations);
-        Pnavigation.add(calendrier);
 
         JPanel Pcompte = new JPanel(new FlowLayout(FlowLayout.RIGHT, 10, 10));
         JButton compte = new JButton("Compte");
@@ -41,27 +35,9 @@ public class VueInscription extends JFrame {
 
         add(header, BorderLayout.NORTH); // Ajout du header avec les boutons de navigation
 
-        accueil.addActionListener(e -> {
-            VueAccueil vueAccueil = new VueAccueil(null,null);
-            vueAccueil.setVisible(true);
-            dispose();
-        });
-
-        informations.addActionListener(e -> {
-            VuePlusInfos vuePlusInfos = new VuePlusInfos(null, null);
-            vuePlusInfos.setVisible(true);
-            dispose();
-        });
-
         compte.addActionListener(e -> {
             VueLogin vueLogin = new VueLogin();
             vueLogin.setVisible(true);
-            dispose();
-        });
-
-        calendrier.addActionListener(e -> {
-            VueCalendrier vueCalendrier = new VueCalendrier(null,null);
-            vueCalendrier.setVisible(true);
             dispose();
         });
 

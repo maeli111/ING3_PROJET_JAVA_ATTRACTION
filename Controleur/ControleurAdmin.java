@@ -60,7 +60,9 @@ public class ControleurAdmin {
             vue.dispose();
 
             if (choix == 0) {
-                new VueAdminRC(admin).setVisible(true);
+                VueAdminRC vueAdminRC = new VueAdminRC(admin);
+                new ControleurAdminRC(vueAdminRC,admin);
+                vueAdminRC.setVisible(true);
             } else if (choix == 1) {
                 VueAdminRA vueAdminRA = new VueAdminRA(admin);
                 new ControleurAdminRA(vueAdminRA, admin);

@@ -28,40 +28,6 @@ public class VueConnexionClient extends JFrame {
         // Panneau supérieur avec boutons
         JPanel topPanel = new JPanel(new BorderLayout());
 
-        JPanel leftPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-
-        JButton btnAccueil = new JButton("Accueil");
-        btnAccueil.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                dispose(); // Ferme la fenêtre actuelle
-                VueAccueil accueil = new VueAccueil(null,null); // Crée une nouvelle instance de VueAccueil
-                accueil.setVisible(true); // Affiche la fenêtre
-            }
-        });
-        leftPanel.add(btnAccueil);
-
-        JButton btnInfo = new JButton("Informations");
-        btnInfo.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                dispose(); // Ferme la fenêtre actuelle
-                VuePlusInfos infos = new VuePlusInfos(null, null); // Crée une nouvelle instance de VueAccueil
-                infos.setVisible(true); // Affiche la fenêtre
-            }
-        });
-        leftPanel.add(btnInfo);
-
-        JButton btnCalendrier = new JButton("Calendrier");
-        btnCalendrier.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                dispose(); // Ferme la fenêtre actuelle
-                VueCalendrier vueCalendrier= new VueCalendrier(null, null); // Crée une nouvelle instance de VueAccueil
-                vueCalendrier.setVisible(true); // Affiche la fenêtre
-            }
-        });
-        leftPanel.add(btnCalendrier);
 
         JPanel rightPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         JButton btnCompte = new JButton("Compte");
@@ -74,8 +40,6 @@ public class VueConnexionClient extends JFrame {
             }
         });
         rightPanel.add(btnCompte);
-
-        topPanel.add(leftPanel, BorderLayout.WEST);
         topPanel.add(rightPanel, BorderLayout.EAST);
 
         // Panneau principal (contenu central)
