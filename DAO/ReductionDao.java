@@ -5,11 +5,11 @@ import Modele.*;
 import java.sql.*;
 import java.util.ArrayList;
 
-public class ReductionDao {
+public class ReductionDao  implements ReductionDaoInt{
     private DaoFactory daoFactory;
 
     // constructeur dépendant de la classe DaoFactory
-    public ReductionDao(DaoFactory daoFactory) {
+    public ReductionDao(DaoFactory daoFactory){
         this.daoFactory = daoFactory;
     }
 
@@ -317,8 +317,36 @@ public class ReductionDao {
     }
 
 
+    public double getPourcentageById(int idReduction) {
+        double pourcentage = 0.0;
 
+        try (Connection conn = daoFactory.getConnection();
+             PreparedStatement ps = conn.prepareStatement("SELECT pourcentage FROM reduction WHERE id_reduction = ?")) {
+            ps.setInt(1, idReduction);
+            ResultSet rs = ps.executeQuery();
 
+            if (rs.next()) {
+                pourcentage = rs.getDouble("pourcentage");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return pourcentage;
+    }
+
+    public int NbResaClient(int idClient) throws SQLException {
+        String query = "SELECT COUNT(DISTINCT id_reservation) FROM reservation WHERE id_client = ?";
+        try (Connection conn = daoFactory.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+            stmt.setInt(1, idClient);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+            return 0;
+        }
+    }
 
 
 

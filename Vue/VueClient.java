@@ -2,52 +2,43 @@ package Vue;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-
 import Modele.Client;
 
 public class VueClient extends JFrame {
+    private Client client;
+    private JButton btnAccueil, btnInfo, btnCalendrier, btnDeconnexion;
+
     public VueClient(Client client) {
+        this.client = client;
         setTitle("Client");
         setSize(600, 500);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new BorderLayout(10, 10));
 
         // Top button panel
+        JPanel topPanel = createTopPanel();
+        // Bottom button panel (Deconnexion)
+        JPanel bottomPanel = createBottomPanel();
+
+        // Main content panel
+        JPanel mainPanel = createMainPanel();
+
+        add(topPanel, BorderLayout.NORTH);
+        add(mainPanel, BorderLayout.CENTER);
+        add(bottomPanel, BorderLayout.SOUTH);
+    }
+
+    private JPanel createTopPanel() {
         JPanel topPanel = new JPanel(new BorderLayout());
         JPanel leftPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        JButton btnAccueil = new JButton("Accueil");
-        btnAccueil.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                dispose(); // Ferme la fenêtre actuelle
-                VueAccueil accueil = new VueAccueil(client, null); // Crée une nouvelle instance de VueAccueil
-                accueil.setVisible(true); // Affiche la fenêtre
-            }
-        });
+
+        // Buttons
+        btnAccueil = new JButton("Accueil");
+        btnInfo = new JButton("Informations");
+        btnCalendrier = new JButton("Calendrier");
+
         leftPanel.add(btnAccueil);
-
-        JButton btnInfo = new JButton("Informations");
-        btnInfo.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                dispose(); // Ferme la fenêtre actuelle
-                VuePlusInfos infos = new VuePlusInfos(client, null); // Crée une nouvelle instance de VueAccueil
-                infos.setVisible(true); // Affiche la fenêtre
-            }
-        });
         leftPanel.add(btnInfo);
-
-        JButton btnCalendrier = new JButton("Calendrier");
-        btnCalendrier.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                dispose(); // Ferme la fenêtre actuelle
-                VueCalendrier vueCalendrier= new VueCalendrier(client, null); // Crée une nouvelle instance de VueAccueil
-                vueCalendrier.setVisible(true); // Affiche la fenêtre
-            }
-        });
         leftPanel.add(btnCalendrier);
 
         JPanel rightPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
@@ -56,26 +47,23 @@ public class VueClient extends JFrame {
         topPanel.add(leftPanel, BorderLayout.WEST);
         topPanel.add(rightPanel, BorderLayout.EAST);
 
-        // === BOUTON DECONNEXION EN BAS À DROITE ===
+        return topPanel;
+    }
+
+    private JPanel createBottomPanel() {
         JPanel bottomPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-        JButton btnDeconnexion = new JButton("Déconnexion");
-
-        btnDeconnexion.addActionListener(e -> {
-            dispose(); // Ferme la fenêtre actuelle
-            VueAccueil vueAccueil = new VueAccueil(null, null); // Redirige vers l'accueil sans session
-            vueAccueil.setVisible(true);
-        });
-
+        btnDeconnexion = new JButton("Déconnexion");
         bottomPanel.add(btnDeconnexion);
-        add(bottomPanel, BorderLayout.SOUTH);
+        return bottomPanel;
+    }
 
-
-        // Main content panel
+    private JPanel createMainPanel() {
         JPanel mainPanel = new JPanel(new GridLayout(3, 1, 10, 10));
 
-        // Personal information panel
+        // Informations personnelles panel
         JPanel infoPanel = new JPanel(new GridLayout(5, 2, 5, 5));
         infoPanel.setBorder(BorderFactory.createTitledBorder("Informations personnelles"));
+
         infoPanel.add(new JLabel("Nom:"));
         JTextField nomField = new JTextField(client.getNom());
         nomField.setEditable(false);
@@ -96,7 +84,7 @@ public class VueClient extends JFrame {
         emailField.setEditable(false);
         infoPanel.add(emailField);
 
-        // Reservations label and panels
+        // Reservations panel
         JPanel reservationsPanel = new JPanel(new BorderLayout(10, 10));
         JLabel reservationsLabel = new JLabel("Mes réservations:");
         reservationsLabel.setBorder(BorderFactory.createEmptyBorder(0, 0, 10, 0));
@@ -114,11 +102,26 @@ public class VueClient extends JFrame {
         reservationsPanel.add(reservationsLabel, BorderLayout.NORTH);
         reservationsPanel.add(reservationsInfoPanel, BorderLayout.CENTER);
 
-        // Add panels to main panel
         mainPanel.add(infoPanel);
         mainPanel.add(reservationsPanel);
 
-        add(topPanel, BorderLayout.NORTH);
-        add(mainPanel, BorderLayout.CENTER);
+        return mainPanel;
+    }
+
+    // Getters for the buttons to be used in the controller
+    public JButton getBtnAccueil() {
+        return btnAccueil;
+    }
+
+    public JButton getBtnInfo() {
+        return btnInfo;
+    }
+
+    public JButton getBtnCalendrier() {
+        return btnCalendrier;
+    }
+
+    public JButton getBtnDeconnexion() {
+        return btnDeconnexion;
     }
 }

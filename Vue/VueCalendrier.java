@@ -1,5 +1,6 @@
 package Vue;
 
+import Controleur.ControleurClient;
 import DAO.AttractionDao;
 import DAO.AttractionDaoInt;
 import DAO.DaoFactory;
@@ -92,7 +93,9 @@ public class VueCalendrier extends JFrame {
                 new VueLogin().setVisible(true);
                 dispose();
             } else if (client != null && admin == null) {
-                new VueClient(client).setVisible(true);
+                VueClient vueClient = new VueClient(client);
+                ControleurClient controleurClient = new ControleurClient(vueClient, client);
+                vueClient.setVisible(true);
                 dispose();
             } else if (client == null && admin != null) {
                 new VueAdmin(admin).setVisible(true);

@@ -2,6 +2,8 @@ package Vue;
 
 import javax.swing.*;
 import java.awt.*;
+
+import Controleur.ControleurClient;
 import DAO.*;
 import Modele.Client;
 import Modele.Admin;
@@ -178,9 +180,10 @@ public class VueLogin extends JFrame {
 
             clientDao.inscrire(client);
             JOptionPane.showMessageDialog(null, "Inscription réussie !", "Succès", JOptionPane.INFORMATION_MESSAGE);
-            dispose();
             VueClient vueClient = new VueClient(client);
+            ControleurClient controleurClient = new ControleurClient(vueClient, client);
             vueClient.setVisible(true);
+            dispose();
         });
 
         JPanel registerButtonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));

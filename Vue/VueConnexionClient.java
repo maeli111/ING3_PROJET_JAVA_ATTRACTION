@@ -3,7 +3,7 @@ package Vue;
 import DAO.ClientDao;
 import DAO.DaoFactory;
 import Modele.Client;
-
+import Controleur.*;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -139,9 +139,10 @@ public class VueConnexionClient extends JFrame {
 
                 if (clientConnecte != null) {
                     JOptionPane.showMessageDialog(null, "Connexion réussie ! Bienvenue, " + clientConnecte.getPrenom() + " " + clientConnecte.getNom(), "Succès", JOptionPane.INFORMATION_MESSAGE);
+                    VueClient vueClient = new VueClient(clientConnecte);
+                    ControleurClient controleurClient = new ControleurClient(vueClient, clientConnecte);
+                    vueClient.setVisible(true);
                     dispose();
-                    VueClient clientPage = new VueClient(clientConnecte);
-                    clientPage.setVisible(true);
                 } else {
                     JOptionPane.showMessageDialog(null, "Email ou mot de passe incorrect.", "Échec de connexion", JOptionPane.ERROR_MESSAGE);
                 }

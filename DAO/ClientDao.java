@@ -400,4 +400,48 @@ public class ClientDao implements ClientDaoInt{
         return client;
     }
 
+    public Client getByEmail(String email) {
+        Client client = null;
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+
+        try {
+            // Connexion à la base
+            conn = daoFactory.getConnection();
+
+            // Requête SQL avec condition sur l'email (dans la table utilisateur)
+            String sql = "SELECT * FROM client INNER JOIN utilisateur ON client.id_utilisateur = utilisateur.id_utilisateur WHERE utilisateur.email = ?";
+            stmt = conn.prepareStatement(sql);
+            stmt.setString(1, email);  // On remplace setInt par setString
+
+            rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                int id_client = rs.getInt("id_client");
+                int id_utilisateur = rs.getInt("id_utilisateur");
+                String nom = rs.getString("nom");
+                String prenom = rs.getString("prenom");
+                String mdp = rs.getString("mdp");
+                int age = rs.getInt("age");
+                String type_client = rs.getString("type_client");
+                String type_membre = rs.getString("type_membre");
+
+                client = new Client(id_client, id_utilisateur, email, nom, prenom, mdp, age, type_client, type_membre);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            // Libération des ressources
+            try {
+                if (rs != null) rs.close();
+                if (stmt != null) stmt.close();
+                if (conn != null) conn.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return client;
+    }
 }

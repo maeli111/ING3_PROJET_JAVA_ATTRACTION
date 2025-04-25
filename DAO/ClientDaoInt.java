@@ -31,4 +31,6 @@ public interface ClientDaoInt {
 
     /// Cette méthode récupère un client spécifique à partir de son ID
     public Client getById(int id_client);
+
+    public Client getByEmail(String email);
 }

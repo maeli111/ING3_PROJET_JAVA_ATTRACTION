@@ -1,5 +1,6 @@
 package Vue;
 
+import Controleur.ControleurClient;
 import Modele.*;
 
 import javax.swing.*;
@@ -80,8 +81,9 @@ public class VueInfoAttraction extends JFrame {
                     new VueLogin().setVisible(true);
                     dispose();
                 } else if (client != null && admin == null) {
-                    new VueClient(client).setVisible(true);
-                    dispose();
+                    VueClient vueClient = new VueClient(client);
+                    ControleurClient controleurClient = new ControleurClient(vueClient, client);
+                    vueClient.setVisible(true);
                 } else if (client == null && admin != null) {
                     new VueAdmin(admin).setVisible(true);
                     dispose();
@@ -148,7 +150,7 @@ public class VueInfoAttraction extends JFrame {
             this.dispose(); // Ferme la fenêtre actuelle
             // Crée d'abord une réservation vide
             Reservation nouvelleReservation = new Reservation(date, attraction.getId_attraction());
-            new VuePageReservation(nouvelleReservation, attraction, date).setVisible(true);
+            new VueReservation().setVisible(true);
         });
 
         // Panel pour le bouton (centré en bas)

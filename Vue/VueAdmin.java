@@ -137,8 +137,8 @@ public class VueAdmin extends JFrame {
             dispose();
 
             if (choix == 0) {
-                VueAdminRC vueClient = new VueAdminRC(admin);
-                vueClient.setVisible(true);
+                VueAdminRC vueReducClient = new VueAdminRC(admin);
+                vueReducClient.setVisible(true);
             } else if (choix == 1) {
                 VueAdminRA vueAttraction = new VueAdminRA(admin);
                 vueAttraction.setVisible(true);
