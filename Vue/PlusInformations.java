@@ -95,7 +95,7 @@ public class PlusInformations extends JFrame {
                 .append(" En passant par quatre attractions à sensations fortes, trois attractions aquatiques, <br>")
                 .append(" deux manèges familiaux, deux manèges intéractifs et deux attractions plus mystérieuses <br><br>");
 
-        // Fonction pour ajouter dynamiquement les sections
+        // fonction pour ajouter dynamiquement les sections
         Map<String, String> typeIcones = Map.of(
                 "Sensations fortes", "🌪️",
                 "Aquatique", "🌊",
@@ -127,7 +127,7 @@ public class PlusInformations extends JFrame {
         infos.setBorder(BorderFactory.createEmptyBorder(20, 0, 20, 0));
         contenu.add(infos);
 
-        // Générer le tableau dynamiquement depuis les réductions
+        // tableau dynamique depuis les réductions
         String[] colonnes = {"Réductions", "Pourcentage", "Description"};
         Object[][] data = new Object[reductions.size()][3];
         for (int i = 0; i < reductions.size(); i++) {
@@ -143,7 +143,7 @@ public class PlusInformations extends JFrame {
 
 
         JScrollPane tableauScroll = new JScrollPane(tableau);
-        tableauScroll.setAlignmentX(Component.CENTER_ALIGNMENT); // centrer dans le contenu
+        tableauScroll.setAlignmentX(Component.CENTER_ALIGNMENT);
         tableauScroll.setBorder(BorderFactory.createEmptyBorder(10, 0, 20, 0));
 
         // ajout du tableau dans le contenu
