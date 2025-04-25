@@ -44,7 +44,7 @@ public class testPageAttraction {
 
          */
 
-/*
+
         // Connexion à la base
         DaoFactory daoFactory = DaoFactory.getInstance("java_attraction", "root", "");
         AttractionDaoInt attractionDAO = new AttractionDao(daoFactory);
@@ -65,7 +65,7 @@ public class testPageAttraction {
         daoFactory.disconnect(); // Fermer proprement
 
 
- */
+
 
 /*
         // Initialisation de la DAO
@@ -89,6 +89,7 @@ public class testPageAttraction {
         });
 
  */
+        /*
         DaoFactory daoFactory = DaoFactory.getInstance("java_attraction", "root", "");
         AttractionDaoInt attractionDao = new AttractionDao(daoFactory);
         Attraction attraction = attractionDao.chercher(3); // ou un autre ID valide
@@ -97,5 +98,7 @@ public class testPageAttraction {
 
         new ControleurReservation(view, attraction, date);
 
+
+         */
     }
 }

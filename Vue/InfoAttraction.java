@@ -1,5 +1,6 @@
 package Vue;
 
+import Controleur.ControleurReservation;
 import Modele.*;
 
 import javax.swing.*;
@@ -100,9 +101,8 @@ public class InfoAttraction extends JFrame {
 
         reserverBtn.addActionListener(e -> {
             this.dispose(); // Ferme la fenêtre actuelle
-            // Crée d'abord une réservation vide
-            Reservation nouvelleReservation = new Reservation(date, attraction.getIdAttraction()); // 0=id_client temporaire, 1=nb_personnes par défaut
-            new pageReservation(nouvelleReservation, attraction, date).setVisible(true);// Ouvre la page de réservation
+            VueReservation view = new VueReservation();
+            new ControleurReservation(view, attraction, date);
         });
 
         // Panel pour le bouton (centré en bas)
