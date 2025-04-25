@@ -17,6 +17,14 @@ public class Attraction {
         this.type_attraction=type_attraction;
     }
 
+    public Attraction(String nom, String description, double prix, int capacite, String type_attraction){
+        this.nom=nom;
+        this.description=description;
+        this.prix=prix;
+        this.capacite=capacite;
+        this.type_attraction=type_attraction;
+    }
+
     public int getId_attraction(){return id_attraction;}
     public String getNom(){return nom;}
     public String getDescription(){return description;}
