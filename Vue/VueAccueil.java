@@ -1,13 +1,13 @@
 package Vue;
 
-import Modele.*;
-import Controleur.*;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.*;
 import java.awt.event.*;
 import java.io.File;
 import javax.imageio.ImageIO;
+import Modele.*;
+import Controleur.*;
 
 public class VueAccueil extends JFrame{
     //boutons en haut de la page
@@ -49,40 +49,6 @@ public class VueAccueil extends JFrame{
         JPanel Pcompte = new JPanel(new FlowLayout(FlowLayout.RIGHT, 10, 10));
         Pcompte.add(compte);
 
-        compte.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if (client == null && admin == null) {
-                    VueLogin vueLogin = new VueLogin();
-                    new ControleurLogin(vueLogin);
-                    vueLogin.setVisible(true);
-                    dispose();
-                } else if (client != null && admin == null) {
-                    VueClient vueClient = new VueClient(client);
-                    new ControleurClient(vueClient, client);
-                    vueClient.setVisible(true);
-                    dispose();
-                } else if (client == null && admin != null) {
-                    VueAdmin vueAdmin = new VueAdmin(admin);
-                    new ControleurAdmin(vueAdmin, admin);
-                    vueAdmin.setVisible(true);
-                    dispose();
-                }
-
-            }
-        });
-
-        calendrier.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                VueCalendrier vueCalendrier = new VueCalendrier(client, admin);
-                new ControleurCalendrier(vueCalendrier, client, admin);
-                vueCalendrier.setVisible(true);
-                dispose();
-            }
-        });
-
-
         //ajout des 2 panels creer pour les boutons du haut dans le layout
         Pbarre.add(Pnavigation, BorderLayout.WEST);
         Pbarre.add(Pcompte, BorderLayout.EAST);
@@ -108,7 +74,7 @@ public class VueAccueil extends JFrame{
         JPanel images = new JPanel(new GridLayout(1, 3, 20, 0));
 
         try {
-            BufferedImage image1 = ImageIO.read(new File("C:\\wamp64\\www\\TP8_ING3\\ING3_PROJET_JAVA_ATTRACTION\\Vue\\carroussel1.jpg"));
+            BufferedImage image1 = ImageIO.read(new File("C:\\wamp64\\www\\ING3_PROJET_JAVA_ATTRACTION\\Vue\\carroussel1.jpg"));
             Image scaledImg1 = image1.getScaledInstance(300, 300, Image.SCALE_SMOOTH);
             JLabel img1 = new JLabel(new ImageIcon(scaledImg1));
             img1.setHorizontalAlignment(SwingConstants.CENTER);
@@ -118,7 +84,7 @@ public class VueAccueil extends JFrame{
         }
 
         try {
-            BufferedImage image2 = ImageIO.read(new File("C:\\wamp64\\www\\TP8_ING3\\ING3_PROJET_JAVA_ATTRACTION\\Vue\\carroussel2.jpg"));
+            BufferedImage image2 = ImageIO.read(new File("C:\\wamp64\\www\\ING3_PROJET_JAVA_ATTRACTION\\Vue\\carroussel2.jpg"));
             Image scaledImg2 = image2.getScaledInstance(300, 300, Image.SCALE_SMOOTH);
             JLabel img2 = new JLabel(new ImageIcon(scaledImg2));
             img2.setHorizontalAlignment(SwingConstants.CENTER);
@@ -128,7 +94,7 @@ public class VueAccueil extends JFrame{
         }
 
         try {
-            BufferedImage image3 = ImageIO.read(new File("C:\\wamp64\\www\\TP8_ING3\\ING3_PROJET_JAVA_ATTRACTION\\Vue\\carroussel3.jpg"));
+            BufferedImage image3 = ImageIO.read(new File("C:\\wamp64\\www\\ING3_PROJET_JAVA_ATTRACTION\\Vue\\carroussel3.jpg"));
             Image scaledImg3 = image3.getScaledInstance(300, 300, Image.SCALE_SMOOTH);
             JLabel img3 = new JLabel(new ImageIcon(scaledImg3));
             img3.setHorizontalAlignment(SwingConstants.CENTER);
@@ -174,8 +140,7 @@ public class VueAccueil extends JFrame{
         infos.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                VuePlusInfos vuePlusInfos = new VuePlusInfos(client, admin);
-                vuePlusInfos.setVisible(true);
+                new VuePlusInfos(client, admin);
                 dispose(); // pour fermer la fenêtre actuelle si tu veux
             }
         });
@@ -185,13 +150,43 @@ public class VueAccueil extends JFrame{
         informations.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                VuePlusInfos vuePlusInfos = new VuePlusInfos(client, admin);
-                vuePlusInfos.setVisible(true);
-                dispose();
+                new VuePlusInfos(client, admin);
+                dispose(); // optionnel
             }
         });
 
+        compte.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (client == null && admin == null) {
+                    VueLogin vueLogin = new VueLogin();
+                    new ControleurLogin(vueLogin);
+                    vueLogin.setVisible(true);
+                    dispose();
+                } else if (client != null && admin == null) {
+                    VueClient vueClient = new VueClient(client);
+                    new ControleurClient(vueClient, client);
+                    vueClient.setVisible(true);
+                    dispose();
+                } else if (client == null && admin != null) {
+                    VueAdmin vueAdmin = new VueAdmin(admin);
+                    new ControleurAdmin(vueAdmin, admin);
+                    vueAdmin.setVisible(true);
+                    dispose();
+                }
 
+            }
+        });
+
+        calendrier.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                VueCalendrier vueCalendrier = new VueCalendrier(client, admin);
+                new ControleurCalendrier(vueCalendrier, client, admin);
+                vueCalendrier.setVisible(true);
+                dispose();
+            }
+        });
 
         // ScrollPane
         JScrollPane scrollPane = new JScrollPane(contenu);
@@ -199,9 +194,7 @@ public class VueAccueil extends JFrame{
         add(scrollPane, BorderLayout.CENTER);
 
     }
-
 }
-
 
 //SOURCES :
 //images : https://docs.oracle.com/javase/8/docs/api/index.html?javax/imageio/ImageIO.html
