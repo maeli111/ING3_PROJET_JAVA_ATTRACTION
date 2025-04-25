@@ -68,7 +68,9 @@ public class ControleurAdmin {
 
         vue.getDossiersClientsButton().addActionListener(e -> {
             vue.dispose();
-            new VueAdminClient(admin).setVisible(true);
+            VueAdminClient vueAdminClient = new VueAdminClient(admin);
+            new ControleurAdminClient(vueAdminClient, admin);
+            vueAdminClient.setVisible(true);
         });
 
         // Tu peux encore gérer Attraction du mois ici si tu veux
