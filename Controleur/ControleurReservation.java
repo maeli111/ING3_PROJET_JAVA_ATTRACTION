@@ -1,3 +1,4 @@
+
 package Controleur;
 
 import DAO.*;
@@ -47,11 +48,11 @@ public class ControleurReservation {
         addLigne(formEx, "Email client :", view.emailFieldExistant);
 
         addLigne(formEx, "Nombre d'adultes :", view.nbAdultesField, view.moinsBtnAdultes, view.plusBtnAdultes);
-        addLigne(formEx, "Nombre d'enfants :", view.nbEnfantsField, view.moinsBtnEnfants, view.plusBtnEnfants);
-        addLigne(formEx, "Nombre d'étudiants :", view.nbEtudiantsField, view.moinsBtnEtudiants, view.plusBtnEtudiants);
-        addLigne(formEx, "Nombre de seniors :", view.nbSeniorsField, view.moinsBtnSeniors, view.plusBtnSeniors);
-        addLigne(formEx, "Nombre de pack famille :", view.nbFamField, view.moinsBtnFam, view.plusBtnFam);
-        addLigne(formEx, "Nombre de pack famille nombreuses :", view.nbFamNbField, view.moinsBtnFamNb, view.plusBtnFamNb);
+        addLigne(formEx, "Nombre d'enfants :", view.nbEnfantsField, view.moinsBtnEnfants, view.plusBtnEnfants, view.infoBtnEnfant);
+        addLigne(formEx, "Nombre d'étudiants :", view.nbEtudiantsField, view.moinsBtnEtudiants, view.plusBtnEtudiants, view.infoBtnEtudiant);
+        addLigne(formEx, "Nombre de seniors :", view.nbSeniorsField, view.moinsBtnSeniors, view.plusBtnSeniors, view.infoBtnSenior);
+        addLigne(formEx, "Nombre de pack famille :", view.nbFamField, view.moinsBtnFam, view.plusBtnFam, view.infoBtnFam);
+        addLigne(formEx, "Nombre de pack famille nombreuses :", view.nbFamNbField, view.moinsBtnFamNb, view.plusBtnFamNb, view.infoBtnFamNb);
         addLigne(formEx, "Nombre d'enfants (famille nombreuse):", view.nbEnfantsFamNbField, view.moinsBtnEnfantsFamNb, view.plusBtnEnfantsFamNb);
 
         formEx.add(Box.createRigidArea(new Dimension(0, 10)));
@@ -89,6 +90,16 @@ public class ControleurReservation {
         panel.add(ligne);
     }
 
+    private void addLigne(JPanel panel, String label, JTextField field, JButton moins, JButton plus, JButton info) {
+        JPanel ligne = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        ligne.add(new JLabel(label));
+        ligne.add(moins);
+        ligne.add(field);
+        ligne.add(plus);
+        ligne.add(info);
+        panel.add(ligne);
+    }
+
     private void setupListeners() {
         // Choix type de client
         view.rbClient.addActionListener(e -> {
@@ -113,6 +124,13 @@ public class ControleurReservation {
         setupCompteur(view.nbFamField, view.moinsBtnFam, view.plusBtnFam);
         setupCompteur(view.nbFamNbField, view.moinsBtnFamNb, view.plusBtnFamNb);
         setupCompteur(view.nbEnfantsFamNbField, view.moinsBtnEnfantsFamNb, view.plusBtnEnfantsFamNb, true);
+
+        // === INFO Réductions ===
+        setupInfoReduction(view.infoBtnEnfant, 4);
+        setupInfoReduction(view.infoBtnEtudiant, 6);
+        setupInfoReduction(view.infoBtnSenior, 5);
+        setupInfoReduction(view.infoBtnFam, 2);
+        setupInfoReduction(view.infoBtnFamNb, 7);
 
         // === Valider réservation ===
         view.reserverButton.addActionListener(e -> reserver());
@@ -347,4 +365,18 @@ public class ControleurReservation {
             }
         });
     }
+
+    private void setupInfoReduction(JButton bouton, int idReduction) {
+        bouton.setPreferredSize(new Dimension(20, 20));
+        bouton.setMargin(new Insets(2, 2, 2, 2));
+        bouton.addActionListener(e -> {
+            try {
+                String description = reductionDao.getDescriptionById(idReduction);
+                JOptionPane.showMessageDialog(view, description, "Détail de la réduction", JOptionPane.INFORMATION_MESSAGE);
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(view, "Impossible de charger la description.", "Erreur", JOptionPane.ERROR_MESSAGE);
+            }
+        });
+    }
+
 }
