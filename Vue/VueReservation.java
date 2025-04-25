@@ -1,5 +1,7 @@
 package Vue;
 
+import Modele.Client;
+
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
@@ -78,7 +80,7 @@ public class VueReservation extends JFrame {
     // === BOUTON DE RÉSERVATION ===
     public JButton reserverButton = new JButton("Valider la réservation");
 
-    public VueReservation() {
+    public VueReservation(Client client) {
         setTitle("Formulaire de Réservation");
         setSize(900, 600);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

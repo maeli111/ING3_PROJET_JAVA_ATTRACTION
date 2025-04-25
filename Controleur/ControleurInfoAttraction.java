@@ -30,7 +30,7 @@ public class ControleurInfoAttraction {
             @Override
             public void actionPerformed(ActionEvent e) {
                 vue.dispose();
-                VueReservation view = new VueReservation();
+                VueReservation view = new VueReservation(client);
                 new ControleurReservation(view,attraction,date);
                 view.setVisible(true);
             }
