@@ -18,6 +18,7 @@ public class ControleurLogin {
         vue.getBtnRegister().addActionListener(e -> {
             vue.dispose();
             VueInscription vueInscription = new VueInscription();
+            new ControleurInscription(vueInscription);
             vueInscription.setVisible(true);
         });
 

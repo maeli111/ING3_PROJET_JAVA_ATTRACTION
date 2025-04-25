@@ -42,6 +42,7 @@ public class VueAdminClient extends JFrame {
         titreLabel.setFont(new Font("Serif", Font.BOLD, 24));
         titrePanel.add(titreLabel);
 
+        topPanel.add(buttonBar, BorderLayout.NORTH);
         topPanel.add(titrePanel, BorderLayout.CENTER);
         add(topPanel, BorderLayout.NORTH);
 
