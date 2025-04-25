@@ -24,8 +24,9 @@ public class ControleurLogin {
 
         vue.getBtnGuest().addActionListener(e -> {
             vue.dispose();
-            VueAccueil accueilGuest = new VueAccueil(null, null);
-            accueilGuest.setVisible(true);
+            VueAccueil vueAccueil = new VueAccueil(null,null);
+            new ControleurAccueil(vueAccueil,null, null);
+            vueAccueil.setVisible(true);
         });
 
         vue.getBtnAdmin().addActionListener(e -> {

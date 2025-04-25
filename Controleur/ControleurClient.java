@@ -25,8 +25,9 @@ public class ControleurClient {
             @Override
             public void actionPerformed(ActionEvent e) {
                 vueClient.dispose(); // Ferme la fenêtre actuelle
-                VueAccueil accueil = new VueAccueil(client, null);
-                accueil.setVisible(true);
+                VueAccueil vueAccueil = new VueAccueil(client,null);
+                new ControleurAccueil(vueAccueil,client, null);
+                vueAccueil.setVisible(true);
             }
         });
 
@@ -35,8 +36,10 @@ public class ControleurClient {
             @Override
             public void actionPerformed(ActionEvent e) {
                 vueClient.dispose(); // Ferme la fenêtre actuelle
-                VuePlusInfos infos = new VuePlusInfos(client, null);
-                infos.setVisible(true);
+                VuePlusInfos v = new VuePlusInfos(client, null);
+                new ControleurPlusInfos(v, client, null);
+                v.setVisible(true);
+
             }
         });
 
@@ -56,8 +59,9 @@ public class ControleurClient {
             @Override
             public void actionPerformed(ActionEvent e) {
                 vueClient.dispose(); // Ferme la fenêtre actuelle
-                VueAccueil vueAccueil = new VueAccueil(null, null);
-                vueAccueil.setVisible(true);
+                VueLogin vueLogin = new VueLogin();
+                new ControleurLogin(vueLogin);
+                vueLogin.setVisible(true);
             }
         });
     }

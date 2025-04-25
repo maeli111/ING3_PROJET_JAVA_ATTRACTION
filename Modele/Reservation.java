@@ -44,4 +44,6 @@ public class Reservation {
     public double getPrix_total(){return prix_total;}
     public int getNb_personne(){return nb_personne;}
     public int getEst_archivee(){return est_archivee;}
+
+
 }

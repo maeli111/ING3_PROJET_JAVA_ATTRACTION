@@ -1,12 +1,10 @@
 package Vue;
 
-import Controleur.*;
+import Controleur.ControleurReservation;
 import Modele.*;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.File;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -43,57 +41,8 @@ public class VueInfoAttraction extends JFrame {
         Pnavigation.add(informations);
         Pnavigation.add(calendrier);
 
-        // Gestion des actions des boutons
-        accueil.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                dispose();
-                VueAccueil accueil = new VueAccueil(client, admin);
-                accueil.setVisible(true);
-            }
-        });
-
-        informations.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                dispose();
-                VuePlusInfos infos = new VuePlusInfos(client, admin);
-                infos.setVisible(true);
-            }
-        });
-
-        calendrier.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                dispose();
-                VueCalendrier vueCalendrier = new VueCalendrier(client, admin);
-                new ControleurCalendrier(vueCalendrier, client, admin);
-                vueCalendrier.setVisible(true);
-            }
-        });
-
         JPanel Pcompte = new JPanel(new FlowLayout(FlowLayout.RIGHT, 10, 10));
         Pcompte.add(compte);
-
-        compte.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if (client == null && admin == null) {
-                    new VueLogin().setVisible(true);
-                    dispose();
-                } else if (client != null && admin == null) {
-                    VueClient vueClient = new VueClient(client);
-                    new ControleurClient(vueClient, client);
-                    vueClient.setVisible(true);
-                } else if (client == null && admin != null) {
-                    VueAdmin vueAdmin = new VueAdmin(admin);
-                    new ControleurAdmin(vueAdmin, admin);
-                    vueAdmin.setVisible(true);
-                    dispose();
-                }
-
-            }
-        });
 
         Pbarre.add(Pnavigation, BorderLayout.WEST);
         Pbarre.add(Pcompte, BorderLayout.EAST);
@@ -131,6 +80,7 @@ public class VueInfoAttraction extends JFrame {
         JLabel descLabel = new JLabel("Description : " + attraction.getDescription());
         JLabel prixLabel = new JLabel("Prix : " + attraction.getPrix() + " €");
         JLabel capaciteLabel = new JLabel("Capacité : " + attraction.getCapacite());
+        //JLabel reservationLabel = new JLabel("Réservations : " + attraction.getNbReservation());
 
         Font font = new Font("SansSerif", Font.PLAIN, 16);
         for (JLabel label : new JLabel[]{nomLabel, descLabel, prixLabel, capaciteLabel, dateLabel}) {
@@ -151,9 +101,8 @@ public class VueInfoAttraction extends JFrame {
 
         reserverBtn.addActionListener(e -> {
             this.dispose(); // Ferme la fenêtre actuelle
-            // Crée d'abord une réservation vide
-            Reservation nouvelleReservation = new Reservation(date, attraction.getId_attraction());
-            new VueReservation().setVisible(true);
+            VueReservation view = new VueReservation();
+            new ControleurReservation(view, attraction, date);
         });
 
         // Panel pour le bouton (centré en bas)
@@ -162,6 +111,7 @@ public class VueInfoAttraction extends JFrame {
 
         // Ajout au layout principal
         add(buttonPanel, BorderLayout.SOUTH);
+
 
         setVisible(true);
     }
