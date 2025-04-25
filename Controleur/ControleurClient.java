@@ -46,6 +46,7 @@ public class ControleurClient {
             public void actionPerformed(ActionEvent e) {
                 vueClient.dispose(); // Ferme la fenêtre actuelle
                 VueCalendrier vueCalendrier = new VueCalendrier(client, null);
+                new ControleurCalendrier(vueCalendrier, client, null);
                 vueCalendrier.setVisible(true);
             }
         });

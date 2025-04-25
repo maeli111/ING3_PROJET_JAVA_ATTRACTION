@@ -1,20 +1,12 @@
 package Vue;
 
-import Controleur.ControleurClient;
-import DAO.AttractionDao;
-import DAO.AttractionDaoInt;
-import DAO.DaoFactory;
 import Modele.*;
-import Controleur.*;
-
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
 import java.time.*;
-import java.util.Locale;
-import java.sql.*;
 
 public class VueCalendrier extends JFrame {
+
     private JButton accueil = new JButton("Accueil");
     private JButton informations = new JButton("Informations");
     private JButton calendrier = new JButton("Calendrier");
@@ -28,14 +20,15 @@ public class VueCalendrier extends JFrame {
     private YearMonth currentMonth;
 
     private final YearMonth minMonth = YearMonth.now();
-    private final YearMonth maxMonth = YearMonth.of(2026, 4); // Avril 2026
+    private final YearMonth maxMonth = YearMonth.of(2026, 4);
 
-    // ➕ Ajout : Attributs pour client et admin
     private Client client;
     private Admin admin;
 
+    private JButton prevButton;
+    private JButton nextButton;
+
     public VueCalendrier(Client client, Admin admin) {
-        // ➕ Initialisation des attributs
         this.client = client;
         this.admin = admin;
 
@@ -59,52 +52,8 @@ public class VueCalendrier extends JFrame {
         Pnavigation.add(informations);
         Pnavigation.add(calendrier);
 
-        accueil.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                VueAccueil vueAccueil = new VueAccueil(client, admin);
-                vueAccueil.setVisible(true);
-                dispose();
-            }
-        });
-
-        informations.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                VuePlusInfos vuePlusInfos = new VuePlusInfos(client, admin);
-                vuePlusInfos.setVisible(true);
-                dispose(); // pour fermer la fenêtre actuelle si tu veux
-            }
-        });
-
-        calendrier.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                VueCalendrier vueCalendrier = new VueCalendrier(client, admin);
-                vueCalendrier.setVisible(true);
-                dispose();
-            }
-        });
-
         JPanel Pcompte = new JPanel(new FlowLayout(FlowLayout.RIGHT, 10, 10));
         Pcompte.add(compte);
-
-        compte.addActionListener(e -> {
-            if (client == null && admin == null) {
-                new VueLogin().setVisible(true);
-                dispose();
-            } else if (client != null && admin == null) {
-                VueClient vueClient = new VueClient(client);
-                ControleurClient controleurClient = new ControleurClient(vueClient, client);
-                vueClient.setVisible(true);
-                dispose();
-            } else if (client == null && admin != null) {
-                VueAdmin vueAdmin = new VueAdmin(admin);
-                ControleurAdmin controleurAdmin = new ControleurAdmin(vueAdmin, admin);
-                vueAdmin.setVisible(true);
-                dispose();
-            }
-        });
 
         Pbarre.add(Pnavigation, BorderLayout.WEST);
         Pbarre.add(Pcompte, BorderLayout.EAST);
@@ -118,30 +67,15 @@ public class VueCalendrier extends JFrame {
         currentMonth = YearMonth.now();
         JPanel mainPanel = new JPanel(new BorderLayout());
 
-        // Calendrier
         JPanel wrapper = new JPanel(new BorderLayout());
         wrapper.setBorder(BorderFactory.createEmptyBorder(10, 20, 20, 10));
 
         JPanel topPanel = new JPanel(new BorderLayout());
-        JButton prevButton = new JButton("←");
-        JButton nextButton = new JButton("→");
+        prevButton = new JButton("←");
+        nextButton = new JButton("→");
 
         moisLabel = new JLabel("", SwingConstants.CENTER);
         moisLabel.setFont(new Font("SansSerif", Font.BOLD, 18));
-
-        prevButton.addActionListener(e -> {
-            if (currentMonth.isAfter(minMonth)) {
-                currentMonth = currentMonth.minusMonths(1);
-                updateCalendar();
-            }
-        });
-
-        nextButton.addActionListener(e -> {
-            if (currentMonth.isBefore(maxMonth)) {
-                currentMonth = currentMonth.plusMonths(1);
-                updateCalendar();
-            }
-        });
 
         topPanel.add(prevButton, BorderLayout.WEST);
         topPanel.add(moisLabel, BorderLayout.CENTER);
@@ -153,7 +87,6 @@ public class VueCalendrier extends JFrame {
         wrapper.add(calendarPanel, BorderLayout.CENTER);
         mainPanel.add(wrapper, BorderLayout.CENTER);
 
-        // ➕ Panel de droite pour les détails
         detailsPanel = new JPanel();
         detailsPanel.setLayout(new BoxLayout(detailsPanel, BoxLayout.Y_AXIS));
         detailsPanel.setBorder(BorderFactory.createTitledBorder("Attractions disponibles"));
@@ -162,107 +95,24 @@ public class VueCalendrier extends JFrame {
         mainPanel.add(detailsPanel, BorderLayout.EAST);
         add(mainPanel, BorderLayout.CENTER);
 
-        updateCalendar();
         setVisible(true);
     }
 
-    private void updateCalendar() {
-        calendarPanel.removeAll();
+    // --- Méthodes accessibles au contrôleur ---
+    public JButton getBtnAccueil() { return accueil; }
+    public JButton getBtnInfos() { return informations; }
+    public JButton getBtnCalendrier() { return calendrier; }
+    public JButton getBtnCompte() { return compte; }
+    public JButton getBtnPrev() { return prevButton; }
+    public JButton getBtnNext() { return nextButton; }
 
-        for (DayOfWeek day : DayOfWeek.values()) {
-            JLabel label = new JLabel(day.getDisplayName(java.time.format.TextStyle.SHORT, Locale.FRENCH), SwingConstants.CENTER);
-            label.setFont(new Font("SansSerif", Font.BOLD, 14));
-            calendarPanel.add(label);
-        }
+    public JPanel getCalendarPanel() { return calendarPanel; }
+    public JPanel getDetailsPanel() { return detailsPanel; }
 
-        moisLabel.setText(currentMonth.getMonth().getDisplayName(java.time.format.TextStyle.FULL, Locale.FRENCH).toUpperCase() + " " + currentMonth.getYear());
+    public JLabel getMoisLabel() { return moisLabel; }
+    public YearMonth getCurrentMonth() { return currentMonth; }
+    public void setCurrentMonth(YearMonth ym) { this.currentMonth = ym; }
 
-        LocalDate firstDay = currentMonth.atDay(1);
-        int dayOfWeek = firstDay.getDayOfWeek().getValue();
-
-        for (int i = 1; i < dayOfWeek; i++) {
-            calendarPanel.add(new JLabel(""));
-        }
-
-        int daysInMonth = currentMonth.lengthOfMonth();
-        for (int day = 1; day <= daysInMonth; day++) {
-            JButton dayButton = new JButton(String.valueOf(day));
-            LocalDate dateClicked = currentMonth.atDay(day);
-            dayButton.addActionListener(new DayClickListener(dateClicked));
-            calendarPanel.add(dayButton);
-        }
-
-        calendarPanel.revalidate();
-        calendarPanel.repaint();
-    }
-
-    private class DayClickListener implements ActionListener {
-        private final LocalDate date;
-
-        public DayClickListener(LocalDate date) {
-            this.date = date;
-        }
-
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            detailsPanel.removeAll();
-
-            JLabel titre = new JLabel("Attractions disponibles le " + date);
-            titre.setAlignmentX(Component.CENTER_ALIGNMENT);
-            titre.setFont(new Font("SansSerif", Font.BOLD, 16));
-            detailsPanel.add(titre);
-            detailsPanel.add(Box.createRigidArea(new Dimension(0, 10)));
-
-            DaoFactory daoFactory = DaoFactory.getInstance("java_attraction", "root", "");
-            AttractionDaoInt attractionDAO = new AttractionDao(daoFactory);
-            boolean found = false;
-
-            try {
-                Connection connexion = DriverManager.getConnection("jdbc:mysql://localhost:3306/java_attraction", "root", "");
-                PreparedStatement ps = connexion.prepareStatement("SELECT id_attraction, nom FROM attraction");
-                ResultSet rs = ps.executeQuery();
-
-                while (rs.next()) {
-                    int idAttraction = rs.getInt("id_attraction");
-                    String nomAttraction = rs.getString("nom");
-
-                    if (attractionDAO.estDisponible(date, idAttraction)) {
-                        found = true;
-
-                        JButton btn = new JButton(nomAttraction);
-                        btn.setAlignmentX(Component.CENTER_ALIGNMENT);
-
-                        btn.addActionListener(ev -> {
-                            Attraction attraction = attractionDAO.chercher(idAttraction);
-                            if (attraction != null) {
-                                dispose();
-                                new VueInfoAttraction(attraction, date, client, admin).setVisible(true);
-                            } else {
-                                JOptionPane.showMessageDialog(null, "Aucune attraction trouvée avec l'ID : " + idAttraction);
-                            }
-                        });
-
-                        detailsPanel.add(btn);
-                        detailsPanel.add(Box.createRigidArea(new Dimension(0, 5)));
-                    }
-                }
-
-                rs.close();
-                ps.close();
-                connexion.close();
-            } catch (Exception ex) {
-                ex.printStackTrace();
-                detailsPanel.add(new JLabel("(Erreur lors du chargement)"));
-            }
-
-            if (!found) {
-                JLabel noAttractions = new JLabel("Aucune attraction disponible à cette date.");
-                noAttractions.setAlignmentX(Component.CENTER_ALIGNMENT);
-                detailsPanel.add(noAttractions);
-            }
-
-            detailsPanel.revalidate();
-            detailsPanel.repaint();
-        }
-    }
+    public YearMonth getMinMonth() { return minMonth; }
+    public YearMonth getMaxMonth() { return maxMonth; }
 }

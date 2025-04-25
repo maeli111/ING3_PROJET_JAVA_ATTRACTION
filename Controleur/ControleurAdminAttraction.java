@@ -53,6 +53,7 @@ public class ControleurAdminAttraction {
             public void actionPerformed(ActionEvent e) {
                 vue.dispose(); // Ferme la fenêtre actuelle
                 VueCalendrier vueCalendrier = new VueCalendrier(null, admin);
+                new ControleurCalendrier(vueCalendrier, null, admin);
                 vueCalendrier.setVisible(true);
             }
         });

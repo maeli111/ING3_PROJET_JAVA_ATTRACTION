@@ -12,7 +12,7 @@ import java.util.ArrayList;
 public class VueAdminClient extends JFrame {
     private JTable table;
     private DefaultTableModel tableModel;
-    private JButton accueilButton, infoButton, calendrierButton, compteButton, ajouterButton, modifierButton, supprimerButton;
+    private JButton compteButton, ajouterButton, modifierButton, supprimerButton;
 
     public VueAdminClient(Admin admin) {
         setTitle("Clients - Admin");
@@ -28,12 +28,6 @@ public class VueAdminClient extends JFrame {
         JPanel topPanel = new JPanel(new BorderLayout());
         JPanel buttonBar = new JPanel(new BorderLayout());
         JPanel leftPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        accueilButton = new JButton("Accueil");
-        infoButton = new JButton("Informations");
-        calendrierButton = new JButton("Calendrier");
-        leftPanel.add(accueilButton);
-        leftPanel.add(infoButton);
-        leftPanel.add(calendrierButton);
 
         JPanel rightPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         compteButton = new JButton("Compte");
@@ -48,7 +42,6 @@ public class VueAdminClient extends JFrame {
         titreLabel.setFont(new Font("Serif", Font.BOLD, 24));
         titrePanel.add(titreLabel);
 
-        topPanel.add(buttonBar, BorderLayout.NORTH);
         topPanel.add(titrePanel, BorderLayout.CENTER);
         add(topPanel, BorderLayout.NORTH);
 
@@ -89,17 +82,6 @@ public class VueAdminClient extends JFrame {
     }
 
     // Getters pour les boutons
-    public JButton getAccueilButton() {
-        return accueilButton;
-    }
-
-    public JButton getInfoButton() {
-        return infoButton;
-    }
-
-    public JButton getCalendrierButton() {
-        return calendrierButton;
-    }
 
     public JButton getCompteButton() {
         return compteButton;

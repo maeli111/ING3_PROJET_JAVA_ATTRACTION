@@ -67,6 +67,7 @@ public class VueInfoAttraction extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 dispose();
                 VueCalendrier vueCalendrier = new VueCalendrier(client, admin);
+                new ControleurCalendrier(vueCalendrier, client, admin);
                 vueCalendrier.setVisible(true);
             }
         });

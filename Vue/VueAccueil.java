@@ -57,12 +57,12 @@ public class VueAccueil extends JFrame{
                     dispose();
                 } else if (client != null && admin == null) {
                     VueClient vueClient = new VueClient(client);
-                    ControleurClient controleurClient = new ControleurClient(vueClient, client);
+                    new ControleurClient(vueClient, client);
                     vueClient.setVisible(true);
                     dispose();
                 } else if (client == null && admin != null) {
                     VueAdmin vueAdmin = new VueAdmin(admin);
-                    ControleurAdmin controleurAdmin = new ControleurAdmin(vueAdmin, admin);
+                    new ControleurAdmin(vueAdmin, admin);
                     vueAdmin.setVisible(true);
                     dispose();
                 }
@@ -74,6 +74,7 @@ public class VueAccueil extends JFrame{
             @Override
             public void actionPerformed(ActionEvent e) {
                 VueCalendrier vueCalendrier = new VueCalendrier(client, admin);
+                new ControleurCalendrier(vueCalendrier, client, admin);
                 vueCalendrier.setVisible(true);
                 dispose();
             }

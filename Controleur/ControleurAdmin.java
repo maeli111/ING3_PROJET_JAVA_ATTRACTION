@@ -29,7 +29,9 @@ public class ControleurAdmin {
 
         vue.getCalendrierButton().addActionListener(e -> {
             vue.dispose();
-            new VueCalendrier(null, admin).setVisible(true);
+            VueCalendrier vueCalendrier = new VueCalendrier(null, admin);
+            new ControleurCalendrier(vueCalendrier, null, admin);
+            vueCalendrier.setVisible(true);
         });
 
         vue.getDeconnexionButton().addActionListener(e -> {

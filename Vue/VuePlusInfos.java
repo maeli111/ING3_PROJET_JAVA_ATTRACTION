@@ -76,6 +76,7 @@ public class VuePlusInfos extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 VueCalendrier vueCalendrier = new VueCalendrier(client, admin);
+                new ControleurCalendrier(vueCalendrier, client, admin);
                 vueCalendrier.setVisible(true);
                 dispose();
             }
