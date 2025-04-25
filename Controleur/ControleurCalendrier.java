@@ -51,7 +51,9 @@ public class ControleurCalendrier {
 
         vue.getBtnCompte().addActionListener(e -> {
             if (client == null && admin == null) {
-                new VueLogin().setVisible(true);
+                VueLogin vueLogin = new VueLogin();
+                new ControleurLogin(vueLogin);
+                vueLogin.setVisible(true);
             } else if (client != null) {
                 VueClient v = new VueClient(client);
                 new ControleurClient(v, client);

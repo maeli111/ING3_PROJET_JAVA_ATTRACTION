@@ -41,8 +41,9 @@ public class ControleurConnexionClient {
         // Action bouton Retour/Compte
         vue.getBtnCompte().addActionListener(e -> {
             vue.dispose();
-            VueLogin login = new VueLogin();
-            login.setVisible(true);
+            VueLogin vueLogin = new VueLogin();
+            new ControleurLogin(vueLogin);
+            vueLogin.setVisible(true);
         });
     }
 }

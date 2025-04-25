@@ -53,7 +53,9 @@ public class VueAccueil extends JFrame{
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (client == null && admin == null) {
-                    new VueLogin().setVisible(true);
+                    VueLogin vueLogin = new VueLogin();
+                    new ControleurLogin(vueLogin);
+                    vueLogin.setVisible(true);
                     dispose();
                 } else if (client != null && admin == null) {
                     VueClient vueClient = new VueClient(client);

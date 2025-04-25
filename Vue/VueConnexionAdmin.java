@@ -61,7 +61,5 @@ public class VueConnexionAdmin extends JFrame {
 
         add(mainPanel, BorderLayout.CENTER);
 
-        // Contrôleur
-        new ControleurConnexionAdmin(this);
     }
 }

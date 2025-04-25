@@ -37,6 +37,7 @@ public class VueInscription extends JFrame {
 
         compte.addActionListener(e -> {
             VueLogin vueLogin = new VueLogin();
+            new ControleurLogin(vueLogin);
             vueLogin.setVisible(true);
             dispose();
         });

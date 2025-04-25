@@ -25,7 +25,9 @@ public class ControleurConnexionAdmin {
     private void initControl() {
         vue.btnCompte.addActionListener(e -> {
             vue.dispose();
-            new VueLogin().setVisible(true);
+            VueLogin vueLogin = new VueLogin();
+            new ControleurLogin(vueLogin);
+            vueLogin.setVisible(true);
         });
 
         vue.btnConnexion.addActionListener(new ActionListener() {
