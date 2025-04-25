@@ -43,10 +43,9 @@ public class AttractionDao {
                 double prix = resultats.getDouble(4);
                 int capacite = resultats.getInt(5);
                 String type_attraction = resultats.getString(6);
-                int nb_reservation = resultats.getInt(7);
 
                 // instancier un objet de Attraction avec ces 3 champs en paramètres
-                Attraction attraction = new Attraction(id_attraction,nom,description,prix,capacite, type_attraction, nb_reservation);
+                Attraction attraction = new Attraction(id_attraction,nom,description,prix,capacite, type_attraction);
 
                 // ajouter ce Attraction à listeattractions
                 listeAttraction.add(attraction);
