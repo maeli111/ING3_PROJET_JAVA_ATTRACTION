@@ -177,4 +177,22 @@ public class ReductionDao {
             return 0;
         }
     }
+
+    public String getDescriptionById(int id) {
+        try (Connection conn = daoFactory.getConnection();
+             PreparedStatement ps = conn.prepareStatement("SELECT description FROM reduction WHERE id_reduction = ?")) {
+
+            ps.setInt(1, id);
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                return rs.getString("description");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return "Description non trouvée.";
+    }
+
+
 }

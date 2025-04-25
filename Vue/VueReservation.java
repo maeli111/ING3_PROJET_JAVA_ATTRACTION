@@ -1,7 +1,12 @@
 package Vue;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+
 
 public class VueReservation extends JFrame {
     // === NAVIGATION & HEADER ===
@@ -60,6 +65,15 @@ public class VueReservation extends JFrame {
     public JButton moinsBtnEnfantsFamNb = new JButton("-");
 
     public JLabel prixLabelExistant = new JLabel();
+
+    // === BOUTONS "?" POUR INFO RÉDUCTION ===
+
+    public JButton infoBtnEnfant = createImageButton("images/ptInterrogation.png", 15);
+    public JButton infoBtnEtudiant = createImageButton("images/ptInterrogation.png", 15);
+    public JButton infoBtnSenior = createImageButton("images/ptInterrogation.png", 15);
+    public JButton infoBtnFam = createImageButton("images/ptInterrogation.png", 15);
+    public JButton infoBtnFamNb = createImageButton("images/ptInterrogation.png", 15);
+
 
     // === BOUTON DE RÉSERVATION ===
     public JButton reserverButton = new JButton("Valider la réservation");
@@ -127,4 +141,16 @@ public class VueReservation extends JFrame {
         add(formPanel, BorderLayout.CENTER);
         setVisible(true);
     }
+
+    public JButton createImageButton(String imagePath, int size) {
+        try {
+            BufferedImage img = ImageIO.read(new File(imagePath));
+            Image scaled = img.getScaledInstance(size, size, Image.SCALE_SMOOTH);
+            return new JButton(new ImageIcon(scaled));
+        } catch (IOException e) {
+            System.out.println("Erreur chargement image : " + imagePath);
+            return new JButton("?");
+        }
+    }
+
 }
