@@ -28,35 +28,6 @@ public class ControleurAdminAttraction {
     }
 
     private void ajouterListeners() {
-        vue.getAccueilButton().addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                vue.dispose(); // Ferme la fenêtre actuelle
-                VueAccueil accueil = new VueAccueil(null, admin);
-                accueil.setVisible(true);
-            }
-        });
-
-        // Listener pour le bouton "Informations"
-        vue.getInformationsButton().addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                vue.dispose(); // Ferme la fenêtre actuelle
-                VuePlusInfos infos = new VuePlusInfos(null, admin);
-                infos.setVisible(true);
-            }
-        });
-
-        // Listener pour le bouton "Calendrier"
-        vue.getCalendrierButton().addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                vue.dispose(); // Ferme la fenêtre actuelle
-                VueCalendrier vueCalendrier = new VueCalendrier(null, admin);
-                new ControleurCalendrier(vueCalendrier, null, admin);
-                vueCalendrier.setVisible(true);
-            }
-        });
 
         vue.getCompteButton().addActionListener(new ActionListener() {
             @Override

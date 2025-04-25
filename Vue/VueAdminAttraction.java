@@ -29,12 +29,6 @@ public class VueAdminAttraction extends JFrame {
         JPanel topPanel = new JPanel(new BorderLayout());
         JPanel buttonBar = new JPanel(new BorderLayout());
         JPanel leftPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        accueilButton = new JButton("Accueil");
-        informationsButton = new JButton("Informations");
-        calendrierButton = new JButton("Calendrier");
-        leftPanel.add(accueilButton);
-        leftPanel.add(informationsButton);
-        leftPanel.add(calendrierButton);
 
         JPanel rightPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         compteButton = new JButton("Compte");
@@ -70,17 +64,6 @@ public class VueAdminAttraction extends JFrame {
     }
 
     // Getters pour les boutons et la table
-    public JButton getAccueilButton() {
-        return accueilButton;
-    }
-
-    public JButton getInformationsButton() {
-        return informationsButton;
-    }
-
-    public JButton getCalendrierButton() {
-        return calendrierButton;
-    }
 
     public JButton getCompteButton() {
         return compteButton;

@@ -32,14 +32,17 @@ public class ControleurCalendrier {
 
     private void setupListeners() {
         vue.getBtnAccueil().addActionListener(e -> {
-            VueAccueil v = new VueAccueil(client, admin);
-            v.setVisible(true);
+            VueAccueil vueAccueil = new VueAccueil(client,admin);
+            new ControleurAccueil(vueAccueil,client, admin);
+            vueAccueil.setVisible(true);
             vue.dispose();
         });
 
         vue.getBtnInfos().addActionListener(e -> {
             VuePlusInfos v = new VuePlusInfos(client, admin);
+            new ControleurPlusInfos(v, client, admin);
             v.setVisible(true);
+
             vue.dispose();
         });
 
