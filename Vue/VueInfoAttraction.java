@@ -1,0 +1,168 @@
+package Vue;
+
+import Controleur.*;
+import Modele.*;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.File;
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.time.LocalDate;
+
+public class VueInfoAttraction extends JFrame {
+    // Boutons en haut de la page
+    private JButton accueil = new JButton("Accueil");
+    private JButton informations = new JButton("Informations");
+    private JButton calendrier = new JButton("Calendrier");
+    private JButton compte = new JButton("Compte");
+
+    // Nom du parc
+    private JTextField parc = new JTextField("Palasi Land");
+
+    public VueInfoAttraction(Attraction attraction, LocalDate date, Client client, Admin admin) {
+        setTitle("Informations de l'attraction");
+        setSize(900, 600);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setLocationRelativeTo(null);
+        setLayout(new BorderLayout());
+
+        // === HEADER ===
+        parc.setHorizontalAlignment(JTextField.CENTER);
+        parc.setEditable(false);
+        parc.setFont(new Font("Bodoni MT", Font.BOLD, 32));
+        parc.setBorder(null);
+        parc.setOpaque(false);
+
+        JPanel Pbarre = new JPanel(new BorderLayout());
+
+        JPanel Pnavigation = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 10));
+        Pnavigation.add(accueil);
+        Pnavigation.add(informations);
+        Pnavigation.add(calendrier);
+
+        // Gestion des actions des boutons
+        accueil.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                dispose();
+                VueAccueil accueil = new VueAccueil(client, admin);
+                accueil.setVisible(true);
+            }
+        });
+
+        informations.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                dispose();
+                VuePlusInfos infos = new VuePlusInfos(client, admin);
+                infos.setVisible(true);
+            }
+        });
+
+        calendrier.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                dispose();
+                VueCalendrier vueCalendrier = new VueCalendrier(client, admin);
+                new ControleurCalendrier(vueCalendrier, client, admin);
+                vueCalendrier.setVisible(true);
+            }
+        });
+
+        JPanel Pcompte = new JPanel(new FlowLayout(FlowLayout.RIGHT, 10, 10));
+        Pcompte.add(compte);
+
+        compte.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (client == null && admin == null) {
+                    new VueLogin().setVisible(true);
+                    dispose();
+                } else if (client != null && admin == null) {
+                    VueClient vueClient = new VueClient(client);
+                    new ControleurClient(vueClient, client);
+                    vueClient.setVisible(true);
+                } else if (client == null && admin != null) {
+                    VueAdmin vueAdmin = new VueAdmin(admin);
+                    new ControleurAdmin(vueAdmin, admin);
+                    vueAdmin.setVisible(true);
+                    dispose();
+                }
+
+            }
+        });
+
+        Pbarre.add(Pnavigation, BorderLayout.WEST);
+        Pbarre.add(Pcompte, BorderLayout.EAST);
+
+        JPanel header = new JPanel(new BorderLayout());
+        header.add(Pbarre, BorderLayout.NORTH);
+        header.add(parc, BorderLayout.CENTER);
+
+        add(header, BorderLayout.NORTH);
+
+        // === CONTENU PRINCIPAL ===
+        JPanel mainPanel = new JPanel(new BorderLayout());
+
+        // PHOTO à gauche
+        JLabel photoLabel = new JLabel();
+        photoLabel.setPreferredSize(new Dimension(300, 300));
+
+        try {
+            BufferedImage img = ImageIO.read(new File("images/" + attraction.getNom() + ".jpg"));
+            Image scaled = img.getScaledInstance(300, 300, Image.SCALE_SMOOTH);
+            photoLabel.setIcon(new ImageIcon(scaled));
+        } catch (Exception e) {
+            photoLabel.setText("Image non trouvée");
+            photoLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        }
+
+        mainPanel.add(photoLabel, BorderLayout.WEST);
+
+        // INFOS à droite
+        JPanel infoPanel = new JPanel();
+        infoPanel.setLayout(new GridLayout(5, 1, 10, 10));
+
+        JLabel dateLabel = new JLabel("Date : " + date);
+        JLabel nomLabel = new JLabel("Nom : " + attraction.getNom());
+        JLabel descLabel = new JLabel("Description : " + attraction.getDescription());
+        JLabel prixLabel = new JLabel("Prix : " + attraction.getPrix() + " €");
+        JLabel capaciteLabel = new JLabel("Capacité : " + attraction.getCapacite());
+
+        Font font = new Font("SansSerif", Font.PLAIN, 16);
+        for (JLabel label : new JLabel[]{nomLabel, descLabel, prixLabel, capaciteLabel, dateLabel}) {
+            label.setFont(font);
+            infoPanel.add(label);
+        }
+
+        mainPanel.add(infoPanel, BorderLayout.CENTER);
+
+        add(mainPanel, BorderLayout.CENTER);
+
+        // === BOUTON RÉSERVER ===
+        JButton reserverBtn = new JButton("Réserver");
+        reserverBtn.setFont(new Font("SansSerif", Font.BOLD, 18));
+        reserverBtn.setBackground(new Color(0, 150, 0)); // Vert
+        reserverBtn.setForeground(Color.WHITE);
+        reserverBtn.setPreferredSize(new Dimension(200, 50));
+
+        reserverBtn.addActionListener(e -> {
+            this.dispose(); // Ferme la fenêtre actuelle
+            // Crée d'abord une réservation vide
+            Reservation nouvelleReservation = new Reservation(date, attraction.getId_attraction());
+            new VueReservation().setVisible(true);
+        });
+
+        // Panel pour le bouton (centré en bas)
+        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        buttonPanel.add(reserverBtn);
+
+        // Ajout au layout principal
+        add(buttonPanel, BorderLayout.SOUTH);
+
+        setVisible(true);
+    }
+}

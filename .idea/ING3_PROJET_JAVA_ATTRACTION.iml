@@ -7,8 +7,26 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" exported="" name="lib" level="project" />
-    <orderEntry type="library" exported="" name="mysql-connector-j-9.3" level="project" />
+    <orderEntry type="module-library" exported="">
+      <library>
+        <CLASSES />
+        <JAVADOC />
+        <SOURCES>
+          <root url="file://$MODULE_DIR$/../../../../Poo Java/mysql-connector-j-9.3.0/mysql-connector-j-9.3.0/src/build/java" />
+          <root url="file://$MODULE_DIR$/../../../../Poo Java/mysql-connector-j-9.3.0/mysql-connector-j-9.3.0/src/demo/java" />
+          <root url="file://$MODULE_DIR$/../../../../Poo Java/mysql-connector-j-9.3.0/mysql-connector-j-9.3.0/src/generated/java" />
+          <root url="file://$MODULE_DIR$/../../../../Poo Java/mysql-connector-j-9.3.0/mysql-connector-j-9.3.0/src/legacy/java" />
+          <root url="file://$MODULE_DIR$/../../../../Poo Java/mysql-connector-j-9.3.0/mysql-connector-j-9.3.0/src/main/core-api/java" />
+          <root url="file://$MODULE_DIR$/../../../../Poo Java/mysql-connector-j-9.3.0/mysql-connector-j-9.3.0/src/main/core-impl/java" />
+          <root url="file://$MODULE_DIR$/../../../../Poo Java/mysql-connector-j-9.3.0/mysql-connector-j-9.3.0/src/main/protocol-impl/java" />
+          <root url="file://$MODULE_DIR$/../../../../Poo Java/mysql-connector-j-9.3.0/mysql-connector-j-9.3.0/src/main/user-api/java" />
+          <root url="file://$MODULE_DIR$/../../../../Poo Java/mysql-connector-j-9.3.0/mysql-connector-j-9.3.0/src/main/user-impl/java" />
+          <root url="file://$MODULE_DIR$/../../../../Poo Java/mysql-connector-j-9.3.0/mysql-connector-j-9.3.0/src/test/java" />
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="library" name="mysql-connector-j-9.2.0" level="project" />
     <orderEntry type="library" exported="" name="javafx-sdk-24.0" level="project" />
+    <orderEntry type="library" exported="" name="lib" level="project" />
   </component>
 </module>

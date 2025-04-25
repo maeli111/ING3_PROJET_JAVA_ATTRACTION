@@ -6,8 +6,10 @@ import java.awt.image.*;
 import java.awt.event.*;
 import java.io.File;
 import javax.imageio.ImageIO;
+import Modele.*;
+import Controleur.*;
 
-public class Accueil extends JFrame{
+public class VueAccueil extends JFrame{
     //boutons en haut de la page
     private JButton accueil = new JButton("Accueil");
     private JButton informations = new JButton("Informations");
@@ -18,7 +20,7 @@ public class Accueil extends JFrame{
     private JTextField parc = new JTextField("Palasi Land");
 
 
-    public Accueil(){
+    public VueAccueil(Client client, Admin admin){
         setTitle("Accueil");
         setSize(1250,680);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -138,7 +140,7 @@ public class Accueil extends JFrame{
         infos.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                new PlusInformations();
+                new VuePlusInfos(client, admin);
                 dispose(); // pour fermer la fenêtre actuelle si tu veux
             }
         });
@@ -148,11 +150,43 @@ public class Accueil extends JFrame{
         informations.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                new PlusInformations();
+                new VuePlusInfos(client, admin);
                 dispose(); // optionnel
             }
         });
 
+        compte.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (client == null && admin == null) {
+                    VueLogin vueLogin = new VueLogin();
+                    new ControleurLogin(vueLogin);
+                    vueLogin.setVisible(true);
+                    dispose();
+                } else if (client != null && admin == null) {
+                    VueClient vueClient = new VueClient(client);
+                    new ControleurClient(vueClient, client);
+                    vueClient.setVisible(true);
+                    dispose();
+                } else if (client == null && admin != null) {
+                    VueAdmin vueAdmin = new VueAdmin(admin);
+                    new ControleurAdmin(vueAdmin, admin);
+                    vueAdmin.setVisible(true);
+                    dispose();
+                }
+
+            }
+        });
+
+        calendrier.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                VueCalendrier vueCalendrier = new VueCalendrier(client, admin);
+                new ControleurCalendrier(vueCalendrier, client, admin);
+                vueCalendrier.setVisible(true);
+                dispose();
+            }
+        });
 
         // ScrollPane
         JScrollPane scrollPane = new JScrollPane(contenu);

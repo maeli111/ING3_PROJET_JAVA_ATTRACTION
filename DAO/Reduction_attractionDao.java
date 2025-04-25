@@ -33,10 +33,11 @@ public class Reduction_attractionDao {
 
             // 	Se déplacer sur le prochain enregistrement : retourne false si la fin est atteinte
             while (resultats.next()) {
-                int id_attraction = resultats.getInt(1);
-                int id_reduction = resultats.getInt(2);
+                int id_RA = resultats.getInt(1);
+                int id_attraction = resultats.getInt(2);
+                int id_reduction = resultats.getInt(3);
 
-                Reduction_attraction Reduction_attraction = new Reduction_attraction(id_attraction,id_reduction);
+                Reduction_attraction Reduction_attraction = new Reduction_attraction(id_RA, id_attraction,id_reduction);
 
                 listeReduction_attraction.add(Reduction_attraction);
             }
