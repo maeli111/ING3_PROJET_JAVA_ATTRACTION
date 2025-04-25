@@ -30,8 +30,8 @@ public class ControleurInfoAttraction {
             @Override
             public void actionPerformed(ActionEvent e) {
                 vue.dispose();
-                VueReservation view = new VueReservation(client);
-                new ControleurReservation(view,attraction,date);
+                VueReservationInvite view = new VueReservationInvite();
+                new ControleurReservationInvite(view,attraction,date);
                 view.setVisible(true);
             }
         });
