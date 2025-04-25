@@ -44,7 +44,7 @@ import java.util.ArrayList;
             // Action du bouton Compte
             compteButton.addActionListener(e -> {
                 VueAdmin vueAdmin = new VueAdmin(admin);
-                ControleurAdmin controleurAdmin = new ControleurAdmin(vueAdmin, admin);
+                new ControleurAdmin(vueAdmin, admin);
                 vueAdmin.setVisible(true);
                 dispose();
             });

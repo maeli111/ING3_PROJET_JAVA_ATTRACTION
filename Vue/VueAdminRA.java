@@ -51,7 +51,7 @@ public class VueAdminRA extends JFrame {
         compteButton.addActionListener(e -> {
             dispose();
             VueAdmin vueAdmin = new VueAdmin(admin);
-            ControleurAdmin controleurAdmin = new ControleurAdmin(vueAdmin, admin);
+            new ControleurAdmin(vueAdmin, admin);
             vueAdmin.setVisible(true);
         });
 

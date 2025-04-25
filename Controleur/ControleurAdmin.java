@@ -39,7 +39,9 @@ public class ControleurAdmin {
 
         vue.getAttractionsButton().addActionListener(e -> {
             vue.dispose();
-            new VueAdminAttraction(admin).setVisible(true);
+            VueAdminAttraction vueAdminAttraction = new VueAdminAttraction(admin);
+            new ControleurAdminAttraction(vueAdminAttraction, admin);
+            vueAdminAttraction.setVisible(true);
         });
 
         vue.getReductionsButton().addActionListener(e -> {
