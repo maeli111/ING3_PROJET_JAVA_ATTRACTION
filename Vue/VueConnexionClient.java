@@ -1,75 +1,54 @@
 package Vue;
 
-import DAO.ClientDao;
-import DAO.DaoFactory;
-import Modele.Client;
-import Controleur.*;
+import Controleur.ControleurConnexionAdmin;
+
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 public class VueConnexionClient extends JFrame {
-    private DaoFactory daoFactory;
+    private JTextField emailField;
+    private JPasswordField mdpField;
+    private JButton btnConnexion;
+    private JButton btnCompte;
 
     public VueConnexionClient() {
-        // Connexion à la base de données
-        daoFactory = new DaoFactory("jdbc:mysql://localhost:3306/java_attraction", "root", "");
-
-        // Création du DAO
-        ClientDao clientDao = new ClientDao(daoFactory);
-
-        // Paramètres de la fenêtre
         setTitle("Connexion Client");
         setSize(600, 500);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new BorderLayout(10, 10));
 
-        // Panneau supérieur avec boutons
+        // -------- Panneau haut --------
         JPanel topPanel = new JPanel(new BorderLayout());
-
-
         JPanel rightPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-        JButton btnCompte = new JButton("Compte");
-        btnCompte.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                dispose(); // Ferme la fenêtre actuelle
-                VueLogin vueLogin= new VueLogin(); // Crée une nouvelle instance de VueAccueil
-                vueLogin.setVisible(true); // Affiche la fenêtre
-            }
-        });
+        btnCompte = new JButton("Compte");
         rightPanel.add(btnCompte);
         topPanel.add(rightPanel, BorderLayout.EAST);
 
-        // Panneau principal (contenu central)
+        // -------- Panneau principal --------
         JPanel mainPanel = new JPanel();
         mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
-        mainPanel.setBorder(BorderFactory.createEmptyBorder(30, 20, 20, 20)); // plus de marge en haut
+        mainPanel.setBorder(BorderFactory.createEmptyBorder(30, 20, 20, 20));
 
-// Titre PalasiLand
         JLabel titreLabel = new JLabel("PalasiLand", JLabel.CENTER);
         titreLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         titreLabel.setFont(new Font("Serif", Font.BOLD, 28));
         mainPanel.add(titreLabel);
 
-// Texte de bienvenue
         JLabel bienvenuLabel = new JLabel("Se connecter en tant que client", JLabel.CENTER);
         bienvenuLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         bienvenuLabel.setFont(new Font("Arial", Font.BOLD, 20));
-        mainPanel.add(Box.createRigidArea(new Dimension(0, 10))); // petit espace entre le titre et le texte
+        mainPanel.add(Box.createRigidArea(new Dimension(0, 10)));
         mainPanel.add(bienvenuLabel);
 
-        // Formulaire
-        mainPanel.add(Box.createRigidArea(new Dimension(0, 20))); // espace après le texte
+        mainPanel.add(Box.createRigidArea(new Dimension(0, 20)));
         JPanel formPanel = new JPanel(new GridLayout(2, 2, 10, 10));
         formPanel.setMaximumSize(new Dimension(400, 80));
 
         JLabel emailLabel = new JLabel("Email :");
-        JTextField emailField = new JTextField();
+        emailField = new JTextField();
 
         JLabel mdpLabel = new JLabel("Mot de passe :");
-        JPasswordField mdpField = new JPasswordField();
+        mdpField = new JPasswordField();
 
         formPanel.add(emailLabel);
         formPanel.add(emailField);
@@ -77,43 +56,31 @@ public class VueConnexionClient extends JFrame {
         formPanel.add(mdpField);
         mainPanel.add(formPanel);
 
-// Bouton de connexion
         mainPanel.add(Box.createRigidArea(new Dimension(0, 20)));
-        JButton btnConnexion = new JButton("Connexion");
+        btnConnexion = new JButton("Connexion");
         btnConnexion.setAlignmentX(Component.CENTER_ALIGNMENT);
         mainPanel.add(btnConnexion);
 
-        // Ajout des panels à la fenêtre
+        // -------- Ajout aux panels --------
         add(topPanel, BorderLayout.NORTH);
         add(mainPanel, BorderLayout.CENTER);
 
-        // 🎯 Action sur le bouton Connexion
-        btnConnexion.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                String email = emailField.getText().trim();
-                String mdp = new String(mdpField.getPassword());
+    }
 
-                if (email.isEmpty() || mdp.isEmpty()) {
-                    JOptionPane.showMessageDialog(null, "Veuillez remplir tous les champs.", "Erreur", JOptionPane.ERROR_MESSAGE);
-                    return;
-                }
+    // Accesseurs pour le contrôleur
+    public JButton getBtnConnexion() {
+        return btnConnexion;
+    }
 
-                Client clientConnecte = clientDao.seConnecter(email, mdp);
+    public JButton getBtnCompte() {
+        return btnCompte;
+    }
 
-                if (clientConnecte != null) {
-                    JOptionPane.showMessageDialog(null, "Connexion réussie ! Bienvenue, " + clientConnecte.getPrenom() + " " + clientConnecte.getNom(), "Succès", JOptionPane.INFORMATION_MESSAGE);
-                    VueClient vueClient = new VueClient(clientConnecte);
-                    ControleurClient controleurClient = new ControleurClient(vueClient, clientConnecte);
-                    vueClient.setVisible(true);
-                    dispose();
-                } else {
-                    JOptionPane.showMessageDialog(null, "Email ou mot de passe incorrect.", "Échec de connexion", JOptionPane.ERROR_MESSAGE);
-                }
-            }
-        });
+    public String getEmail() {
+        return emailField.getText().trim();
+    }
 
-        // Affichage
-        setVisible(true);
+    public String getMotDePasse() {
+        return new String(mdpField.getPassword());
     }
 }

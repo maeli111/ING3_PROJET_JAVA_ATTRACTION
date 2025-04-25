@@ -3,8 +3,7 @@ package Vue;
 import javax.swing.*;
 import java.awt.*;
 
-import Controleur.ControleurCalendrier;
-import Controleur.ControleurConnexionAdmin;
+import Controleur.*;
 import DAO.*;
 
 public class VueLogin extends JFrame {
@@ -38,6 +37,7 @@ public class VueLogin extends JFrame {
         btnConnect.addActionListener(e -> {
             dispose();
             VueConnexionClient vueConnexionClient = new VueConnexionClient();
+            new ControleurConnexionClient(vueConnexionClient);
             vueConnexionClient.setVisible(true);
         });
         buttonPanel.add(btnConnect);
