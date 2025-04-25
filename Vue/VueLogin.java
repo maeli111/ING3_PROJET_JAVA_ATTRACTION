@@ -12,8 +12,6 @@ import java.awt.event.ActionListener;
 
 public class VueLogin extends JFrame {
 
-    private JTextField txtNom, txtPrenom, txtAge, txtEmail;
-    private JPasswordField txtMdp, txtMdpVerification;
     private DaoFactory daoFactory;
 
     public VueLogin() {
@@ -43,25 +41,6 @@ public class VueLogin extends JFrame {
         header.add(Pnavigation, BorderLayout.WEST);
         header.add(Pcompte, BorderLayout.EAST);
 
-        // ----------- TOP PANEL "Connexion / Inscription" -----------
-
-        JPanel topPanel = new JPanel(new GridLayout(1, 2));
-        JPanel leftTitlePanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
-        leftTitlePanel.add(new JLabel("Connexion", SwingConstants.CENTER));
-        JPanel rightTitlePanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
-        rightTitlePanel.add(new JLabel("Inscription", SwingConstants.CENTER));
-        topPanel.add(leftTitlePanel);
-        topPanel.add(rightTitlePanel);
-
-        // ----------- FUSION HEADER + TOPPANEL -----------
-
-        JPanel northPanel = new JPanel();
-        northPanel.setLayout(new BoxLayout(northPanel, BoxLayout.Y_AXIS));
-        northPanel.add(header);
-        northPanel.add(topPanel);
-
-        add(northPanel, BorderLayout.NORTH);
-
         // ----------- ACTIONS DES BOUTONS DU HEADER -----------
 
         accueil.addActionListener(e -> {
@@ -84,13 +63,47 @@ public class VueLogin extends JFrame {
 
         // ----------- PANNEAU CENTRAL -----------
 
-        JPanel mainPanel = new JPanel(new GridLayout(1, 2, 10, 10));
+        JPanel mainPanel = new JPanel(new BorderLayout()); // On garde BorderLayout pour avoir la partie supérieure fixe
         add(mainPanel, BorderLayout.CENTER);
 
-        // ----------- COLONNE DE GAUCHE : CHOIX MODE DE CONNEXION -----------
+        // Ajouter le header au top
+        mainPanel.add(header, BorderLayout.NORTH);
 
-        JPanel leftPanel = new JPanel(new GridLayout(4, 1, 10, 10));
-        leftPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+        // ----------- BOUTONS VERTICAUX CENTRÉS EN BAS -----------
+
+        JPanel buttonPanel = new JPanel();
+        buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.Y_AXIS));
+        buttonPanel.setAlignmentX(Component.CENTER_ALIGNMENT); // Centrer les boutons dans le panneau
+
+        // On ajuste l'espacement entre les boutons pour qu'ils soient bien espacés
+        buttonPanel.add(Box.createVerticalStrut(20)); // Espacement avant le premier bouton
+
+        JButton btnConnect = new JButton("Se connecter");
+        btnConnect.addActionListener(e -> {
+            dispose();
+            VueConnexionClient vueConnexionClient = new VueConnexionClient();
+            vueConnexionClient.setVisible(true);
+        });
+        buttonPanel.add(btnConnect);
+        buttonPanel.add(Box.createVerticalStrut(10)); // Espacement entre les boutons
+
+        JButton btnRegister = new JButton("S'inscrire");
+        btnRegister.addActionListener(e -> {
+            dispose();
+            VueInscription vueInscription = new VueInscription();
+            vueInscription.setVisible(true);
+        });
+        buttonPanel.add(btnRegister);
+        buttonPanel.add(Box.createVerticalStrut(10)); // Espacement entre les boutons
+
+        JButton btnGuest = new JButton("Continuer en tant qu'invité");
+        btnGuest.addActionListener(e -> {
+            dispose();
+            VueAccueil accueilGuest = new VueAccueil(null,null);
+            accueilGuest.setVisible(true);
+        });
+        buttonPanel.add(btnGuest);
+        buttonPanel.add(Box.createVerticalStrut(10)); // Espacement entre les boutons
 
         JButton btnAdmin = new JButton("Administrateur");
         btnAdmin.addActionListener(e -> {
@@ -98,99 +111,16 @@ public class VueLogin extends JFrame {
             VueConnexionAdmin vueConnexionAdmin = new VueConnexionAdmin();
             vueConnexionAdmin.setVisible(true);
         });
+        buttonPanel.add(btnAdmin);
 
-        JButton btnClient = new JButton("Client");
-        btnClient.addActionListener(e -> {
-            dispose();
-            VueConnexionClient vueConnexionClient = new VueConnexionClient();
-            vueConnexionClient.setVisible(true);
-        });
+        buttonPanel.add(Box.createVerticalStrut(20)); // Espacement après le dernier bouton
 
-        JButton btnGuest = new JButton("Continuer en tant qu'invité");
-        btnGuest.setFocusPainted(false);
-        btnGuest.setBorderPainted(false);
-        btnGuest.setContentAreaFilled(false);
-        btnGuest.setForeground(Color.BLUE);
-        btnGuest.setFont(btnGuest.getFont().deriveFont(Font.ITALIC));
-        btnGuest.addActionListener(e -> {
-            dispose();
-            VueAccueil accueilGuest = new VueAccueil(null,null);
-            accueilGuest.setVisible(true);
-        });
+        // ----------- AJOUTER LES BOUTONS AU BAS CENTRÉ -----------
 
-        leftPanel.add(btnAdmin);
-        leftPanel.add(btnClient);
-        leftPanel.add(btnGuest);
+        JPanel bottomPanel = new JPanel();
+        bottomPanel.setLayout(new FlowLayout(FlowLayout.CENTER));  // Pour centrer les boutons
+        bottomPanel.add(buttonPanel);
 
-        // ----------- COLONNE DE DROITE : FORMULAIRE D'INSCRIPTION -----------
-
-        JPanel rightPanel = new JPanel(new BorderLayout());
-        JPanel formPanel = new JPanel(new GridLayout(7, 2, 10, 10));
-        formPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
-
-        txtNom = new JTextField();
-        txtPrenom = new JTextField();
-        txtAge = new JTextField();
-        txtEmail = new JTextField();
-        txtMdp = new JPasswordField();
-        txtMdpVerification = new JPasswordField();
-
-        formPanel.add(new JLabel("Nom :")); formPanel.add(txtNom);
-        formPanel.add(new JLabel("Prénom :")); formPanel.add(txtPrenom);
-        formPanel.add(new JLabel("Age :")); formPanel.add(txtAge);
-        formPanel.add(new JLabel("E-mail :")); formPanel.add(txtEmail);
-        formPanel.add(new JLabel("Mot de passe :")); formPanel.add(txtMdp);
-        formPanel.add(new JLabel("Vérifier mot de passe :")); formPanel.add(txtMdpVerification);
-
-        rightPanel.add(formPanel, BorderLayout.CENTER);
-
-        JButton btnRegister = new JButton("S'inscrire");
-        btnRegister.addActionListener(e -> {
-            String nom = txtNom.getText();
-            String prenom = txtPrenom.getText();
-            String mdp = new String(txtMdp.getPassword());
-            String mdpVerification = new String(txtMdpVerification.getPassword());
-            String email = txtEmail.getText();
-
-            if (!mdp.equals(mdpVerification)) {
-                JOptionPane.showMessageDialog(null, "Les mots de passe ne correspondent pas.", "Erreur", JOptionPane.ERROR_MESSAGE);
-                return;
-            }
-
-            int age;
-            try {
-                age = Integer.parseInt(txtAge.getText());
-            } catch (NumberFormatException ex) {
-                JOptionPane.showMessageDialog(null, "L'âge doit être un nombre entier.", "Erreur", JOptionPane.ERROR_MESSAGE);
-                return;
-            }
-
-            ClientDao clientDao = new ClientDao(daoFactory);
-            if (clientDao.emailExiste(email)) {
-                JOptionPane.showMessageDialog(null, "Cet e-mail est déjà utilisé.", "Erreur", JOptionPane.ERROR_MESSAGE);
-                return;
-            }
-
-            Client client = new Client();
-            client.setNom(nom);
-            client.setPrenom(prenom);
-            client.setEmail(email);
-            client.setMdp(mdp);
-            client.setAge(age);
-
-            clientDao.inscrire(client);
-            JOptionPane.showMessageDialog(null, "Inscription réussie !", "Succès", JOptionPane.INFORMATION_MESSAGE);
-            VueClient vueClient = new VueClient(client);
-            new ControleurClient(vueClient, client);
-            vueClient.setVisible(true);
-            dispose();
-        });
-
-        JPanel registerButtonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-        registerButtonPanel.add(btnRegister);
-        rightPanel.add(registerButtonPanel, BorderLayout.SOUTH);
-
-        mainPanel.add(leftPanel);
-        mainPanel.add(rightPanel);
+        mainPanel.add(bottomPanel, BorderLayout.SOUTH);  // Ajouter les boutons au bas
     }
 }
