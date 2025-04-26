@@ -198,4 +198,7 @@ public class VueInfoAttraction extends JFrame {
     public JButton getCalendrier() { return calendrier; }
     public JButton getCompte() { return compte; }
     public JButton getReserverBtn() { return reserverBtn; }
+    public JButton getLoupeButton() {
+        return loupeBtn;
+    }
 }
