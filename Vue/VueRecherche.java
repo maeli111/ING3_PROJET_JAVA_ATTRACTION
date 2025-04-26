@@ -22,6 +22,8 @@ public class VueRecherche extends JFrame {
 
     private JComboBox<String> filtreCombo;
 
+    private JPanel panelResultats;
+
     public VueRecherche() {
         setTitle("Recherche");
         setSize(1250, 680);
@@ -94,12 +96,11 @@ public class VueRecherche extends JFrame {
 
         contenu.add(panelFiltre);
 
-        // Table pour afficher les attractions
-        tableAttractions = new JTable();
-        scrollPane = new JScrollPane(tableAttractions);
-        scrollPane.setPreferredSize(new Dimension(1000, 400));
+        // Panel qui contiendra tous les boutons de résultats
+        panelResultats = new JPanel();
+        panelResultats.setLayout(new BoxLayout(panelResultats, BoxLayout.Y_AXIS));
         contenu.add(Box.createRigidArea(new Dimension(0, 30)));
-        contenu.add(scrollPane);
+        contenu.add(panelResultats);
 
         add(contenu, BorderLayout.CENTER);
     }
@@ -113,8 +114,17 @@ public class VueRecherche extends JFrame {
     public JButton getRechercherBtn() { return rechercherBtn; }
     public JComboBox<String> getFiltreCombo() { return filtreCombo; }
 
-    public void mettreAJourTable(DefaultTableModel model) {
-        tableAttractions.setModel(model);
+
+    public void ajouterResultat(JButton btn) {
+        panelResultats.add(btn);
+        panelResultats.revalidate();
+        panelResultats.repaint();
+    }
+
+    public void viderResultats() {
+        panelResultats.removeAll();
+        panelResultats.revalidate();
+        panelResultats.repaint();
     }
 
 }

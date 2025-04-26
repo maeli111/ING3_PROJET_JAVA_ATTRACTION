@@ -1,11 +1,12 @@
 package Controleur;
 
-import Vue.VueRecherche;
-import Modele.Admin;
-import Modele.Client;
+import Vue.*;
+import DAO.*;
+import Modele.*;
 
 import javax.swing.*;
-import javax.swing.table.DefaultTableModel;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.sql.*;
 
 public class ControleurRecherche {
@@ -29,7 +30,6 @@ public class ControleurRecherche {
         String filtre = (String) vue.getFiltreCombo().getSelectedItem();
         String orderBy = "";
 
-        // Déterminer l'ordre SQL selon le filtre
         switch (filtre) {
             case "Prix croissant":
                 orderBy = "prix ASC";
@@ -47,31 +47,50 @@ public class ControleurRecherche {
                 orderBy = "capacite DESC";
                 break;
             default:
-                orderBy = "nom ASC"; // par défaut trié par nom
+                orderBy = "nom ASC";
         }
 
-        // Requête SQL : NE sélectionne QUE nom + prix
-        String sql = "SELECT nom, prix FROM attraction ORDER BY " + orderBy;
+        String sql = "SELECT id_attraction, nom, prix, type_attraction, capacite FROM attraction ORDER BY " + orderBy;
 
         try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
              Statement stmt = conn.createStatement();
              ResultSet rs = stmt.executeQuery(sql)) {
 
-            // Créer un modèle avec uniquement deux colonnes : Nom, Prix
-            DefaultTableModel model = new DefaultTableModel(
-                    new Object[]{"Nom", "Prix (€)"}, 0
-            );
+            vue.viderResultats(); // <-- Avant de remplir, on vide les anciens résultats
 
-            // Remplir le tableau
             while (rs.next()) {
+                int id = rs.getInt("id_attraction");
                 String nom = rs.getString("nom");
                 double prix = rs.getDouble("prix");
+                String type = rs.getString("type_attraction");
+                int capacite = rs.getInt("capacite");
 
-                model.addRow(new Object[]{nom, prix});
+                String texteBouton = nom + " — " + prix + "€ — " + type + " — Capacité: " + capacite;
+
+                JButton attractionBtn = new JButton(texteBouton);
+
+                DaoFactory daoFactory = DaoFactory.getInstance("java_attraction", "root", "");
+
+                // Action quand on clique sur le bouton
+                attractionBtn.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        AttractionDao attractionDao = new AttractionDao(daoFactory); // utilise ton daoFactory
+                        Attraction attraction = attractionDao.chercher(id); // on utilise ton chercher(id)
+
+                        if (attraction != null) {
+                            VueAttraction vueAttraction = new VueAttraction(attraction);
+                            vueAttraction.setVisible(true);
+                            vue.dispose(); // optionnel : ferme la vue actuelle
+                        } else {
+                            JOptionPane.showMessageDialog(vue, "Attraction introuvable !");
+                        }
+                    }
+                });
+
+
+                vue.ajouterResultat(attractionBtn);
             }
-
-            // Mettre à jour la JTable
-            vue.mettreAJourTable(model);
 
         } catch (SQLException e) {
             JOptionPane.showMessageDialog(vue, "Erreur de connexion à la base de données : " + e.getMessage());
