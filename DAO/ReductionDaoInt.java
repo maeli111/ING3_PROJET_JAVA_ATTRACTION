@@ -14,6 +14,8 @@ public interface ReductionDaoInt {
 
     public int getPourcentageFidelite(int idClient);
 
+    public int getPourcentageAttraction(int idAttraction);
+
     public void ajouter(Reduction reduction);
 
     public void modifier(int ancienId, Reduction reduction);
@@ -37,4 +39,6 @@ public interface ReductionDaoInt {
     public double getPourcentageById(int idReduction);
 
     public int NbResaClient(int idClient) throws SQLException;
+
+    public String getDescriptionById(int id);
 }

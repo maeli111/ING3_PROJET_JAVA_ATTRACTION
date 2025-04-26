@@ -8,7 +8,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 
-public class Reduction_attractionDao {
+public class Reduction_attractionDao implements Reduction_attractionDaoInt {
     private DaoFactory daoFactory;
 
     // constructeur dépendant de la classe DaoFactory
@@ -20,6 +20,7 @@ public class Reduction_attractionDao {
      * Récupérer de la base de données tous les objets des Reduction_attractions dans une liste
      * @return : liste retournée des objets des Reduction_attractions récupérés
      */
+    @Override
     public ArrayList<Reduction_attraction> getAll() {
         ArrayList<Reduction_attraction> listeReduction_attraction = new ArrayList<Reduction_attraction>();
 

@@ -1,149 +1,217 @@
 package Controleur;
 
-import Vue.*;
-import Modele.*;
-import DAO.*;
+import DAO.AttractionDao;
+import DAO.ReductionDao;
+import DAO.DaoFactory;
+import Modele.Admin;
+import Modele.Attraction;
+import Modele.Reduction;
+import Vue.VueAdmin;
+import Vue.VueAdminRA;
 
 import javax.swing.*;
-import java.awt.event.*;
+import javax.swing.table.DefaultTableModel;
+import java.awt.*;
 import java.util.ArrayList;
 
 public class ControleurAdminRA {
-    private VueAdminRA vueAdmin;
-    private Admin admin;
 
-    public ControleurAdminRA(VueAdminRA vueAdmin, Admin admin) {
-        this.vueAdmin = vueAdmin;
+    private VueAdminRA vue;
+    private Admin admin;
+    private ReductionDao reductionDao;
+    private AttractionDao attractionDao;
+
+    public ControleurAdminRA(VueAdminRA vue, Admin admin) {
+        this.vue = vue;
         this.admin = admin;
 
-        // Connexion à la base de données via DaoFactory
         DaoFactory daoFactory = DaoFactory.getInstance("java_attraction", "root", "");
+        reductionDao = new ReductionDao(daoFactory);
+        attractionDao = new AttractionDao(daoFactory);
 
-        // Créer une instance d'AttractionDao pour interagir avec la base de données
-        AttractionDao attractionDao = new AttractionDao(daoFactory);
-
-        // Récupérer toutes les attractions en appelant getAll() sur l'instance d'AttractionDao
-        ArrayList<Attraction> attractions = attractionDao.getAll();
-
-        // Passer cette liste d'attractions à la vue
-        vueAdmin.chargerAttractions(attractions);
-
-        // Initialiser les actions des boutons (optionnel)
-        ajouterListeners();
+        initListeners();
+        chargerDonnees();
     }
 
-    // Ajouter vos listeners pour les événements des boutons
-    private void ajouterListeners() {
-
-        vueAdmin.getCompteButton().addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                vueAdmin.dispose();
-                VueAdmin vueAdmin = new VueAdmin(admin);
-                new ControleurAdmin(vueAdmin, admin);
-                vueAdmin.setVisible(true);
-            }
+    private void initListeners() {
+        vue.getCompteButton().addActionListener(e -> {
+            vue.dispose();
+            VueAdmin vueAdmin = new VueAdmin(admin);
+            vueAdmin.setVisible(true);
         });
 
-        // Exemple de listener pour le bouton "Ajouter Attraction"
-        vueAdmin.getAjouterButton().addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                JTextField nomField = new JTextField();
-                JTextField descriptionField = new JTextField();
-                JTextField prixField = new JTextField();
-                JTextField capaciteField = new JTextField();
-                JTextField typeAttractionField = new JTextField();
+        vue.getAjouterButton().addActionListener(e -> ajouterReduction());
+        vue.getModifierButton().addActionListener(e -> modifierReduction());
+        vue.getSupprimerButton().addActionListener(e -> supprimerReduction());
+    }
 
-                Object[] message = {
-                        "Nom:", nomField,
-                        "Description:", descriptionField,
-                        "Prix:", prixField,
-                        "Capacité:", capaciteField,
-                        "Type d'attraction:", typeAttractionField
-                };
+    private void chargerDonnees() {
+        DefaultTableModel model = vue.getModel();
+        model.setRowCount(0);
 
-                int option = JOptionPane.showConfirmDialog(vueAdmin, message, "Ajouter une attraction", JOptionPane.OK_CANCEL_OPTION);
-                if (option == JOptionPane.OK_OPTION) {
-                    String nom = nomField.getText();
-                    String description = descriptionField.getText();
-                    double prix = Double.parseDouble(prixField.getText());
-                    int capacite = Integer.parseInt(capaciteField.getText());
-                    String typeAttraction = typeAttractionField.getText();
-
-                    Attraction nouvelleAttraction = new Attraction(nom, description, prix, capacite, typeAttraction);
-                    AttractionDao attractionDao = new AttractionDao(DaoFactory.getInstance("java_attraction", "root", ""));
-                    attractionDao.ajouter(nouvelleAttraction);
-
-                    // Recharger les attractions après ajout
-                    ArrayList<Attraction> attractions = attractionDao.getAll();
-                    vueAdmin.chargerAttractions(attractions);
-                }
+        ArrayList<Reduction> reductions = reductionDao.getReductionsAvecAttraction();
+        for (Reduction r : reductions) {
+            ArrayList<Attraction> attractionsLiees = reductionDao.getAttractionsLiees(r.getId_reduction());
+            StringBuilder nomsAttractions = new StringBuilder();
+            for (Attraction a : attractionsLiees) {
+                nomsAttractions.append(a.getNom()).append(", ");
             }
-        });
+            if (nomsAttractions.length() > 0) {
+                nomsAttractions.setLength(nomsAttractions.length() - 2);
+            }
+            model.addRow(new Object[]{r.getId_reduction(), r.getNom(), r.getPourcentage(), r.getDescription(), nomsAttractions.toString()});
+        }
+    }
 
-        // Exemple de listener pour le bouton "Modifier Attraction"
-        vueAdmin.getModifierButton().addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                int selectedRow = vueAdmin.getTable().getSelectedRow();
-                if (selectedRow >= 0) {
-                    int idAttraction = Integer.parseInt(vueAdmin.getTableModel().getValueAt(selectedRow, 0).toString());
-                    AttractionDao attractionDao = new AttractionDao(DaoFactory.getInstance("java_attraction", "root", ""));
-                    Attraction attractionExistant = attractionDao.getById(idAttraction);
+    private void ajouterReduction() {
+        JTextField nomField = new JTextField();
+        JTextField pourcentageField = new JTextField();
+        JTextField descriptionField = new JTextField();
 
-                    // Afficher un formulaire pour modifier les informations
-                    JTextField nomField = new JTextField(attractionExistant.getNom());
-                    JTextField descriptionField = new JTextField(attractionExistant.getDescription());
-                    JTextField prixField = new JTextField(String.valueOf(attractionExistant.getPrix()));
-                    JTextField capaciteField = new JTextField(String.valueOf(attractionExistant.getCapacite()));
-                    JTextField typeAttractionField = new JTextField(attractionExistant.getType_attraction());
+        ArrayList<Attraction> attractions = attractionDao.getAll();
+        JPanel attractionCheckboxPanel = new JPanel();
+        attractionCheckboxPanel.setLayout(new BoxLayout(attractionCheckboxPanel, BoxLayout.Y_AXIS));
 
-                    Object[] message = {
-                            "Nom:", nomField,
-                            "Description:", descriptionField,
-                            "Prix:", prixField,
-                            "Capacité:", capaciteField,
-                            "Type d'attraction:", typeAttractionField
-                    };
+        ArrayList<JCheckBox> checkBoxes = new ArrayList<>();
+        for (Attraction attraction : attractions) {
+            JCheckBox cb = new JCheckBox(attraction.getNom());
+            cb.putClientProperty("attraction", attraction);
+            checkBoxes.add(cb);
+            attractionCheckboxPanel.add(cb);
+        }
 
-                    int option = JOptionPane.showConfirmDialog(vueAdmin, message, "Modifier l'attraction", JOptionPane.OK_CANCEL_OPTION);
-                    if (option == JOptionPane.OK_OPTION) {
-                        attractionExistant.setNom(nomField.getText());
-                        attractionExistant.setDescription(descriptionField.getText());
-                        attractionExistant.setPrix(Double.parseDouble(prixField.getText()));
-                        attractionExistant.setCapacite(Integer.parseInt(capaciteField.getText()));
-                        attractionExistant.setType_attraction(typeAttractionField.getText());
+        JScrollPane listScrollPane = new JScrollPane(attractionCheckboxPanel);
+        listScrollPane.setPreferredSize(new Dimension(300, 150));
 
-                        attractionDao.modifier(attractionExistant);
+        Object[] fields = {
+                "Nom :", nomField,
+                "Pourcentage :", pourcentageField,
+                "Description :", descriptionField,
+                "Sélectionnez les attractions :", listScrollPane
+        };
 
-                        // Recharger les attractions après modification
-                        ArrayList<Attraction> attractions = attractionDao.getAll();
-                        vueAdmin.chargerAttractions(attractions);
+        int res = JOptionPane.showConfirmDialog(null, fields, "Nouvelle réduction", JOptionPane.OK_CANCEL_OPTION);
+
+        if (res == JOptionPane.OK_OPTION) {
+            try {
+                String nom = nomField.getText();
+                int pourcentage = Integer.parseInt(pourcentageField.getText());
+                String description = descriptionField.getText();
+
+                Reduction reduction = new Reduction(nom, pourcentage, description);
+                reductionDao.ajouter(reduction);
+
+                for (JCheckBox cb : checkBoxes) {
+                    if (cb.isSelected()) {
+                        Attraction attraction = (Attraction) cb.getClientProperty("attraction");
+                        reductionDao.lierReductionAttraction(reduction.getId_reduction(), attraction.getId_attraction());
                     }
-                } else {
-                    JOptionPane.showMessageDialog(vueAdmin, "Veuillez sélectionner une attraction à modifier.");
                 }
+
+                chargerDonnees();
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(null, "Erreur : données invalides");
             }
-        });
+        }
+    }
 
-        // Exemple de listener pour le bouton "Supprimer Attraction"
-        vueAdmin.getSupprimerButton().addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                int selectedRow = vueAdmin.getTable().getSelectedRow();
-                if (selectedRow >= 0) {
-                    int idAttraction = Integer.parseInt(vueAdmin.getTableModel().getValueAt(selectedRow, 0).toString());
-                    AttractionDao attractionDao = new AttractionDao(DaoFactory.getInstance("java_attraction", "root", ""));
-                    attractionDao.supprimer(idAttraction);
+    private void modifierReduction() {
+        int row = vue.getTable().getSelectedRow();
+        if (row == -1) {
+            JOptionPane.showMessageDialog(null, "Sélectionnez une réduction.");
+            return;
+        }
 
-                    // Recharger les attractions après suppression
-                    ArrayList<Attraction> attractions = attractionDao.getAll();
-                    vueAdmin.chargerAttractions(attractions);
-                } else {
-                    JOptionPane.showMessageDialog(vueAdmin, "Veuillez sélectionner une attraction à supprimer.");
+        DefaultTableModel model = vue.getModel();
+        int oldId = (int) model.getValueAt(row, 0);
+        String nom = (String) model.getValueAt(row, 1);
+        String pourcentage = model.getValueAt(row, 2).toString();
+        String description = (String) model.getValueAt(row, 3);
+
+        JTextField nomField = new JTextField(nom);
+        JTextField pourcentageField = new JTextField(pourcentage);
+        JTextField descriptionField = new JTextField(description);
+
+        ArrayList<Attraction> linkedAttractions = reductionDao.getAttractionsLiees(oldId);
+        ArrayList<Attraction> nonLinkedAttractions = reductionDao.getAttractionsNonLiees(oldId);
+
+        JPanel attractionCheckboxPanel = new JPanel();
+        attractionCheckboxPanel.setLayout(new BoxLayout(attractionCheckboxPanel, BoxLayout.Y_AXIS));
+
+        ArrayList<JCheckBox> checkBoxes = new ArrayList<>();
+
+        for (Attraction attraction : linkedAttractions) {
+            JCheckBox cb = new JCheckBox(attraction.getNom());
+            cb.putClientProperty("attraction", attraction);
+            cb.setSelected(true);
+            checkBoxes.add(cb);
+            attractionCheckboxPanel.add(cb);
+        }
+
+        for (Attraction attraction : nonLinkedAttractions) {
+            JCheckBox cb = new JCheckBox(attraction.getNom());
+            cb.putClientProperty("attraction", attraction);
+            checkBoxes.add(cb);
+            attractionCheckboxPanel.add(cb);
+        }
+
+        JScrollPane listScrollPane = new JScrollPane(attractionCheckboxPanel);
+        listScrollPane.setPreferredSize(new Dimension(300, 150));
+
+        Object[] fields = {
+                "Nom :", nomField,
+                "Pourcentage :", pourcentageField,
+                "Description :", descriptionField,
+                "Modifier les attractions :", listScrollPane
+        };
+
+        int res = JOptionPane.showConfirmDialog(null, fields, "Modifier la réduction", JOptionPane.OK_CANCEL_OPTION);
+        if (res == JOptionPane.OK_OPTION) {
+            try {
+                String newNom = nomField.getText();
+                int newPourcentage = Integer.parseInt(pourcentageField.getText());
+                String newDesc = descriptionField.getText();
+
+                reductionDao.modifier(oldId, new Reduction(oldId, newNom, newPourcentage, newDesc));
+                reductionDao.supprimerLiaisonsAttractions(oldId);
+
+                for (JCheckBox cb : checkBoxes) {
+                    if (cb.isSelected()) {
+                        Attraction attraction = (Attraction) cb.getClientProperty("attraction");
+                        reductionDao.lierReductionAttraction(oldId, attraction.getId_attraction());
+                    }
                 }
+
+                if (reductionDao.isEmpty(oldId)) {
+                    reductionDao.supprimer(oldId);
+                    JOptionPane.showMessageDialog(null, "Réduction supprimée, aucune attraction concernée.");
+                }
+
+                chargerDonnees();
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(null, "Erreur : données invalides");
             }
-        });
+        }
+    }
+
+    private void supprimerReduction() {
+        int row = vue.getTable().getSelectedRow();
+        if (row == -1) {
+            JOptionPane.showMessageDialog(null, "Sélectionnez une réduction.");
+            return;
+        }
+
+        int id = (int) vue.getModel().getValueAt(row, 0);
+        int confirm = JOptionPane.showConfirmDialog(null, "Supprimer cette réduction ?", "Confirmer", JOptionPane.YES_NO_OPTION);
+        if (confirm == JOptionPane.YES_OPTION) {
+            try {
+                reductionDao.supprimerLiaisonsAttractions(id);
+                reductionDao.supprimer(id);
+                chargerDonnees();
+                JOptionPane.showMessageDialog(null, "Réduction supprimée.");
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(null, "Erreur lors de la suppression.");
+            }
+        }
     }
 }

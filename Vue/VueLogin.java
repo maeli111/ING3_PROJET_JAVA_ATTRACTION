@@ -11,7 +11,7 @@ public class VueLogin extends JFrame {
 
     public VueLogin() {
         setTitle("Login");
-        setSize(600, 500);
+        setSize(1250, 680);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new BorderLayout(10, 10));
 

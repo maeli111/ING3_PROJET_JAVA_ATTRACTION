@@ -18,6 +18,7 @@ public class ReductionDao  implements ReductionDaoInt{
      *
      * @return : liste retournée des objets des Reductions récupérés
      */
+    @Override
     public ArrayList<Reduction> getAll() {
         ArrayList<Reduction> listeReduction = new ArrayList<Reduction>();
 
@@ -43,6 +44,7 @@ public class ReductionDao  implements ReductionDaoInt{
         return listeReduction;
     }
 
+    @Override
     public int getPourcentagePremiereVisite(int idClient) {
         String queryCheck = "SELECT COUNT(*) FROM reservation WHERE id_client = ?";
         String queryReduction = "SELECT pourcentage FROM reduction WHERE nom = 'Première visite'";
@@ -72,6 +74,7 @@ public class ReductionDao  implements ReductionDaoInt{
         return 0;
     }
 
+    @Override
     public int getPourcentageFidelite(int idClient) {
         String queryCountReservations = "SELECT COUNT(*) AS nb_reservations FROM reservation WHERE id_client = ?";
         String queryFidelite = "SELECT pourcentage FROM reduction WHERE nom = 'Fidélité'";
@@ -104,6 +107,7 @@ public class ReductionDao  implements ReductionDaoInt{
         return 0;
     }
 
+    @Override
     public int getPourcentageAttraction(int idAttraction) {
         String queryCheckAttraction = "SELECT id_reduction FROM reduction_attraction WHERE id_attraction = ?";
         String queryReduction = "SELECT pourcentage FROM reduction WHERE id_reduction = ?";
@@ -135,6 +139,7 @@ public class ReductionDao  implements ReductionDaoInt{
     }
 
 
+    @Override
     public void ajouter(Reduction reduction) {
         String query = "INSERT INTO Reduction (nom, pourcentage, description) VALUES (?, ?, ?)";
         try (Connection conn = daoFactory.getConnection();
@@ -159,6 +164,7 @@ public class ReductionDao  implements ReductionDaoInt{
     }
 
 
+    @Override
     public void modifier(int ancienId, Reduction reduction) {
         String sql = "UPDATE reduction SET id_reduction = ?,nom = ?, pourcentage = ?, description = ? WHERE id_reduction = ?";
         try (Connection conn = daoFactory.getConnection();
@@ -176,6 +182,7 @@ public class ReductionDao  implements ReductionDaoInt{
         }
     }
 
+    @Override
     public void supprimer(int idReduction) {
         String sql = "DELETE FROM reduction WHERE id_reduction = ?";
         try (Connection conn = daoFactory.getConnection();
@@ -188,6 +195,7 @@ public class ReductionDao  implements ReductionDaoInt{
         }
     }
 
+    @Override
     public ArrayList<Reduction> getReductionsSansAttraction() {
         ArrayList<Reduction> liste = new ArrayList<>();
 
@@ -214,6 +222,7 @@ public class ReductionDao  implements ReductionDaoInt{
         return liste;
     }
 
+    @Override
     public ArrayList<Reduction> getReductionsAvecAttraction() {
         ArrayList<Reduction> liste = new ArrayList<>();
 
@@ -242,6 +251,7 @@ public class ReductionDao  implements ReductionDaoInt{
         return liste;
     }
 
+    @Override
     public void supprimerLiaisonsAttractions(int idReduction) {
         String sql = "DELETE FROM Reduction_Attraction WHERE id_reduction = ?";
 
@@ -256,7 +266,7 @@ public class ReductionDao  implements ReductionDaoInt{
         }
     }
 
-
+    @Override
     public ArrayList<Attraction> getAttractionsLiees(int idReduction) {
         ArrayList<Attraction> attractions = new ArrayList<>();
         String sql = "SELECT a.* FROM Attraction a " +
@@ -286,6 +296,7 @@ public class ReductionDao  implements ReductionDaoInt{
         return attractions;
     }
 
+    @Override
     public ArrayList<Attraction> getAttractionsNonLiees(int idReduction) {
         ArrayList<Attraction> attractions = new ArrayList<>();
         String sql = "SELECT * FROM Attraction WHERE id_attraction NOT IN (" +
@@ -314,7 +325,7 @@ public class ReductionDao  implements ReductionDaoInt{
         return attractions;
     }
 
-
+    @Override
     public void lierReductionAttraction(int idReduction, int idAttraction) {
         String sql = "INSERT INTO Reduction_Attraction (id_reduction, id_attraction) VALUES (?, ?)";
 
@@ -329,7 +340,7 @@ public class ReductionDao  implements ReductionDaoInt{
             e.printStackTrace();
         }
     }
-
+    @Override
     public boolean isEmpty(int id_reduction) {
         // Requête pour vérifier si des attractions sont liées à cette réduction
         String query = "SELECT COUNT(*) FROM Reduction_Attraction WHERE id_reduction = ?";
@@ -348,6 +359,7 @@ public class ReductionDao  implements ReductionDaoInt{
     }
 
 
+    @Override
     public double getPourcentageById(int idReduction) {
         double pourcentage = 0.0;
 
@@ -366,6 +378,7 @@ public class ReductionDao  implements ReductionDaoInt{
         return pourcentage;
     }
 
+    @Override
     public int NbResaClient(int idClient) throws SQLException {
         String query = "SELECT COUNT(DISTINCT id_reservation) FROM reservation WHERE id_client = ?";
         try (Connection conn = daoFactory.getConnection();
@@ -379,7 +392,7 @@ public class ReductionDao  implements ReductionDaoInt{
         }
     }
 
-
+    @Override
     public String getDescriptionById(int id) {
         try (Connection conn = daoFactory.getConnection();
              PreparedStatement ps = conn.prepareStatement("SELECT description FROM reduction WHERE id_reduction = ?")) {

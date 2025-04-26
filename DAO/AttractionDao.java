@@ -143,6 +143,7 @@ public class AttractionDao implements AttractionDaoInt{
         return null;
     }
 
+    @Override
     public Attraction chercher(int id) {
         Attraction a = null;
         try (Connection connexion = daoFactory.getConnection();
@@ -167,6 +168,8 @@ public class AttractionDao implements AttractionDaoInt{
         }
         return a;
     }
+
+    @Override
     public boolean estDisponible(LocalDate date, int idAttraction) {
         boolean disponible = true;
 
@@ -210,6 +213,7 @@ public class AttractionDao implements AttractionDaoInt{
         return disponible;
     }
 
+    @Override
     public int getPlacesDisponibles(LocalDate date, int idAttraction) {
         int placesDisponibles = 0;
 
@@ -254,6 +258,7 @@ public class AttractionDao implements AttractionDaoInt{
     }
 
 
+    @Override
     public Attraction getAttractionById(int idAttraction) {
         Attraction attraction = null;
         String query = "SELECT * FROM Attraction WHERE id_attraction = ?";
@@ -324,6 +329,41 @@ public class AttractionDao implements AttractionDaoInt{
         }
     }
 
+    @Override
+    public Attraction getByName(String nom) {
+        Attraction attraction = null;
+
+        // Requête SQL pour récupérer l'attraction par son nom
+        String sql = "SELECT * FROM attraction WHERE nom = ?";
+
+        try (Connection connection = daoFactory.getConnection(); // Utiliser getConnection() de DaoFactory
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+
+            // Paramétrer la requête avec le nom de l'attraction
+            statement.setString(1, nom);
+
+            // Exécuter la requête
+            ResultSet resultSet = statement.executeQuery();
+
+            // Si l'attraction existe dans la base de données
+            if (resultSet.next()) {
+                int id = resultSet.getInt("id_attraction");
+                String name = resultSet.getString("nom");
+                String description = resultSet.getString("description");
+                double prix = resultSet.getDouble("prix");
+                int capacite = resultSet.getInt("capacite");
+                String typeAttraction = resultSet.getString("type_attraction");
+
+                // Créer l'objet Attraction à partir des résultats de la requête
+                attraction = new Attraction(id, name, description, prix, capacite, typeAttraction);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.out.println("Erreur lors de la récupération de l'attraction par nom.");
+        }
+
+        return attraction;
+    }
 
 
 
