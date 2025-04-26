@@ -13,7 +13,6 @@ public class VueAccueil extends JFrame {
     private JButton informations = new JButton("Informations");
     private JButton calendrier = new JButton("Calendrier");
     private JButton compte = new JButton("Compte");
-
     private JButton infos = new JButton("Plus d'informations");
 
     private JTextField parc = new JTextField("Palasi Land");
@@ -30,6 +29,17 @@ public class VueAccueil extends JFrame {
         setSize(1250, 680);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new BorderLayout());
+
+        // Couleurs
+        Color hoverColor = new Color(255, 182, 193); // Rose clair
+        Color defaultColor = UIManager.getColor("Button.background"); // Couleur par défaut des boutons
+
+        // Appliquer le style de survol à tous les boutons
+        applyHoverEffect(accueil, hoverColor, defaultColor);
+        applyHoverEffect(informations, hoverColor, defaultColor);
+        applyHoverEffect(calendrier, hoverColor, defaultColor);
+        applyHoverEffect(compte, hoverColor, defaultColor);
+        applyHoverEffect(infos, hoverColor, defaultColor);
 
         accueil.setBackground(new Color(255, 182, 193));
         parc.setHorizontalAlignment(JTextField.CENTER);
@@ -61,21 +71,21 @@ public class VueAccueil extends JFrame {
         JPanel images = new JPanel(new GridLayout(1, 3, 20, 0));
 
         try {
-            BufferedImage image1 = ImageIO.read(new File("C:\\wamp64\\www\\ING3_PROJET_JAVA_ATTRACTION\\Vue\\carroussel1.jpg"));
+            BufferedImage image1 = ImageIO.read(new File("C:\\wamp64\\www\\ING3_PROJET_JAVA_ATTRACTION\\Images\\gauche.png"));
             Image scaledImg1 = image1.getScaledInstance(300, 300, Image.SCALE_SMOOTH);
             JLabel img1 = new JLabel(new ImageIcon(scaledImg1));
             images.add(img1);
         } catch (Exception e) { System.out.println("Erreur image 1 : " + e.getMessage()); }
 
         try {
-            BufferedImage image2 = ImageIO.read(new File("C:\\wamp64\\www\\ING3_PROJET_JAVA_ATTRACTION\\Vue\\carroussel2.jpg"));
+            BufferedImage image2 = ImageIO.read(new File("C:\\wamp64\\www\\ING3_PROJET_JAVA_ATTRACTION\\Images\\milieu.png"));
             Image scaledImg2 = image2.getScaledInstance(300, 300, Image.SCALE_SMOOTH);
             JLabel img2 = new JLabel(new ImageIcon(scaledImg2));
             images.add(img2);
         } catch (Exception e) { System.out.println("Erreur image 2 : " + e.getMessage()); }
 
         try {
-            BufferedImage image3 = ImageIO.read(new File("C:\\wamp64\\www\\ING3_PROJET_JAVA_ATTRACTION\\Vue\\carroussel3.jpg"));
+            BufferedImage image3 = ImageIO.read(new File("C:\\wamp64\\www\\ING3_PROJET_JAVA_ATTRACTION\\Images\\droite.png"));
             Image scaledImg3 = image3.getScaledInstance(300, 300, Image.SCALE_SMOOTH);
             JLabel img3 = new JLabel(new ImageIcon(scaledImg3));
             images.add(img3);
@@ -93,7 +103,7 @@ public class VueAccueil extends JFrame {
                         + "pour tous les courageux aventuriers et aventurières, petits et grands !<br><br>"
                         + "Venez découvrir et percer les secrets de vos héros préférés,<br>"
                         + "rencontrer des créatures légendaires, passer un moment inoubliable avec des dieux antiques<br>"
-                        + "dans un parc où chaque attraction vous plonge au cœur d’un conte épique !"
+                        + "dans un parc où chaque attraction vous plonge au cœur d'un conte épique !"
                         + "</div></html>",
                 SwingConstants.CENTER
         );
@@ -103,9 +113,9 @@ public class VueAccueil extends JFrame {
         contenu.add(description);
 
         // Ajouter un JPanel avec FlowLayout pour centrer le bouton
-        JPanel panelInfos = new JPanel(new FlowLayout(FlowLayout.CENTER)); // FlowLayout.CENTER pour centrer
+        JPanel panelInfos = new JPanel(new FlowLayout(FlowLayout.CENTER));
         panelInfos.add(infos);
-        contenu.add(Box.createRigidArea(new Dimension(0, 20))); // Espacement
+        contenu.add(Box.createRigidArea(new Dimension(0, 20)));
         contenu.add(panelInfos);
         contenu.add(Box.createRigidArea(new Dimension(0, 20)));
 
@@ -135,6 +145,21 @@ public class VueAccueil extends JFrame {
         JScrollPane scrollPane = new JScrollPane(contenu);
         scrollPane.setBorder(null);
         add(scrollPane, BorderLayout.CENTER);
+    }
+
+    // Méthode pour appliquer l'effet de survol à un bouton
+    private void applyHoverEffect(JButton button, Color hoverColor, Color defaultColor) {
+        button.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                button.setBackground(hoverColor);
+            }
+
+            @Override
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                button.setBackground(defaultColor);
+            }
+        });
     }
 
     // Getters pour le contrôleur

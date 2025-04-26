@@ -22,6 +22,7 @@ public class VueInfoAttraction extends JFrame {
     // Couleurs harmonisées
     private final Color ROSE_PRINCIPAL = new Color(255, 105, 180);
     private final Color ROSE_FONCE = new Color(255, 20, 147);
+    private final Color ROSE_SURVOL = new Color(255, 182, 193); // Rose clair pour le survol des boutons de navigation
 
     public VueInfoAttraction(Attraction attraction, LocalDate date, Client client, Admin admin) {
         setTitle("Informations de l'attraction");
@@ -38,6 +39,15 @@ public class VueInfoAttraction extends JFrame {
         parc.setFont(new Font("Bodoni MT", Font.BOLD, 32));
         parc.setBorder(null);
         parc.setOpaque(false);
+
+        // Appliquer l'effet de survol aux boutons de navigation
+        applyHoverEffect(accueil, ROSE_SURVOL);
+        applyHoverEffect(informations, ROSE_SURVOL);
+        applyHoverEffect(calendrier, ROSE_SURVOL);
+        applyHoverEffect(compte, ROSE_SURVOL);
+
+        // Mettre en surbrillance le bouton Informations
+        informations.setBackground(ROSE_SURVOL);
 
         JPanel Pbarre = new JPanel(new BorderLayout());
         Pbarre.setOpaque(false);
@@ -130,11 +140,11 @@ public class VueInfoAttraction extends JFrame {
         reserverBtn.setFont(new Font("Bodoni MT", Font.BOLD, 18));
         reserverBtn.setBackground(ROSE_PRINCIPAL);
         reserverBtn.setForeground(Color.WHITE);
-        reserverBtn.setPreferredSize(new Dimension(250, 60));
+        reserverBtn.setPreferredSize(new Dimension(150, 50));
         reserverBtn.setBorder(BorderFactory.createEmptyBorder(10, 30, 10, 30));
         reserverBtn.setFocusPainted(false);
 
-        // Effet de survol
+        // Effet de survol pour le bouton Réserver
         reserverBtn.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 reserverBtn.setBackground(ROSE_FONCE);
@@ -148,6 +158,21 @@ public class VueInfoAttraction extends JFrame {
         add(buttonPanel, BorderLayout.SOUTH);
     }
 
+    // Méthode pour appliquer l'effet de survol aux boutons de navigation
+    private void applyHoverEffect(JButton button, Color hoverColor) {
+        Color defaultColor = button.getBackground();
+        button.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                button.setBackground(hoverColor);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                if (!button.equals(informations)) { // Ne pas changer si c'est le bouton actif
+                    button.setBackground(defaultColor);
+                }
+            }
+        });
+    }
+
     private void addInfoLabel(JPanel panel, String label, String value, Font font, Color color, GridBagConstraints gbc) {
         JLabel lbl = new JLabel("<html><b>" + label + "</b> " + value + "</html>");
         lbl.setFont(font);
@@ -159,4 +184,5 @@ public class VueInfoAttraction extends JFrame {
     public JButton getInformations() { return informations; }
     public JButton getCalendrier() { return calendrier; }
     public JButton getCompte() { return compte; }
+    public JButton getReserverBtn() { return reserverBtn; }
 }
