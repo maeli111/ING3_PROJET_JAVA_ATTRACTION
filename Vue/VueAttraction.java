@@ -1,8 +1,8 @@
 package Vue;
 
-import Controleur.*;
-import Modele.*;
-import Vue.*;
+import Modele.Attraction;
+import Modele.Client;
+import Modele.Admin;
 
 import javax.swing.*;
 import java.awt.*;
@@ -10,15 +10,15 @@ import java.io.File;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 
+// VueAttraction.java
+
 public class VueAttraction extends JFrame {
-    // Boutons en haut de la page
     private JButton accueil = new JButton("Accueil");
     private JButton informations = new JButton("Informations");
     private JButton calendrier = new JButton("Calendrier");
     private JButton compte = new JButton("Compte");
+    private JButton reserverBtn; // Déclaration du bouton "Réserver"
     private JButton loupeBtn;
-
-    // Nom du parc
     private JTextField parc = new JTextField("Palasi Land");
 
     public VueAttraction(Attraction attraction, Client client, Admin admin) {
@@ -28,7 +28,7 @@ public class VueAttraction extends JFrame {
         setLocationRelativeTo(null);
         setLayout(new BorderLayout());
 
-        // === HEADER ===
+        // HEADER
         parc.setHorizontalAlignment(JTextField.CENTER);
         parc.setEditable(false);
         parc.setFont(new Font("Bodoni MT", Font.BOLD, 32));
@@ -65,10 +65,10 @@ public class VueAttraction extends JFrame {
 
         add(header, BorderLayout.NORTH);
 
-        // === CONTENU PRINCIPAL ===
+        // CONTENU PRINCIPAL
         JPanel mainPanel = new JPanel(new BorderLayout());
 
-        // PHOTO à gauche
+        // PHOTO
         JLabel photoLabel = new JLabel();
         photoLabel.setPreferredSize(new Dimension(300, 300));
 
@@ -83,7 +83,7 @@ public class VueAttraction extends JFrame {
 
         mainPanel.add(photoLabel, BorderLayout.WEST);
 
-        // INFOS à droite
+        // INFOS
         JPanel infoPanel = new JPanel();
         infoPanel.setLayout(new GridLayout(4, 1, 10, 10));
 
@@ -102,32 +102,44 @@ public class VueAttraction extends JFrame {
 
         add(mainPanel, BorderLayout.CENTER);
 
-        // === BOUTON FAIRE UNE RÉSERVATION ===
-        JButton reserverBtn = new JButton("Faire une réservation");
+        // BOUTON FAIRE UNE RÉSERVATION
+        reserverBtn = new JButton("Faire une réservation");
         reserverBtn.setFont(new Font("SansSerif", Font.BOLD, 18));
         reserverBtn.setBackground(new Color(0, 150, 0)); // Vert
         reserverBtn.setForeground(Color.WHITE);
         reserverBtn.setPreferredSize(new Dimension(250, 50));
 
-        reserverBtn.addActionListener(e -> {
-            this.dispose(); // ferme la fenêtre actuelle
-            VueCalendrier calendrierPage = new VueCalendrier(client, admin);
-            calendrierPage.setVisible(true);
-        });
-
-        // Panel pour le bouton
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
         buttonPanel.add(reserverBtn);
 
         add(buttonPanel, BorderLayout.SOUTH);
 
-        // === Action sur la loupe ===
-        loupeBtn.addActionListener(e -> {
-            this.dispose();
-            VueRecherche recherchePage = new VueRecherche(client, admin);
-            recherchePage.setVisible(true);
-        });
-
         setVisible(true);
+    }
+
+    // Getters pour les boutons à utiliser dans le contrôleur
+    public JButton getAccueilButton() {
+        return accueil;
+    }
+
+    public JButton getInformationsButton() {
+        return informations;
+    }
+
+    public JButton getCalendrierButton() {
+        return calendrier;
+    }
+
+    public JButton getCompteButton() {
+        return compte;
+    }
+
+    public JButton getLoupeButton() {
+        return loupeBtn;
+    }
+
+    // Ajouter un getter pour le bouton "Réserver"
+    public JButton getReserverButton() {
+        return reserverBtn;
     }
 }

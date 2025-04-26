@@ -138,6 +138,7 @@ public class ControleurRecherche {
 
                     if (attraction != null) {
                         VueAttraction vueAttraction = new VueAttraction(attraction, client, admin);
+                        new ControleurAttraction(vueAttraction,attraction,client, admin);
                         vueAttraction.setVisible(true);
                         vue.dispose();
                     } else {
