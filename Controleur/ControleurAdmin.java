@@ -1,6 +1,6 @@
 package Controleur;
 
-import Modele.Admin;
+import Modele.*;
 import Vue.*;
 
 import javax.swing.*;
