@@ -5,6 +5,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import javax.swing.table.DefaultTableModel;
 
 public class VueRecherche extends JFrame {
 
@@ -14,11 +15,12 @@ public class VueRecherche extends JFrame {
     private JButton compte = new JButton("Compte");
     private JButton loupeBtn;
     private JButton rechercherBtn = new JButton("Rechercher");
-
     private JTextField parc = new JTextField("Palasi Land");
 
+    private JTable tableAttractions;
+    private JScrollPane scrollPane;
+
     private JComboBox<String> filtreCombo;
-    private JTextField champRecherche;
 
     public VueRecherche() {
         setTitle("Recherche");
@@ -62,24 +64,20 @@ public class VueRecherche extends JFrame {
         header.add(parc, BorderLayout.CENTER);
         add(header, BorderLayout.NORTH);
 
-        // ---- Zone principale de recherche ----
+        // ---- Zone principale de recherche (avec juste un filtre) ----
         JPanel contenu = new JPanel();
         contenu.setLayout(new BoxLayout(contenu, BoxLayout.Y_AXIS));
         contenu.setBorder(BorderFactory.createEmptyBorder(30, 50, 30, 50));
 
-        JLabel question = new JLabel("Que voulez-vous rechercher ?");
+        JLabel question = new JLabel("Sélectionnez un filtre pour les attractions :");
         question.setFont(new Font("Bodoni MT", Font.BOLD, 24));
         question.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         contenu.add(question);
         contenu.add(Box.createRigidArea(new Dimension(0, 20)));
 
-        // Champs de recherche + filtre
-        JPanel panelRecherche = new JPanel();
-        panelRecherche.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 10));
-
-        champRecherche = new JTextField(20);
-        champRecherche.setFont(new Font("Bodoni MT", Font.PLAIN, 18));
+        JPanel panelFiltre = new JPanel();
+        panelFiltre.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 10));
 
         String[] options = {
                 "Prix croissant",
@@ -91,11 +89,17 @@ public class VueRecherche extends JFrame {
         filtreCombo = new JComboBox<>(options);
         filtreCombo.setFont(new Font("Bodoni MT", Font.PLAIN, 16));
 
-        panelRecherche.add(champRecherche);
-        panelRecherche.add(filtreCombo);
-        panelRecherche.add(rechercherBtn);
+        panelFiltre.add(filtreCombo);
+        panelFiltre.add(rechercherBtn);
 
-        contenu.add(panelRecherche);
+        contenu.add(panelFiltre);
+
+        // Table pour afficher les attractions
+        tableAttractions = new JTable();
+        scrollPane = new JScrollPane(tableAttractions);
+        scrollPane.setPreferredSize(new Dimension(1000, 400));
+        contenu.add(Box.createRigidArea(new Dimension(0, 30)));
+        contenu.add(scrollPane);
 
         add(contenu, BorderLayout.CENTER);
     }
@@ -107,6 +111,10 @@ public class VueRecherche extends JFrame {
     public JButton getCompte() { return compte; }
     public JButton getLoupeBtn() { return loupeBtn; }
     public JButton getRechercherBtn() { return rechercherBtn; }
-    public JTextField getChampRecherche() { return champRecherche; }
     public JComboBox<String> getFiltreCombo() { return filtreCombo; }
+
+    public void mettreAJourTable(DefaultTableModel model) {
+        tableAttractions.setModel(model);
+    }
+
 }
