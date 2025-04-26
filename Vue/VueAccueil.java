@@ -25,12 +25,26 @@ public class VueAccueil extends JFrame {
     private JLabel attractionDescription = new JLabel("Description : ");
     private JLabel attractionPrix = new JLabel("Prix : ");
     private JLabel attractionCapacite = new JLabel("Capacité : ");
+    private JLabel attractionImageLabel = new JLabel(); // Pour l'image de l'attraction
+
 
     public VueAccueil(Client client, Admin admin) {
         setTitle("Accueil");
         setSize(1250, 680);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new BorderLayout());
+
+        //couleurs
+        Color hoverColor = new Color(255, 182, 193); // Rose clair
+        Color defaultColor = UIManager.getColor("Button.background"); // Couleur par défaut des boutons
+
+        // survol à tous les boutons
+        applyHoverEffect(accueil, hoverColor, defaultColor);
+        applyHoverEffect(informations, hoverColor, defaultColor);
+        applyHoverEffect(calendrier, hoverColor, defaultColor);
+        applyHoverEffect(compte, hoverColor, defaultColor);
+        applyHoverEffect(infos, hoverColor, defaultColor);
+
 
         accueil.setBackground(new Color(255, 182, 193));
         parc.setHorizontalAlignment(JTextField.CENTER);
@@ -85,21 +99,21 @@ public class VueAccueil extends JFrame {
         JPanel images = new JPanel(new GridLayout(1, 3, 20, 0));
 
         try {
-            BufferedImage image1 = ImageIO.read(new File("C:\\wamp64\\www\\ING3_PROJET_JAVA_ATTRACTION\\Vue\\carroussel1.jpg"));
+            BufferedImage image1 = ImageIO.read(new File("C:\\wamp64\\www\\ING3_PROJET_JAVA_ATTRACTION\\Images\\gauche.png"));
             Image scaledImg1 = image1.getScaledInstance(300, 300, Image.SCALE_SMOOTH);
             JLabel img1 = new JLabel(new ImageIcon(scaledImg1));
             images.add(img1);
         } catch (Exception e) { System.out.println("Erreur image 1 : " + e.getMessage()); }
 
         try {
-            BufferedImage image2 = ImageIO.read(new File("C:\\wamp64\\www\\ING3_PROJET_JAVA_ATTRACTION\\Vue\\carroussel2.jpg"));
+            BufferedImage image2 = ImageIO.read(new File("C:\\wamp64\\www\\ING3_PROJET_JAVA_ATTRACTION\\Images\\milieu.png"));
             Image scaledImg2 = image2.getScaledInstance(300, 300, Image.SCALE_SMOOTH);
             JLabel img2 = new JLabel(new ImageIcon(scaledImg2));
             images.add(img2);
         } catch (Exception e) { System.out.println("Erreur image 2 : " + e.getMessage()); }
 
         try {
-            BufferedImage image3 = ImageIO.read(new File("C:\\wamp64\\www\\ING3_PROJET_JAVA_ATTRACTION\\Vue\\carroussel3.jpg"));
+            BufferedImage image3 = ImageIO.read(new File("C:\\wamp64\\www\\ING3_PROJET_JAVA_ATTRACTION\\Images\\droite.png"));
             Image scaledImg3 = image3.getScaledInstance(300, 300, Image.SCALE_SMOOTH);
             JLabel img3 = new JLabel(new ImageIcon(scaledImg3));
             images.add(img3);
@@ -144,6 +158,14 @@ public class VueAccueil extends JFrame {
         attractionMois.add(attractionTitre);
         attractionMois.add(Box.createRigidArea(new Dimension(0, 10)));
 
+        // Panel pour l'image de l'attraction
+        JPanel imagePanel = new JPanel();
+        attractionImageLabel.setPreferredSize(new Dimension(200, 200));
+        imagePanel.add(attractionImageLabel);
+        attractionMois.add(imagePanel);
+        attractionMois.add(Box.createRigidArea(new Dimension(0, 10)));
+
+
         attractionNom.setFont(new Font("Bodoni MT", Font.PLAIN, 18));
         attractionDescription.setFont(new Font("Bodoni MT", Font.PLAIN, 18));
         attractionPrix.setFont(new Font("Bodoni MT", Font.PLAIN, 18));
@@ -162,6 +184,22 @@ public class VueAccueil extends JFrame {
         add(scrollPane, BorderLayout.CENTER);
     }
 
+    // Méthode pour appliquer l'effet de survol à un bouton
+    private void applyHoverEffect(JButton button, Color hoverColor, Color defaultColor) {
+        button.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                button.setBackground(hoverColor);
+            }
+
+
+            @Override
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                button.setBackground(defaultColor);
+            }
+        });
+    }
+
     // --- Getters pour le contrôleur ---
     public JButton getAccueil() { return accueil; }
     public JButton getInformations() { return informations; }
@@ -175,5 +213,17 @@ public class VueAccueil extends JFrame {
         attractionDescription.setText("<html>Description :<br>" + attraction.getDescription() + "</html>");
         attractionPrix.setText("Prix : " + attraction.getPrix() + "€");
         attractionCapacite.setText("Capacité : " + attraction.getCapacite() + " personnes");
+
+
+        // Charger et afficher l'image de l'attraction
+        try {
+            String imagePath = "C:\\wamp64\\www\\ING3_PROJET_JAVA_ATTRACTION\\Images\\" + attraction.getId_attraction() + ".jpg";
+            BufferedImage image = ImageIO.read(new File(imagePath));
+            Image scaledImg = image.getScaledInstance(200, 200, Image.SCALE_SMOOTH);
+            attractionImageLabel.setIcon(new ImageIcon(scaledImg));
+        } catch (Exception e) {
+            System.out.println("Erreur lors du chargement de l'image de l'attraction: " + e.getMessage());
+            attractionImageLabel.setIcon(null); // Pas d'image si erreur
+        }
     }
 }
