@@ -78,6 +78,10 @@ public class ControleurReservationInvite {
                 if (source == vue.reserverButton) {
                     if (verifierInformations()) {
                         reserver();
+                        VueAccueil vueAccueil = new VueAccueil(null,null);
+                        new ControleurAccueil(vueAccueil,null,null);
+                        vueAccueil.setVisible(true);
+                        vue.dispose();
                     } else {
                         JOptionPane.showMessageDialog(vue, "Veuillez remplir tous les champs avant de réserver.", "Erreur", JOptionPane.ERROR_MESSAGE);
                     }

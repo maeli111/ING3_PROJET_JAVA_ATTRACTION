@@ -29,12 +29,22 @@ public class ControleurInfoAttraction {
         vue.reserverBtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                vue.dispose();
-                VueReservationInvite view = new VueReservationInvite();
-                new ControleurReservationInvite(view,attraction,date);
-                view.setVisible(true);
+                    if (client == null) {
+                        // Si le client est null, ouvrir VueReservationInvite
+                        vue.dispose();
+                        VueReservationInvite view = new VueReservationInvite();
+                        new ControleurReservationInvite(view, attraction, date);
+                        view.setVisible(true);
+                    } else {
+                        // Si le client existe, ouvrir VueReservationClient
+                        vue.dispose();
+                        VueReservationClient rc = new VueReservationClient(client);
+                        new ControleurReservationClient(rc, attraction, date, client);
+                        rc.setVisible(true);
+                    }
             }
         });
+
 
         vue.accueil.addActionListener(new ActionListener() {
             @Override
