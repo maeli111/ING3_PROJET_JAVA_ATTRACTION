@@ -11,18 +11,13 @@ import java.sql.*;
 
 public class ControleurRecherche {
     private VueRecherche vue;
-    private Client client;
-    private Admin admin;
 
     private static final String URL = "jdbc:mysql://localhost:3306/java_attraction";
     private static final String USER = "root";
     private static final String PASSWORD = "";
 
-    public ControleurRecherche(VueRecherche vue, Client client, Admin admin) {
+    public ControleurRecherche(VueRecherche vue) {
         this.vue = vue;
-        this.client = client;
-        this.admin = admin;
-
         vue.getRechercherBtn().addActionListener(e -> lancerRecherche());
     }
 
@@ -30,33 +25,74 @@ public class ControleurRecherche {
         String filtre = (String) vue.getFiltreCombo().getSelectedItem();
         String orderBy = "";
 
-        switch (filtre) {
-            case "Prix croissant":
-                orderBy = "prix ASC";
-                break;
-            case "Prix décroissant":
-                orderBy = "prix DESC";
-                break;
-            case "Type":
-                orderBy = "type_attraction ASC";
-                break;
-            case "Capacité croissante":
-                orderBy = "capacite ASC";
-                break;
-            case "Capacité décroissante":
-                orderBy = "capacite DESC";
-                break;
-            default:
-                orderBy = "nom ASC";
+        String sql = "";
+
+        if ("Type".equals(filtre)) {
+            try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
+                 Statement stmt = conn.createStatement();
+                 ResultSet rs = stmt.executeQuery("SELECT DISTINCT type_attraction FROM attraction")) {
+
+                java.util.List<String> types = new java.util.ArrayList<>();
+                while (rs.next()) {
+                    types.add(rs.getString("type_attraction"));
+                }
+
+                if (types.isEmpty()) {
+                    JOptionPane.showMessageDialog(vue, "Aucun type trouvé !");
+                    return;
+                }
+
+                // Demande à l'utilisateur de choisir un type
+                String typeChoisi = (String) JOptionPane.showInputDialog(
+                        vue,
+                        "Choisissez un type d'attraction :",
+                        "Type d'attraction",
+                        JOptionPane.QUESTION_MESSAGE,
+                        null,
+                        types.toArray(),
+                        types.get(0)
+                );
+
+                if (typeChoisi == null) {
+                    return; // L'utilisateur a annulé
+                }
+
+                sql = "SELECT id_attraction, nom, prix, type_attraction, capacite FROM attraction WHERE type_attraction = '" + typeChoisi + "'";
+
+            } catch (SQLException e) {
+                JOptionPane.showMessageDialog(vue, "Erreur lors de la récupération des types : " + e.getMessage());
+                e.printStackTrace();
+                return;
+            }
+        } else {
+            switch (filtre) {
+                case "Prix croissant":
+                    orderBy = "prix ASC";
+                    break;
+                case "Prix décroissant":
+                    orderBy = "prix DESC";
+                    break;
+                case "Capacité croissante":
+                    orderBy = "capacite ASC";
+                    break;
+                case "Capacité décroissante":
+                    orderBy = "capacite DESC";
+                    break;
+                default:
+                    orderBy = "nom ASC";
+            }
+
+            sql = "SELECT id_attraction, nom, prix, type_attraction, capacite FROM attraction ORDER BY " + orderBy;
         }
 
-        String sql = "SELECT id_attraction, nom, prix, type_attraction, capacite FROM attraction ORDER BY " + orderBy;
-
+        // Maintenant exécution du SQL
         try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
              Statement stmt = conn.createStatement();
              ResultSet rs = stmt.executeQuery(sql)) {
 
-            vue.viderResultats(); // <-- Avant de remplir, on vide les anciens résultats
+            vue.viderResultats(); // Vide les anciens résultats
+
+            DaoFactory daoFactory = DaoFactory.getInstance("java_attraction", "root", "");
 
             while (rs.next()) {
                 int id = rs.getInt("id_attraction");
@@ -69,25 +105,21 @@ public class ControleurRecherche {
 
                 JButton attractionBtn = new JButton(texteBouton);
 
-                DaoFactory daoFactory = DaoFactory.getInstance("java_attraction", "root", "");
-
-                // Action quand on clique sur le bouton
                 attractionBtn.addActionListener(new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
-                        AttractionDao attractionDao = new AttractionDao(daoFactory); // utilise ton daoFactory
-                        Attraction attraction = attractionDao.chercher(id); // on utilise ton chercher(id)
+                        AttractionDao attractionDao = new AttractionDao(daoFactory);
+                        Attraction attraction = attractionDao.chercher(id);
 
                         if (attraction != null) {
                             VueAttraction vueAttraction = new VueAttraction(attraction);
                             vueAttraction.setVisible(true);
-                            vue.dispose(); // optionnel : ferme la vue actuelle
+                            vue.dispose();
                         } else {
                             JOptionPane.showMessageDialog(vue, "Attraction introuvable !");
                         }
                     }
                 });
-
 
                 vue.ajouterResultat(attractionBtn);
             }
@@ -97,4 +129,5 @@ public class ControleurRecherche {
             e.printStackTrace();
         }
     }
+
 }

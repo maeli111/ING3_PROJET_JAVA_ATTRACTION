@@ -14,7 +14,7 @@ public class main {
         Admin admin = null; // ou récupérez l'admin si besoin
 
         VueAccueil vue = new VueAccueil(client, admin);
-        new ControleurAccueil(vue, client, admin);
+        new ControleurAccueil(vue);
         vue.setVisible(true);
     }
 }
