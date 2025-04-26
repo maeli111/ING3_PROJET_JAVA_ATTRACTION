@@ -143,7 +143,9 @@ public class ControleurCalendrier {
                     btn.addActionListener(ev -> {
                         Attraction attraction = attractionDAO.chercher(id);
                         if (attraction != null) {
-                            new VueInfoAttraction(attraction, date, client, admin).setVisible(true);
+                            VueInfoAttraction vueInfoAttraction= new VueInfoAttraction(attraction,date, client, admin);
+                            new ControleurInfoAttraction(vueInfoAttraction,client,admin,attraction,date);
+                            vueInfoAttraction.setVisible(true);
                             vue.dispose();
                         }
                     });

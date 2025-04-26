@@ -2,13 +2,19 @@ package Vue;
 
 import javax.swing.*;
 import java.awt.*;
-import Modele.Client;
+import Modele.*;
+import DAO.*;
+import Modele.Reservation;
+
+import java.util.ArrayList;
 
 public class VueClient extends JFrame {
     private Client client;
     private JButton btnAccueil, btnInfo, btnCalendrier, btnDeconnexion;
 
     public VueClient(Client client) {
+        ReservationDao reservationDao = new ReservationDao(new DaoFactory("jdbc:mysql://localhost:3306/java_attraction", "root", ""));
+        reservationDao.archiverReservationsPassées();  // Appel de la méthode sur l'instance
         this.client = client;
         setTitle("Client");
         setSize(600, 500);
@@ -26,6 +32,7 @@ public class VueClient extends JFrame {
         add(topPanel, BorderLayout.NORTH);
         add(mainPanel, BorderLayout.CENTER);
         add(bottomPanel, BorderLayout.SOUTH);
+
     }
 
     private JPanel createTopPanel() {
@@ -92,8 +99,43 @@ public class VueClient extends JFrame {
         JPanel currentReservationsPanel = new JPanel();
         currentReservationsPanel.setBorder(BorderFactory.createTitledBorder("Réservations en cours"));
 
+        // Obtenir les réservations en cours via ClientDao
+        ClientDao clientDao = new ClientDao(new DaoFactory("jdbc:mysql://localhost:3306/java_attraction", "root", ""));
+        ArrayList<Reservation> reservationsEnCours = clientDao.getReservationsEnCours(client);
+
+        currentReservationsPanel.setLayout(new BoxLayout(currentReservationsPanel, BoxLayout.Y_AXIS));
+
+        // Afficher chaque réservation en cours
+        for (Reservation reservation : reservationsEnCours) {
+            JPanel reservationPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+            int id_attraction = reservation.getId_attraction();
+            ReservationDao reservationDao = new ReservationDao(new DaoFactory("jdbc:mysql://localhost:3306/java_attraction", "root", ""));
+            String nomAttraction = reservationDao.getNomAttraction(id_attraction);
+            reservationPanel.add(new JLabel("Attraction: " + nomAttraction));
+            reservationPanel.add(new JLabel("Date: " + reservation.getDate_reservation().toString()));
+            reservationPanel.add(new JLabel("Prix total: " + reservation.getPrix_total()));
+            currentReservationsPanel.add(reservationPanel);
+        }
+
+        // Historique des réservations panel
         JPanel reservationHistoryPanel = new JPanel();
         reservationHistoryPanel.setBorder(BorderFactory.createTitledBorder("Historique des réservations"));
+
+        // Récupérer les réservations archivées
+        ArrayList<Reservation> reservationsArchivees = clientDao.getReservationsArchivees(client);
+        reservationHistoryPanel.setLayout(new BoxLayout(reservationHistoryPanel, BoxLayout.Y_AXIS));
+
+        // Afficher chaque réservation archivée
+        for (Reservation reservation : reservationsArchivees) {
+            JPanel reservationPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+            int id_attraction = reservation.getId_attraction();
+            ReservationDao reservationDao = new ReservationDao(new DaoFactory("jdbc:mysql://localhost:3306/java_attraction", "root", ""));
+            String nomAttraction = reservationDao.getNomAttraction(id_attraction);
+            reservationPanel.add(new JLabel("Attraction: " + nomAttraction));
+            reservationPanel.add(new JLabel("Date: " + reservation.getDate_reservation().toString()));
+            reservationPanel.add(new JLabel("Prix total: " + reservation.getPrix_total()));
+            reservationHistoryPanel.add(reservationPanel);
+        }
 
         JPanel reservationsInfoPanel = new JPanel(new GridLayout(1, 2, 10, 10));
         reservationsInfoPanel.add(currentReservationsPanel);
@@ -107,6 +149,7 @@ public class VueClient extends JFrame {
 
         return mainPanel;
     }
+
 
     // Getters for the buttons to be used in the controller
     public JButton getBtnAccueil() {

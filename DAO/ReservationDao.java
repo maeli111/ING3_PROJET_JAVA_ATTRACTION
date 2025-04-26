@@ -1,5 +1,6 @@
 package DAO;
 
+import Modele.Attraction;
 import Modele.Reservation;
 
 import java.sql.Connection;
@@ -91,5 +92,35 @@ public class ReservationDao {
             System.out.println("Erreur lors de l'ajout de la réservation.");
         }
     }
+
+    public String getNomAttraction(int id_attraction) {
+        // Créer une instance de AttractionDao
+        AttractionDao attractionDao = new AttractionDao(daoFactory);
+
+        // Appeler la méthode sur l'instance de AttractionDao
+        Attraction attraction = attractionDao.getAttractionById(id_attraction);
+        return attraction != null ? attraction.getNom() : "Inconnu";
+    }
+
+    public void archiverReservationsPassées() {
+        LocalDate currentDate = LocalDate.now();  // Récupère la date actuelle
+
+        try (Connection connexion = daoFactory.getConnection();
+             PreparedStatement ps = connexion.prepareStatement(
+                     "UPDATE reservation SET est_archivee = 1 WHERE date_reservation < ? AND est_archivee = 0")) {
+
+            // Set la date actuelle dans la requête préparée
+            ps.setDate(1, java.sql.Date.valueOf(currentDate));
+
+            // Exécute la mise à jour
+            int rowsUpdated = ps.executeUpdate();
+            System.out.println(rowsUpdated + " réservations archivées avec succès.");
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.out.println("Erreur lors de l'archivage des réservations passées.");
+        }
+    }
+
 
 }

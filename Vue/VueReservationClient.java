@@ -9,8 +9,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
-
-public class VueReservation extends JFrame {
+public class VueReservationClient extends JFrame {
     // === NAVIGATION & HEADER ===
     public JButton accueil = new JButton("Accueil");
     public JButton informations = new JButton("Informations");
@@ -23,26 +22,10 @@ public class VueReservation extends JFrame {
     // === FORMULAIRE PRINCIPAL ===
     public JPanel formPanel = new JPanel();
 
-    // === RADIO CLIENTS ===
-    public JRadioButton rbClient = new JRadioButton("Client existant");
-    public JRadioButton rbInvite = new JRadioButton("Nouveau client");
-    public ButtonGroup groupClientType = new ButtonGroup();
-
     // === FORM CLIENTS ===
-    public JPanel formNouveauClient = new JPanel();
     public JPanel formClientExistant = new JPanel();
 
-    // === Champs Nouveau Client ===
-    public JTextField nomField = new JTextField(15);
-    public JTextField prenomField = new JTextField(15);
-    public JTextField emailFieldNouveau = new JTextField(15);
-    public JTextField nbPersonneFieldNouveau = new JTextField("0", 2);
-    public JButton plusBtnNouveau = new JButton("+");
-    public JButton moinsBtnNouveau = new JButton("-");
-    public JLabel prixLabelNouveau = new JLabel();
-
     // === Champs Client Existant ===
-    public JTextField emailFieldExistant = new JTextField(10);
     public JTextField nbAdultesField = new JTextField("0", 2);
     public JTextField nbEnfantsField = new JTextField("0", 2);
     public JTextField nbEtudiantsField = new JTextField("0", 2);
@@ -69,18 +52,16 @@ public class VueReservation extends JFrame {
     public JLabel prixLabelExistant = new JLabel();
 
     // === BOUTONS "?" POUR INFO RÉDUCTION ===
-
     public JButton infoBtnEnfant = createImageButton("images/ptInterrogation.png", 15);
     public JButton infoBtnEtudiant = createImageButton("images/ptInterrogation.png", 15);
     public JButton infoBtnSenior = createImageButton("images/ptInterrogation.png", 15);
     public JButton infoBtnFam = createImageButton("images/ptInterrogation.png", 15);
     public JButton infoBtnFamNb = createImageButton("images/ptInterrogation.png", 15);
 
-
     // === BOUTON DE RÉSERVATION ===
     public JButton reserverButton = new JButton("Valider la réservation");
 
-    public VueReservation(Client client) {
+    public VueReservationClient(Client client) {
         setTitle("Formulaire de Réservation");
         setSize(900, 600);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -103,6 +84,7 @@ public class VueReservation extends JFrame {
         Pcompte.add(compte);
         Pbarre.add(Pnavigation, BorderLayout.WEST);
         Pbarre.add(Pcompte, BorderLayout.EAST);
+
         // Titre "Réserver l'attraction ..."
         titreResa.setFont(new Font("SansSerif", Font.BOLD, 16));
         titreResa.setHorizontalAlignment(SwingConstants.CENTER);
@@ -123,17 +105,8 @@ public class VueReservation extends JFrame {
         formPanel.setLayout(new BoxLayout(formPanel, BoxLayout.Y_AXIS));
         formPanel.setBorder(BorderFactory.createEmptyBorder(20, 100, 20, 100));
 
-        // Boutons radio
-        JPanel choixPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        groupClientType.add(rbClient);
-        groupClientType.add(rbInvite);
-        choixPanel.add(rbClient);
-        choixPanel.add(rbInvite);
-        formPanel.add(choixPanel);
-
-        // Panels clients init (contenu complété par le contrôleur)
+        // Panels client existant (contenu complété par le contrôleur)
         formPanel.add(formClientExistant);
-        formPanel.add(formNouveauClient);
 
         // Bouton réserver
         reserverButton.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -154,5 +127,4 @@ public class VueReservation extends JFrame {
             return new JButton("?");
         }
     }
-
 }

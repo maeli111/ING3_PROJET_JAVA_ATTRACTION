@@ -28,6 +28,15 @@ public class Reservation {
         this.est_archivee=est_archivee;
     }
 
+    public Reservation(int id_reservation,int id_client, LocalDate date_reservation, LocalDate date_achat, int id_attraction, double prix_total, int nb_personne){
+        this.id_reservation=id_reservation;
+        this.id_client=id_client;
+        this.date_achat=date_achat;
+        this.date_reservation=date_reservation;
+        this.id_attraction=id_attraction;
+        this.prix_total=prix_total;
+        this.nb_personne=nb_personne;
+    }
     public Reservation(LocalDate date_reservation, int id_attraction){
         this.date_reservation=date_reservation;
         this.id_attraction=id_attraction;
