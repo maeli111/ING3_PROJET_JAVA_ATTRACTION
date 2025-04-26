@@ -3,6 +3,9 @@ package Vue;
 import Modele.*;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import javax.imageio.ImageIO;
 import java.time.*;
 
 public class VueCalendrier extends JFrame {
@@ -11,6 +14,7 @@ public class VueCalendrier extends JFrame {
     private JButton informations = new JButton("Informations");
     private JButton calendrier = new JButton("Calendrier");
     private JButton compte = new JButton("Compte");
+    private JButton loupeBtn; // AJOUT du bouton loupe
     private JTextField parc = new JTextField("Palasi Land");
 
     private JPanel calendarPanel;
@@ -53,6 +57,23 @@ public class VueCalendrier extends JFrame {
         Pnavigation.add(calendrier);
 
         JPanel Pcompte = new JPanel(new FlowLayout(FlowLayout.RIGHT, 10, 10));
+
+        // AJOUT de la LOUPE
+        try {
+            BufferedImage loupeImage = ImageIO.read(new File("images/loupe.png"));
+            Image scaledLoupe = loupeImage.getScaledInstance(20, 20, Image.SCALE_SMOOTH);
+            loupeBtn = new JButton(new ImageIcon(scaledLoupe));
+            loupeBtn.setBorder(BorderFactory.createEmptyBorder());
+            loupeBtn.setContentAreaFilled(false);
+            Pcompte.add(loupeBtn);
+            Pcompte.add(Box.createRigidArea(new Dimension(5, 0)));
+        } catch (Exception e) {
+            System.out.println("Erreur lors du chargement de l'image loupe : " + e.getMessage());
+            loupeBtn = new JButton("🔍");
+            Pcompte.add(loupeBtn);
+            Pcompte.add(Box.createRigidArea(new Dimension(5, 0)));
+        }
+
         Pcompte.add(compte);
 
         Pbarre.add(Pnavigation, BorderLayout.WEST);
@@ -105,6 +126,7 @@ public class VueCalendrier extends JFrame {
     public JButton getBtnCompte() { return compte; }
     public JButton getBtnPrev() { return prevButton; }
     public JButton getBtnNext() { return nextButton; }
+    public JButton getLoupeBtn() { return loupeBtn; } // GETTER pour la loupe
 
     public JPanel getCalendarPanel() { return calendarPanel; }
     public JPanel getDetailsPanel() { return detailsPanel; }

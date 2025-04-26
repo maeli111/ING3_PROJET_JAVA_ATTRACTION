@@ -58,5 +58,16 @@ public class ControleurPlusInfos {
                 vue.dispose();
             }
         });
+
+        // --- Action du bouton Loupe ---
+        vue.loupe.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                VueRecherche v = new VueRecherche(client, admin);  // VueRecherche ouverte
+                new ControleurRecherche(v, client, admin);
+                v.setVisible(true);
+                vue.dispose(); // Ferme la vue actuelle
+            }
+        });
     }
 }

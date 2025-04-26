@@ -32,8 +32,8 @@ public class ControleurCalendrier {
 
     private void setupListeners() {
         vue.getBtnAccueil().addActionListener(e -> {
-            VueAccueil vueAccueil = new VueAccueil(client,admin);
-            new ControleurAccueil(vueAccueil,client, admin);
+            VueAccueil vueAccueil = new VueAccueil(client, admin);
+            new ControleurAccueil(vueAccueil, client, admin);
             vueAccueil.setVisible(true);
             vue.dispose();
         });
@@ -42,13 +42,13 @@ public class ControleurCalendrier {
             VuePlusInfos v = new VuePlusInfos(client, admin);
             new ControleurPlusInfos(v, client, admin);
             v.setVisible(true);
-
             vue.dispose();
         });
 
         vue.getBtnCalendrier().addActionListener(e -> {
             VueCalendrier v = new VueCalendrier(client, admin);
             new ControleurCalendrier(v, client, admin);
+            v.setVisible(true);
             vue.dispose();
         });
 
@@ -66,6 +66,14 @@ public class ControleurCalendrier {
                 new ControleurAdmin(v, admin);
                 v.setVisible(true);
             }
+            vue.dispose();
+        });
+
+        // 👉 Ajout du listener pour le bouton Loupe ici
+        vue.getLoupeBtn().addActionListener(e -> {
+            VueRecherche v = new VueRecherche(client, admin);
+            new ControleurRecherche(v, client, admin);
+            v.setVisible(true);
             vue.dispose();
         });
 
@@ -143,8 +151,8 @@ public class ControleurCalendrier {
                     btn.addActionListener(ev -> {
                         Attraction attraction = attractionDAO.chercher(id);
                         if (attraction != null) {
-                            VueInfoAttraction vueInfoAttraction= new VueInfoAttraction(attraction,date, client, admin);
-                            new ControleurInfoAttraction(vueInfoAttraction,client,admin,attraction,date);
+                            VueInfoAttraction vueInfoAttraction = new VueInfoAttraction(attraction, date, client, admin);
+                            new ControleurInfoAttraction(vueInfoAttraction, client, admin, attraction, date);
                             vueInfoAttraction.setVisible(true);
                             vue.dispose();
                         }

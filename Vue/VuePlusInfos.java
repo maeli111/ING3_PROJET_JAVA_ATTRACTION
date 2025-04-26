@@ -11,6 +11,7 @@ public class VuePlusInfos extends JFrame {
     public JButton informations = new JButton("Informations");
     public JButton calendrier = new JButton("Calendrier");
     public JButton compte = new JButton("Compte");
+    public JButton loupe = new JButton("🔍"); // 👈 Ajout du bouton Loupe ici
 
     private JTextField parc = new JTextField("Palasi Land");
 
@@ -27,13 +28,18 @@ public class VuePlusInfos extends JFrame {
         parc.setBorder(null);
         parc.setOpaque(false);
 
+        // --- Création des barres de navigation ---
         JPanel Pbarre = new JPanel(new BorderLayout());
+
         JPanel Pnavigation = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 10));
         Pnavigation.add(accueil);
         Pnavigation.add(informations);
         Pnavigation.add(calendrier);
+
         JPanel Pcompte = new JPanel(new FlowLayout(FlowLayout.RIGHT, 10, 10));
+        Pcompte.add(loupe); // 👈 Ajout de la loupe à droite
         Pcompte.add(compte);
+
         Pbarre.add(Pnavigation, BorderLayout.WEST);
         Pbarre.add(Pcompte, BorderLayout.EAST);
 
@@ -42,6 +48,7 @@ public class VuePlusInfos extends JFrame {
         header.add(parc, BorderLayout.CENTER);
         add(header, BorderLayout.NORTH);
 
+        // --- Corps du contenu ---
         JPanel contenu = new JPanel();
         contenu.setLayout(new BoxLayout(contenu, BoxLayout.Y_AXIS));
         contenu.setBorder(BorderFactory.createEmptyBorder(20, 30, 20, 30));
