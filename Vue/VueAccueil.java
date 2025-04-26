@@ -102,10 +102,11 @@ public class VueAccueil extends JFrame {
         description.setBorder(BorderFactory.createEmptyBorder(20, 0, 20, 0));
         contenu.add(description);
 
-        infos.setAlignmentX(Component.CENTER_ALIGNMENT);
-        infos.setPreferredSize(new Dimension(150, 40));
-        contenu.add(Box.createRigidArea(new Dimension(0, 20)));
-        contenu.add(infos);
+        // Ajouter un JPanel avec FlowLayout pour centrer le bouton
+        JPanel panelInfos = new JPanel(new FlowLayout(FlowLayout.CENTER)); // FlowLayout.CENTER pour centrer
+        panelInfos.add(infos);
+        contenu.add(Box.createRigidArea(new Dimension(0, 20))); // Espacement
+        contenu.add(panelInfos);
         contenu.add(Box.createRigidArea(new Dimension(0, 20)));
 
         // --- Section "Attraction du mois" ---
@@ -143,16 +144,10 @@ public class VueAccueil extends JFrame {
     public JButton getCompte() { return compte; }
     public JButton getInfos() { return infos; }
 
-    // Getters pour mettre à jour l'attraction du mois
-    public JLabel getAttractionNom() { return attractionNom; }
-    public JLabel getAttractionDescription() { return attractionDescription; }
-    public JLabel getAttractionPrix() { return attractionPrix; }
-    public JLabel getAttractionCapacite() { return attractionCapacite; }
     public void afficherAttractionDuMois(Attraction attraction) {
         attractionNom.setText("Nom : " + attraction.getNom());
         attractionDescription.setText("<html>Description :<br>" + attraction.getDescription() + "</html>");
         attractionPrix.setText("Prix : " + attraction.getPrix() + "€");
         attractionCapacite.setText("Capacité : " + attraction.getCapacite() + " personnes");
     }
-
 }

@@ -307,6 +307,24 @@ public class AttractionDao implements AttractionDaoInt{
         return attraction;
     }
 
+    // Pour mettre à jour l'attraction du mois
+    public boolean modifAttractionMois(int idAttraction) {
+        try {
+            Connection conn = daoFactory.getConnection();
+            PreparedStatement stmt = conn.prepareStatement("UPDATE attraction SET mois = 0");
+            stmt.executeUpdate(); // Remettre à 0 tout d'abord
+
+            stmt = conn.prepareStatement("UPDATE attraction SET mois = 1 WHERE id_attraction = ?");
+            stmt.setInt(1, idAttraction);
+            int rowsUpdated = stmt.executeUpdate();
+            return rowsUpdated > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+
 
 
 }
