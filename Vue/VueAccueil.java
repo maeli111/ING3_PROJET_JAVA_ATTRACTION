@@ -18,6 +18,13 @@ public class VueAccueil extends JFrame {
 
     private JTextField parc = new JTextField("Palasi Land");
 
+    // Labels pour l'attraction du mois
+    private JLabel attractionTitre = new JLabel("Attraction du mois");
+    private JLabel attractionNom = new JLabel("Nom : ");
+    private JLabel attractionDescription = new JLabel("Description : ");
+    private JLabel attractionPrix = new JLabel("Prix : ");
+    private JLabel attractionCapacite = new JLabel("Capacité : ");
+
     public VueAccueil(Client client, Admin admin) {
         setTitle("Accueil");
         setSize(1250, 680);
@@ -95,11 +102,35 @@ public class VueAccueil extends JFrame {
         description.setBorder(BorderFactory.createEmptyBorder(20, 0, 20, 0));
         contenu.add(description);
 
-        infos.setAlignmentX(Component.CENTER_ALIGNMENT);
-        infos.setPreferredSize(new Dimension(150, 40));
+        // Ajouter un JPanel avec FlowLayout pour centrer le bouton
+        JPanel panelInfos = new JPanel(new FlowLayout(FlowLayout.CENTER)); // FlowLayout.CENTER pour centrer
+        panelInfos.add(infos);
+        contenu.add(Box.createRigidArea(new Dimension(0, 20))); // Espacement
+        contenu.add(panelInfos);
         contenu.add(Box.createRigidArea(new Dimension(0, 20)));
-        contenu.add(infos);
-        contenu.add(Box.createRigidArea(new Dimension(0, 20)));
+
+        // --- Section "Attraction du mois" ---
+        JPanel attractionMois = new JPanel();
+        attractionMois.setLayout(new BoxLayout(attractionMois, BoxLayout.Y_AXIS));
+        attractionMois.setBorder(BorderFactory.createTitledBorder("Attraction du mois"));
+
+        attractionTitre.setFont(new Font("Bodoni MT", Font.BOLD, 24));
+        attractionTitre.setAlignmentX(Component.CENTER_ALIGNMENT);
+        attractionMois.add(attractionTitre);
+        attractionMois.add(Box.createRigidArea(new Dimension(0, 10)));
+
+        attractionNom.setFont(new Font("Bodoni MT", Font.PLAIN, 18));
+        attractionDescription.setFont(new Font("Bodoni MT", Font.PLAIN, 18));
+        attractionPrix.setFont(new Font("Bodoni MT", Font.PLAIN, 18));
+        attractionCapacite.setFont(new Font("Bodoni MT", Font.PLAIN, 18));
+
+        attractionMois.add(attractionNom);
+        attractionMois.add(attractionDescription);
+        attractionMois.add(attractionPrix);
+        attractionMois.add(attractionCapacite);
+
+        contenu.add(attractionMois);
+        // -------------------------------------
 
         JScrollPane scrollPane = new JScrollPane(contenu);
         scrollPane.setBorder(null);
@@ -112,4 +143,11 @@ public class VueAccueil extends JFrame {
     public JButton getCalendrier() { return calendrier; }
     public JButton getCompte() { return compte; }
     public JButton getInfos() { return infos; }
+
+    public void afficherAttractionDuMois(Attraction attraction) {
+        attractionNom.setText("Nom : " + attraction.getNom());
+        attractionDescription.setText("<html>Description :<br>" + attraction.getDescription() + "</html>");
+        attractionPrix.setText("Prix : " + attraction.getPrix() + "€");
+        attractionCapacite.setText("Capacité : " + attraction.getCapacite() + " personnes");
+    }
 }

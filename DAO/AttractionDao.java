@@ -38,8 +38,9 @@ public class AttractionDao implements AttractionDaoInt{
                 double prix = resultats.getDouble(4);
                 int capacite = resultats.getInt(5);
                 String type_attraction = resultats.getString(6);
+                int mois = resultats.getInt(7);
 
-                Attraction attraction = new Attraction(id_attraction, nom, description, prix, capacite, type_attraction);
+                Attraction attraction = new Attraction(id_attraction, nom, description, prix, capacite, type_attraction,mois);
 
                 listeAttraction.add(attraction);
             }
@@ -277,6 +278,50 @@ public class AttractionDao implements AttractionDaoInt{
         }
 
         return attraction;
+    }
+
+    public Attraction getAttractionMois() {
+        Attraction attraction = null;
+        String query = "SELECT * FROM attraction WHERE mois = 1 ";
+
+        try (Connection connexion = daoFactory.getConnection();
+             PreparedStatement ps = connexion.prepareStatement(query);
+             ResultSet rs = ps.executeQuery()) {
+
+            if (rs.next()) {
+                int id = rs.getInt("id_attraction");
+                String nom = rs.getString("nom");
+                String description = rs.getString("description");
+                double prix = rs.getDouble("prix");
+                int capacite = rs.getInt("capacite");
+                String type = rs.getString("type_attraction");
+                int mois = rs.getInt("mois");
+
+                attraction = new Attraction(id, nom, description, prix, capacite, type, mois);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.out.println("Erreur lors de la récupération de l'attraction du mois 1.");
+        }
+
+        return attraction;
+    }
+
+    // Pour mettre à jour l'attraction du mois
+    public boolean modifAttractionMois(int idAttraction) {
+        try {
+            Connection conn = daoFactory.getConnection();
+            PreparedStatement stmt = conn.prepareStatement("UPDATE attraction SET mois = 0");
+            stmt.executeUpdate(); // Remettre à 0 tout d'abord
+
+            stmt = conn.prepareStatement("UPDATE attraction SET mois = 1 WHERE id_attraction = ?");
+            stmt.setInt(1, idAttraction);
+            int rowsUpdated = stmt.executeUpdate();
+            return rowsUpdated > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 
 

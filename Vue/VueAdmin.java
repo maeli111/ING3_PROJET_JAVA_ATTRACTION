@@ -16,16 +16,20 @@ public class VueAdmin extends JFrame {
     private JButton dossiersClientsButton = new JButton("Dossiers clients");
     private JButton attractionDuMoisButton = new JButton("Attraction du mois");
 
+    // Nouveaux éléments pour Attraction du Mois
+    private JPanel attractionMoisPanel = new JPanel();
+    private JLabel attractionActuelleLabel = new JLabel("Attraction actuelle : ");
+    private JComboBox<String> attractionComboBox = new JComboBox<>();
+    private JButton validerAttractionButton = new JButton("Valider");
+
     public VueAdmin(Admin admin) {
         setTitle("Infos Administrateur");
-        setSize(600, 500);
+        setSize(800, 600);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new BorderLayout(10, 10));
 
         // ----------- HEADER -----------
-
         JPanel header = new JPanel(new BorderLayout());
-
         JPanel Pnavigation = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 10));
         Pnavigation.add(accueil);
         Pnavigation.add(informations);
@@ -39,7 +43,6 @@ public class VueAdmin extends JFrame {
         add(header, BorderLayout.NORTH);
 
         // ----------- MAIN -----------
-
         JPanel mainPanel = new JPanel(new BorderLayout(10, 10));
 
         JPanel infoPanel = new JPanel(new GridLayout(3, 2, 5, 5));
@@ -60,30 +63,56 @@ public class VueAdmin extends JFrame {
         emailField.setEditable(false);
         infoPanel.add(emailField);
 
-        JLabel modificationsLabel = new JLabel("Modifications:", SwingConstants.LEFT);
-        modificationsLabel.setBorder(BorderFactory.createEmptyBorder(0, 0, 5, 10));
+        JLabel modificationsLabel = new JLabel("Modifications:", SwingConstants.CENTER);
+        modificationsLabel.setBorder(BorderFactory.createEmptyBorder(0, 0, 10, 0));
+        modificationsLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        JPanel managementPanel = new JPanel(new GridLayout(4, 1, 5, 5));
+
+        JPanel managementPanel = new JPanel();
+        managementPanel.setLayout(new BoxLayout(managementPanel, BoxLayout.Y_AXIS));
+        managementPanel.setAlignmentX(Component.CENTER_ALIGNMENT); // Centre le panneau
+
         JButton[] btns = {attractionsButton, reductionsButton, dossiersClientsButton, attractionDuMoisButton};
         for (JButton btn : btns) {
+            btn.setAlignmentX(Component.CENTER_ALIGNMENT); // Centre chaque bouton
             btn.setFocusPainted(false);
             btn.setBorderPainted(false);
             btn.setContentAreaFilled(false);
             btn.setForeground(Color.BLUE);
-            btn.setFont(btn.getFont().deriveFont(Font.ITALIC));
+            btn.setFont(btn.getFont().deriveFont(Font.ITALIC, 14f)); // Taille de texte un peu plus grande
             managementPanel.add(btn);
+            managementPanel.add(Box.createRigidArea(new Dimension(0, 5))); // Petit espace entre les boutons
         }
 
-        JPanel leftPanelWithLabel = new JPanel(new BorderLayout());
-        leftPanelWithLabel.add(modificationsLabel, BorderLayout.NORTH);
-        leftPanelWithLabel.add(managementPanel, BorderLayout.CENTER);
+        // ----------- ATTRACTION DU MOIS PANEL -----------
+        attractionMoisPanel.setLayout(new BoxLayout(attractionMoisPanel, BoxLayout.Y_AXIS));
+        attractionMoisPanel.setBorder(BorderFactory.createTitledBorder("Définir l'attraction du mois"));
+        attractionMoisPanel.setAlignmentX(Component.CENTER_ALIGNMENT); // Centre aussi ce panneau
+        attractionMoisPanel.add(Box.createRigidArea(new Dimension(0, 10)));
+        attractionActuelleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        attractionMoisPanel.add(attractionActuelleLabel);
+        attractionMoisPanel.add(Box.createRigidArea(new Dimension(0, 10)));
+        attractionComboBox.setMaximumSize(new Dimension(200, 25)); // Taille fixée pour ne pas être trop large
+        attractionComboBox.setAlignmentX(Component.CENTER_ALIGNMENT);
+        attractionMoisPanel.add(attractionComboBox);
+        attractionMoisPanel.add(Box.createRigidArea(new Dimension(0, 10)));
+        validerAttractionButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+        attractionMoisPanel.add(validerAttractionButton);
+        attractionMoisPanel.setVisible(false); // Masqué par défaut
+
+        // Panel qui contient les boutons + le panneau AttractionMois
+        JPanel leftPanelWithLabel = new JPanel();
+        leftPanelWithLabel.setLayout(new BoxLayout(leftPanelWithLabel, BoxLayout.Y_AXIS));
+        leftPanelWithLabel.add(modificationsLabel);
+        leftPanelWithLabel.add(managementPanel);
+        leftPanelWithLabel.add(Box.createRigidArea(new Dimension(0, 20))); // espace
+        leftPanelWithLabel.add(attractionMoisPanel); // <= ajouté ici
 
         mainPanel.add(infoPanel, BorderLayout.NORTH);
         mainPanel.add(leftPanelWithLabel, BorderLayout.CENTER);
         add(mainPanel, BorderLayout.CENTER);
 
         // ----------- FOOTER -----------
-
         JPanel bottomPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         bottomPanel.add(btnDeconnexion);
         add(bottomPanel, BorderLayout.SOUTH);
@@ -100,4 +129,9 @@ public class VueAdmin extends JFrame {
     public JButton getReductionsButton() { return reductionsButton; }
     public JButton getDossiersClientsButton() { return dossiersClientsButton; }
     public JButton getAttractionDuMoisButton() { return attractionDuMoisButton; }
+
+    public JPanel getAttractionMoisPanel() { return attractionMoisPanel; }
+    public JLabel getAttractionActuelleLabel() { return attractionActuelleLabel; }
+    public JComboBox<String> getAttractionComboBox() { return attractionComboBox; }
+    public JButton getValiderAttractionButton() { return validerAttractionButton; }
 }
