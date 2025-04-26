@@ -11,7 +11,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.sql.*;
 
-public class ReservationDao {
+public class ReservationDao implements ReservationDaoInt{
     private DaoFactory daoFactory;
 
     // constructeur dépendant de la classe DaoFactory
@@ -23,6 +23,7 @@ public class ReservationDao {
      * Récupérer de la base de données tous les objets des Reservations dans une liste
      * @return : liste retournée des objets des Reservations récupérés
      */
+    @Override
     public ArrayList<Reservation> getAll() {
         ArrayList<Reservation> listeReservation = new ArrayList<Reservation>();
 
@@ -63,7 +64,7 @@ public class ReservationDao {
         return listeReservation;
     }
 
-
+    @Override
     public void ajouter(Reservation reservation) {
         try (Connection connexion = daoFactory.getConnection();
              PreparedStatement ps = connexion.prepareStatement(
@@ -93,6 +94,7 @@ public class ReservationDao {
         }
     }
 
+    @Override
     public String getNomAttraction(int id_attraction) {
         // Créer une instance de AttractionDao
         AttractionDao attractionDao = new AttractionDao(daoFactory);
@@ -102,6 +104,7 @@ public class ReservationDao {
         return attraction != null ? attraction.getNom() : "Inconnu";
     }
 
+    @Override
     public void archiverReservationsPassées() {
         LocalDate currentDate = LocalDate.now();  // Récupère la date actuelle
 

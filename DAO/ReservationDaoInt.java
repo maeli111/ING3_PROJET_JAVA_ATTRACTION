@@ -9,5 +9,7 @@ public interface ReservationDaoInt {
 
     public void ajouter(Reservation reservation);
 
-    public int genererIdReservationUnique();
+    public String getNomAttraction(int id_attraction);
+
+    public void archiverReservationsPassées();
 }

@@ -9,7 +9,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 
-public class UtilisateurDao {
+public class UtilisateurDao implements UtilisateurDaoInt{
     private DaoFactory daoFactory;
 
     // constructeur dépendant de la classe DaoFactory
@@ -21,6 +21,7 @@ public class UtilisateurDao {
      * Récupérer de la base de données tous les objets des Utilisateurs dans une liste
      * @return : liste retournée des objets des Utilisateurs récupérés
      */
+    @Override
     public ArrayList<Utilisateur> getAll() {
         ArrayList<Utilisateur> listeUtilisateur = new ArrayList<Utilisateur>();
 
