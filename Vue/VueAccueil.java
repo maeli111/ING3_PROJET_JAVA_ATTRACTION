@@ -71,11 +71,31 @@ public class VueAccueil extends JFrame {
             this.loupeBtn = new JButton(new ImageIcon(scaledLoupe));
             loupeBtn.setBorder(BorderFactory.createEmptyBorder());
             loupeBtn.setContentAreaFilled(false);
+
+            // Effet de survol pour la loupe avec image
+            loupeBtn.addMouseListener(new java.awt.event.MouseAdapter() {
+                private Color originalBg = loupeBtn.getBackground();
+
+                @Override
+                public void mouseEntered(java.awt.event.MouseEvent evt) {
+                    loupeBtn.setBackground(hoverColor);
+                    loupeBtn.setCursor(new Cursor(Cursor.HAND_CURSOR));
+                }
+
+                @Override
+                public void mouseExited(java.awt.event.MouseEvent evt) {
+                    loupeBtn.setBackground(originalBg);
+                    loupeBtn.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+                }
+            });
+
             Pdroite.add(loupeBtn);
             Pdroite.add(Box.createRigidArea(new Dimension(5, 0)));
         } catch (Exception e) {
             System.out.println("Erreur lors du chargement de l'image loupe : " + e.getMessage());
             this.loupeBtn = new JButton("🔍");
+            // Appliquer l'effet normal si l'image ne charge pas
+            applyHoverEffect(loupeBtn, hoverColor, defaultColor);
             Pdroite.add(loupeBtn);
             Pdroite.add(Box.createRigidArea(new Dimension(5, 0)));
         }
