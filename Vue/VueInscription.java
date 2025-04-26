@@ -10,7 +10,7 @@ public class VueInscription extends JFrame {
 
     public VueInscription() {
         setTitle("Inscription");
-        setSize(600, 500);
+        setSize(1250, 680);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new BorderLayout(10, 10));
 

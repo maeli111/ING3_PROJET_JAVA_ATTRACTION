@@ -33,7 +33,7 @@ public class VueCalendrier extends JFrame {
         this.admin = admin;
 
         setTitle("Calendrier des Attractions");
-        setSize(1000, 600);
+        setSize(1250, 680);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new BorderLayout());
         setLocationRelativeTo(null);

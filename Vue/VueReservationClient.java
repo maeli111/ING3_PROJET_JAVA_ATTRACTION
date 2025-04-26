@@ -63,7 +63,7 @@ public class VueReservationClient extends JFrame {
 
     public VueReservationClient(Client client) {
         setTitle("Formulaire de Réservation");
-        setSize(900, 600);
+        setSize(1250, 680);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         setLayout(new BorderLayout());

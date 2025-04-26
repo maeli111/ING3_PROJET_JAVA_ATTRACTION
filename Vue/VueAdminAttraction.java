@@ -20,7 +20,7 @@ public class VueAdminAttraction extends JFrame {
 
     public VueAdminAttraction(Admin admin) {
         setTitle("Attractions - Admin");
-        setSize(900, 500);
+        setSize(1250, 680);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLayout(new BorderLayout());

@@ -70,7 +70,7 @@ public class VueAdminRA extends JFrame {
         add(panelButtons, BorderLayout.SOUTH); // Les autres boutons en bas
 
         // Taille de la fenêtre
-        setSize(800, 600);
+        setSize(1250, 680);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null); // Centrer la fenêtre
     }

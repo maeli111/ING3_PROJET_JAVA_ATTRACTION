@@ -16,7 +16,7 @@ public class VueAdminRC extends JFrame {
 
     public VueAdminRC(Admin admin) {
         setTitle("Réductions - Admin");
-        setSize(900, 500);
+        setSize(1250, 680);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLayout(new BorderLayout());

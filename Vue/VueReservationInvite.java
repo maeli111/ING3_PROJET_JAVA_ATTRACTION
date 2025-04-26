@@ -19,7 +19,7 @@ public class VueReservationInvite extends JFrame {
 
     public VueReservationInvite() {
         setTitle("Réservation");
-        setSize(400, 600);
+        setSize(1250, 680);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new BorderLayout());
