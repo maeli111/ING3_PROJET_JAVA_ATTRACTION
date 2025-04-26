@@ -23,6 +23,7 @@ public class VueAccueil extends JFrame {
     private JLabel attractionDescription = new JLabel("Description : ");
     private JLabel attractionPrix = new JLabel("Prix : ");
     private JLabel attractionCapacite = new JLabel("Capacité : ");
+    private JLabel attractionImageLabel = new JLabel(); // Pour l'image de l'attraction
 
     public VueAccueil(Client client, Admin admin) {
         setTitle("Accueil");
@@ -129,6 +130,13 @@ public class VueAccueil extends JFrame {
         attractionMois.add(attractionTitre);
         attractionMois.add(Box.createRigidArea(new Dimension(0, 10)));
 
+        // Panel pour l'image de l'attraction
+        JPanel imagePanel = new JPanel();
+        attractionImageLabel.setPreferredSize(new Dimension(200, 200));
+        imagePanel.add(attractionImageLabel);
+        attractionMois.add(imagePanel);
+        attractionMois.add(Box.createRigidArea(new Dimension(0, 10)));
+
         attractionNom.setFont(new Font("Bodoni MT", Font.PLAIN, 18));
         attractionDescription.setFont(new Font("Bodoni MT", Font.PLAIN, 18));
         attractionPrix.setFont(new Font("Bodoni MT", Font.PLAIN, 18));
@@ -174,5 +182,16 @@ public class VueAccueil extends JFrame {
         attractionDescription.setText("<html>Description :<br>" + attraction.getDescription() + "</html>");
         attractionPrix.setText("Prix : " + attraction.getPrix() + "€");
         attractionCapacite.setText("Capacité : " + attraction.getCapacite() + " personnes");
+
+        // Charger et afficher l'image de l'attraction
+        try {
+            String imagePath = "C:\\wamp64\\www\\ING3_PROJET_JAVA_ATTRACTION\\Images\\" + attraction.getId_attraction() + ".jpg";
+            BufferedImage image = ImageIO.read(new File(imagePath));
+            Image scaledImg = image.getScaledInstance(200, 200, Image.SCALE_SMOOTH);
+            attractionImageLabel.setIcon(new ImageIcon(scaledImg));
+        } catch (Exception e) {
+            System.out.println("Erreur lors du chargement de l'image de l'attraction: " + e.getMessage());
+            attractionImageLabel.setIcon(null); // Pas d'image si erreur
+        }
     }
 }
