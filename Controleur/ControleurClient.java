@@ -1,7 +1,9 @@
 package Controleur;
 
+import DAO.ReservationDao;
 import Vue.*;
 import Modele.Client;
+import DAO.*;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -39,7 +41,6 @@ public class ControleurClient {
                 VuePlusInfos v = new VuePlusInfos(client, null);
                 new ControleurPlusInfos(v, client, null);
                 v.setVisible(true);
-
             }
         });
 

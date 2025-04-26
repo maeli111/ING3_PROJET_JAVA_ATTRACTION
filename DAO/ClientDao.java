@@ -1,8 +1,11 @@
 package DAO;
 
 import java.sql.*;
+import java.time.LocalDate;
 import java.util.*;
-import Modele.Client;
+import java.util.Date;
+
+import Modele.*;
 
 public class ClientDao implements ClientDaoInt{
     private DaoFactory daoFactory;
@@ -444,4 +447,80 @@ public class ClientDao implements ClientDaoInt{
 
         return client;
     }
+
+    // Méthode pour récupérer les réservations en cours du client
+    public ArrayList<Reservation> getReservationsEnCours(Client client) {
+        ArrayList<Reservation> reservations = new ArrayList<>();
+        String query = "SELECT * FROM Reservation WHERE id_client = ? AND est_archivee = 0";
+
+        try (Connection conn = daoFactory.getConnection();
+             PreparedStatement ps = conn.prepareStatement(query)) {
+
+            ps.setInt(1, client.getid_client()); // On lie l'ID du client à la requête
+
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    int idReservation = rs.getInt("id_reservation");
+
+                    // Convert the SQL Date to LocalDate
+                    Date dateReservationSql = rs.getDate("date_reservation");
+                    LocalDate dateReservation = (dateReservationSql != null) ? ((java.sql.Date) dateReservationSql).toLocalDate() : null;
+
+                    Date dateAchatSql = rs.getDate("date_achat");
+                    LocalDate dateAchat = (dateAchatSql != null) ? ((java.sql.Date) dateAchatSql).toLocalDate() : null;
+
+                    int idAttraction = rs.getInt("id_attraction");
+                    double prixTotal = rs.getDouble("prix_total");
+                    int nbPersonne = rs.getInt("nb_personne");
+
+                    // Créer une nouvelle réservation et l'ajouter à la liste
+                    Reservation reservation = new Reservation(idReservation, client.getid_client(), dateReservation,
+                            dateAchat, idAttraction, prixTotal, nbPersonne);
+                    reservations.add(reservation);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.out.println("Erreur lors de la récupération des réservations.");
+        }
+
+        return reservations;
+    }
+
+    public ArrayList<Reservation> getReservationsArchivees(Client client) {
+        ArrayList<Reservation> reservationsArchivees = new ArrayList<>();
+
+        try (Connection connexion = daoFactory.getConnection();
+             PreparedStatement ps = connexion.prepareStatement(
+                     "SELECT * FROM reservation WHERE id_client = ? AND est_archivee = 1")) {
+
+            ps.setInt(1, client.getid_client());  // Assurez-vous que vous avez une méthode getId() dans la classe Client.
+
+            ResultSet resultSet = ps.executeQuery();
+            while (resultSet.next()) {
+                // Récupérez les données de la réservation
+                int id_reservation = resultSet.getInt(1);
+                String nom = resultSet.getString(3);
+                String prenom = resultSet.getString(4);
+                String mail = resultSet.getString(5);
+                LocalDate date_reservation = resultSet.getDate(6).toLocalDate();
+                LocalDate date_achat = resultSet.getDate(7).toLocalDate();
+                int id_attraction = resultSet.getInt(8);
+                double prix_total = resultSet.getDouble(9);
+                int nb_personne = resultSet.getInt(10);
+                int est_archivee = resultSet.getInt(11);
+
+                Reservation reservation = new Reservation(id_reservation, client.getid_client(), nom, prenom, mail,
+                        date_reservation, date_achat, id_attraction, prix_total, nb_personne, est_archivee);
+
+                reservationsArchivees.add(reservation);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.out.println("Erreur lors de la récupération des réservations archivées.");
+        }
+
+        return reservationsArchivees;
+    }
+
 }

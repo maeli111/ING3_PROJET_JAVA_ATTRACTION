@@ -252,4 +252,34 @@ public class AttractionDao implements AttractionDaoInt{
         return placesDisponibles;
     }
 
+
+    public Attraction getAttractionById(int idAttraction) {
+        Attraction attraction = null;
+        String query = "SELECT * FROM Attraction WHERE id_attraction = ?";
+
+        // Créer une instance de DaoFactory avant d'appeler getConnection()
+        DaoFactory daoFactory = new DaoFactory("jdbc:mysql://localhost:3306/java_attraction", "root", "");
+
+        try (Connection conn = daoFactory.getConnection();  // Appel à getConnection() sur l'instance de DaoFactory
+             PreparedStatement ps = conn.prepareStatement(query)) {
+
+            ps.setInt(1, idAttraction);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    int id = rs.getInt("id_attraction");
+                    String nom = rs.getString("nom");
+                    attraction = new Attraction(id, nom);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return attraction;
+    }
+
+
+
+
 }

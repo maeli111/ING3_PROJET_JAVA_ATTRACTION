@@ -25,6 +25,12 @@ public class Attraction {
         this.type_attraction=type_attraction;
     }
 
+    public Attraction(int id_attraction, String nom){
+        this.nom=nom;
+        this.id_attraction=id_attraction;
+    }
+
+
     public int getId_attraction(){return id_attraction;}
     public String getNom(){return nom;}
     public String getDescription(){return description;}
