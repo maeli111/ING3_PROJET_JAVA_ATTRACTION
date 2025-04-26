@@ -26,12 +26,6 @@ public class VueAdminRA extends JFrame {
         JPanel buttonBar = new JPanel(new BorderLayout());
 
         JPanel leftPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        JButton accueilButton = new JButton("Accueil");
-        JButton infoButton = new JButton("Informations");
-        JButton calendrierButton = new JButton("Calendrier");
-        leftPanel.add(accueilButton);
-        leftPanel.add(infoButton);
-        leftPanel.add(calendrierButton);
 
         JPanel rightPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         compteButton = new JButton("Compte");
