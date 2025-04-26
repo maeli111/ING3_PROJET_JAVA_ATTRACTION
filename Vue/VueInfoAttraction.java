@@ -18,6 +18,8 @@ public class VueInfoAttraction extends JFrame {
     public JButton calendrier = new JButton("Calendrier");
     public JButton compte = new JButton("Compte");
     public JButton reserverBtn = new JButton("Réserver");
+    private JButton loupeBtn;
+
 
     // Couleurs harmonisées
     private final Color ROSE_PRINCIPAL = new Color(255, 105, 180);
@@ -59,6 +61,17 @@ public class VueInfoAttraction extends JFrame {
         Pnavigation.add(calendrier);
 
         JPanel Pcompte = new JPanel(new FlowLayout(FlowLayout.RIGHT, 10, 10));
+        try {
+            BufferedImage loupeImage = ImageIO.read(new File("images/loupe.png"));
+            Image scaledLoupe = loupeImage.getScaledInstance(20, 20, Image.SCALE_SMOOTH);
+            loupeBtn = new JButton(new ImageIcon(scaledLoupe));
+            loupeBtn.setBorder(BorderFactory.createEmptyBorder());
+            loupeBtn.setContentAreaFilled(false);
+            Pcompte.add(loupeBtn);
+        } catch (Exception e) {
+            loupeBtn = new JButton("🔍");
+            Pcompte.add(loupeBtn);
+        }
         Pcompte.setOpaque(false);
         Pcompte.add(compte);
 
