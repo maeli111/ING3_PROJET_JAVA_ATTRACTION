@@ -105,7 +105,11 @@ public class VueRecherche extends JFrame {
         contenu.add(Box.createRigidArea(new Dimension(0, 30)));
         contenu.add(panelResultats);
 
-        add(contenu, BorderLayout.CENTER);
+        // Ajout d'un JScrollPane autour du contenu pour permettre le défilement vertical
+        JScrollPane scrollPane = new JScrollPane(contenu);
+        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS); // Afficher la barre de défilement verticale toujours
+
+        add(scrollPane, BorderLayout.CENTER);
     }
 
     // --- Getters pour le Contrôleur ---
@@ -117,7 +121,6 @@ public class VueRecherche extends JFrame {
     public JButton getRechercherBtn() { return rechercherBtn; }
     public JComboBox<String> getFiltreCombo() { return filtreCombo; }
 
-
     public void ajouterResultat(JButton btn) {
         JPanel boutonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER)); // CENTRE LE BOUTON
         boutonPanel.add(btn);
@@ -128,11 +131,9 @@ public class VueRecherche extends JFrame {
         panelResultats.repaint();
     }
 
-
     public void viderResultats() {
         panelResultats.removeAll();
         panelResultats.revalidate();
         panelResultats.repaint();
     }
-
 }
