@@ -19,12 +19,12 @@ public class ControleurRecherche {
     public ControleurRecherche(VueRecherche vue) {
         this.vue = vue;
         vue.getRechercherBtn().addActionListener(e -> lancerRecherche());
+        vue.getLoupeBtn().addActionListener(e -> ouvrirRecherche());
+
     }
 
     private void lancerRecherche() {
         String filtre = (String) vue.getFiltreCombo().getSelectedItem();
-        String orderBy = "";
-
         String sql = "";
 
         if ("Type".equals(filtre)) {
@@ -42,7 +42,6 @@ public class ControleurRecherche {
                     return;
                 }
 
-                // Demande à l'utilisateur de choisir un type
                 String typeChoisi = (String) JOptionPane.showInputDialog(
                         vue,
                         "Choisissez un type d'attraction :",
@@ -64,7 +63,31 @@ public class ControleurRecherche {
                 e.printStackTrace();
                 return;
             }
+
+        } else if ("Prix".equals(filtre)) {
+            try {
+                String minStr = JOptionPane.showInputDialog(vue, "Prix minimum (€) :", "0");
+                if (minStr == null) return;
+                double prixMin = Double.parseDouble(minStr);
+
+                String maxStr = JOptionPane.showInputDialog(vue, "Prix maximum (€) :", "100");
+                if (maxStr == null) return;
+                double prixMax = Double.parseDouble(maxStr);
+
+                if (prixMin > prixMax) {
+                    JOptionPane.showMessageDialog(vue, "Le prix minimum doit être inférieur ou égal au prix maximum !");
+                    return;
+                }
+
+                sql = "SELECT id_attraction, nom, prix, type_attraction, capacite FROM attraction WHERE prix BETWEEN " + prixMin + " AND " + prixMax;
+
+            } catch (NumberFormatException ex) {
+                JOptionPane.showMessageDialog(vue, "Veuillez entrer des nombres valides !");
+                return;
+            }
+
         } else {
+            String orderBy = "";
             switch (filtre) {
                 case "Prix croissant":
                     orderBy = "prix ASC";
@@ -85,7 +108,7 @@ public class ControleurRecherche {
             sql = "SELECT id_attraction, nom, prix, type_attraction, capacite FROM attraction ORDER BY " + orderBy;
         }
 
-        // Maintenant exécution du SQL
+        // Maintenant on exécute le SQL
         try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
              Statement stmt = conn.createStatement();
              ResultSet rs = stmt.executeQuery(sql)) {
@@ -105,19 +128,16 @@ public class ControleurRecherche {
 
                 JButton attractionBtn = new JButton(texteBouton);
 
-                attractionBtn.addActionListener(new ActionListener() {
-                    @Override
-                    public void actionPerformed(ActionEvent e) {
-                        AttractionDao attractionDao = new AttractionDao(daoFactory);
-                        Attraction attraction = attractionDao.chercher(id);
+                attractionBtn.addActionListener(e -> {
+                    AttractionDao attractionDao = new AttractionDao(daoFactory);
+                    Attraction attraction = attractionDao.chercher(id);
 
-                        if (attraction != null) {
-                            VueAttraction vueAttraction = new VueAttraction(attraction);
-                            vueAttraction.setVisible(true);
-                            vue.dispose();
-                        } else {
-                            JOptionPane.showMessageDialog(vue, "Attraction introuvable !");
-                        }
+                    if (attraction != null) {
+                        VueAttraction vueAttraction = new VueAttraction(attraction);
+                        vueAttraction.setVisible(true);
+                        vue.dispose();
+                    } else {
+                        JOptionPane.showMessageDialog(vue, "Attraction introuvable !");
                     }
                 });
 
@@ -130,4 +150,13 @@ public class ControleurRecherche {
         }
     }
 
+    private void ouvrirRecherche() {
+        // Fermer la vue actuelle si nécessaire (optionnel)
+        vue.setVisible(false);
+
+        // Créer et afficher la vue recherche
+        VueRecherche vueRecherche = new VueRecherche();
+        new ControleurRecherche(vueRecherche); // Si vous avez un contrôleur dédié
+        vueRecherche.setVisible(true);
+    }
 }

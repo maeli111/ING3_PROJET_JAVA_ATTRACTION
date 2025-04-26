@@ -17,9 +17,6 @@ public class VueRecherche extends JFrame {
     private JButton rechercherBtn = new JButton("Rechercher");
     private JTextField parc = new JTextField("Palasi Land");
 
-    private JTable tableAttractions;
-    private JScrollPane scrollPane;
-
     private JComboBox<String> filtreCombo;
 
     private JPanel panelResultats;
@@ -42,6 +39,7 @@ public class VueRecherche extends JFrame {
         Pnavigation.add(informations);
         Pnavigation.add(calendrier);
         JPanel Pcompte = new JPanel(new FlowLayout(FlowLayout.RIGHT, 10, 10));
+
         try {
             BufferedImage loupeImage = ImageIO.read(new File("images/loupe.png"));
             Image scaledLoupe = loupeImage.getScaledInstance(20, 20, Image.SCALE_SMOOTH);
@@ -84,10 +82,12 @@ public class VueRecherche extends JFrame {
         String[] options = {
                 "Prix croissant",
                 "Prix décroissant",
+                "Prix",
                 "Type",
                 "Capacité croissante",
                 "Capacité décroissante"
         };
+
         filtreCombo = new JComboBox<>(options);
         filtreCombo.setFont(new Font("Bodoni MT", Font.PLAIN, 16));
 
@@ -99,6 +99,8 @@ public class VueRecherche extends JFrame {
         // Panel qui contiendra tous les boutons de résultats
         panelResultats = new JPanel();
         panelResultats.setLayout(new BoxLayout(panelResultats, BoxLayout.Y_AXIS));
+        panelResultats.setAlignmentX(Component.CENTER_ALIGNMENT);
+
         contenu.add(Box.createRigidArea(new Dimension(0, 30)));
         contenu.add(panelResultats);
 
@@ -116,10 +118,15 @@ public class VueRecherche extends JFrame {
 
 
     public void ajouterResultat(JButton btn) {
-        panelResultats.add(btn);
+        JPanel boutonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER)); // CENTRE LE BOUTON
+        boutonPanel.add(btn);
+
+        panelResultats.add(boutonPanel);
+        panelResultats.add(Box.createRigidArea(new Dimension(0, 10))); // Petit espace entre les boutons
         panelResultats.revalidate();
         panelResultats.repaint();
     }
+
 
     public void viderResultats() {
         panelResultats.removeAll();
