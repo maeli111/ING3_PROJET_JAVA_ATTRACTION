@@ -104,6 +104,37 @@ public class ReductionDao  implements ReductionDaoInt{
         return 0;
     }
 
+    public int getPourcentageAttraction(int idAttraction) {
+        String queryCheckAttraction = "SELECT id_reduction FROM reduction_attraction WHERE id_attraction = ?";
+        String queryReduction = "SELECT pourcentage FROM reduction WHERE id_reduction = ?";
+
+        try (Connection connexion = daoFactory.getConnection();
+             PreparedStatement stmtCheckAttraction = connexion.prepareStatement(queryCheckAttraction);
+             PreparedStatement stmtReduction = connexion.prepareStatement(queryReduction)) {
+
+            // Vérifier si l'attraction a une réduction
+            stmtCheckAttraction.setInt(1, idAttraction);
+            ResultSet resCheckAttraction = stmtCheckAttraction.executeQuery();
+            if (resCheckAttraction.next()) {
+                int idReduction = resCheckAttraction.getInt("id_reduction");
+
+                // Récupérer le pourcentage associé à cette réduction
+                stmtReduction.setInt(1, idReduction);
+                ResultSet resReduction = stmtReduction.executeQuery();
+                if (resReduction.next()) {
+                    return resReduction.getInt("pourcentage");
+                }
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.out.println("Erreur lors de la récupération de la réduction pour l'attraction.");
+        }
+
+        return 0; // Pas de réduction trouvée
+    }
+
+
     public void ajouter(Reduction reduction) {
         String query = "INSERT INTO Reduction (nom, pourcentage, description) VALUES (?, ?, ?)";
         try (Connection conn = daoFactory.getConnection();
