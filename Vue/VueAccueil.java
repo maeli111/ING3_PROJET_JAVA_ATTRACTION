@@ -13,6 +13,7 @@ public class VueAccueil extends JFrame {
     private JButton informations = new JButton("Informations");
     private JButton calendrier = new JButton("Calendrier");
     private JButton compte = new JButton("Compte");
+    private JButton loupeBtn;
 
     private JButton infos = new JButton("Plus d'informations");
 
@@ -38,26 +39,49 @@ public class VueAccueil extends JFrame {
         parc.setBorder(null);
         parc.setOpaque(false);
 
+        // Barre supérieure
         JPanel Pbarre = new JPanel(new BorderLayout());
+
+        // Partie gauche : navigation
         JPanel Pnavigation = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 10));
         Pnavigation.add(accueil);
         Pnavigation.add(informations);
         Pnavigation.add(calendrier);
-        JPanel Pcompte = new JPanel(new FlowLayout(FlowLayout.RIGHT, 10, 10));
-        Pcompte.add(compte);
+
+        // Partie droite : loupe + compte
+        JPanel Pdroite = new JPanel(new FlowLayout(FlowLayout.RIGHT, 10, 10));
+
+        try {
+            BufferedImage loupeImage = ImageIO.read(new File("images/loupe.png"));
+            Image scaledLoupe = loupeImage.getScaledInstance(20, 20, Image.SCALE_SMOOTH);
+            this.loupeBtn = new JButton(new ImageIcon(scaledLoupe));
+            loupeBtn.setBorder(BorderFactory.createEmptyBorder());
+            loupeBtn.setContentAreaFilled(false);
+            Pdroite.add(loupeBtn);
+            Pdroite.add(Box.createRigidArea(new Dimension(5, 0)));
+        } catch (Exception e) {
+            System.out.println("Erreur lors du chargement de l'image loupe : " + e.getMessage());
+            this.loupeBtn = new JButton("🔍");
+            Pdroite.add(loupeBtn);
+            Pdroite.add(Box.createRigidArea(new Dimension(5, 0)));
+        }
+
+        Pdroite.add(compte);
 
         Pbarre.add(Pnavigation, BorderLayout.WEST);
-        Pbarre.add(Pcompte, BorderLayout.EAST);
+        Pbarre.add(Pdroite, BorderLayout.EAST);
 
         JPanel header = new JPanel(new BorderLayout());
         header.add(Pbarre, BorderLayout.NORTH);
         header.add(parc, BorderLayout.CENTER);
         add(header, BorderLayout.NORTH);
 
+        // Contenu principal
         JPanel contenu = new JPanel();
         contenu.setLayout(new BoxLayout(contenu, BoxLayout.Y_AXIS));
         contenu.setBorder(BorderFactory.createEmptyBorder(20, 30, 20, 30));
 
+        // Images
         JPanel images = new JPanel(new GridLayout(1, 3, 20, 0));
 
         try {
@@ -83,6 +107,7 @@ public class VueAccueil extends JFrame {
 
         contenu.add(images);
 
+        // Description
         JLabel description = new JLabel(
                 "<html><div style='text-align: center;'>"
                         + "Entrez dans l'univers magique de <b>Palasi Land</b> <br>"
@@ -102,14 +127,14 @@ public class VueAccueil extends JFrame {
         description.setBorder(BorderFactory.createEmptyBorder(20, 0, 20, 0));
         contenu.add(description);
 
-        // Ajouter un JPanel avec FlowLayout pour centrer le bouton
-        JPanel panelInfos = new JPanel(new FlowLayout(FlowLayout.CENTER)); // FlowLayout.CENTER pour centrer
+        // Bouton plus d'infos centré
+        JPanel panelInfos = new JPanel(new FlowLayout(FlowLayout.CENTER));
         panelInfos.add(infos);
-        contenu.add(Box.createRigidArea(new Dimension(0, 20))); // Espacement
+        contenu.add(Box.createRigidArea(new Dimension(0, 20)));
         contenu.add(panelInfos);
         contenu.add(Box.createRigidArea(new Dimension(0, 20)));
 
-        // --- Section "Attraction du mois" ---
+        // Section Attraction du mois
         JPanel attractionMois = new JPanel();
         attractionMois.setLayout(new BoxLayout(attractionMois, BoxLayout.Y_AXIS));
         attractionMois.setBorder(BorderFactory.createTitledBorder("Attraction du mois"));
@@ -130,19 +155,20 @@ public class VueAccueil extends JFrame {
         attractionMois.add(attractionCapacite);
 
         contenu.add(attractionMois);
-        // -------------------------------------
 
+        // Scroll
         JScrollPane scrollPane = new JScrollPane(contenu);
         scrollPane.setBorder(null);
         add(scrollPane, BorderLayout.CENTER);
     }
 
-    // Getters pour le contrôleur
+    // --- Getters pour le contrôleur ---
     public JButton getAccueil() { return accueil; }
     public JButton getInformations() { return informations; }
     public JButton getCalendrier() { return calendrier; }
     public JButton getCompte() { return compte; }
     public JButton getInfos() { return infos; }
+    public JButton getLoupeBtn() { return loupeBtn; }
 
     public void afficherAttractionDuMois(Attraction attraction) {
         attractionNom.setText("Nom : " + attraction.getNom());

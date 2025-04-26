@@ -10,7 +10,7 @@ import java.util.ArrayList;
 
 public class VueClient extends JFrame {
     private Client client;
-    private JButton btnAccueil, btnInfo, btnCalendrier, btnDeconnexion;
+    private JButton btnAccueil, btnInfo, btnCalendrier, btnDeconnexion, btnLoupe;
 
     public VueClient(Client client) {
         ReservationDao reservationDao = new ReservationDao(new DaoFactory("jdbc:mysql://localhost:3306/java_attraction", "root", ""));
@@ -49,7 +49,9 @@ public class VueClient extends JFrame {
         leftPanel.add(btnCalendrier);
 
         JPanel rightPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-        rightPanel.add(new JButton("Compte"));
+        btnLoupe = new JButton("🔍");  // Loupe button added to the right
+        rightPanel.add(btnLoupe);  // Added loupe button to the right
+        rightPanel.add(new JButton("Compte"));  // "Compte" button is also on the right
 
         topPanel.add(leftPanel, BorderLayout.WEST);
         topPanel.add(rightPanel, BorderLayout.EAST);
@@ -166,5 +168,9 @@ public class VueClient extends JFrame {
 
     public JButton getBtnDeconnexion() {
         return btnDeconnexion;
+    }
+
+    public JButton getBtnLoupe() {
+        return btnLoupe; // Getter for the loupe button
     }
 }

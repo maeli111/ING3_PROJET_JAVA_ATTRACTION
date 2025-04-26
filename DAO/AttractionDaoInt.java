@@ -26,4 +26,13 @@ public interface AttractionDaoInt {
     public boolean estDisponible(LocalDate date, int idAttraction);
 
     public int getPlacesDisponibles(LocalDate date, int idAttraction);
+
+    public Attraction getAttractionById(int idAttraction);
+
+    public Attraction getAttractionMois();
+
+    // Pour mettre à jour l'attraction du mois
+    public boolean modifAttractionMois(int idAttraction);
+
+    public Attraction getByName(String nom);;
 }

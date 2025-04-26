@@ -26,7 +26,6 @@ public class ControleurReservationClient {
         this.attraction = attraction;
         this.date = date;
 
-        // DAO
         daoFactory = DaoFactory.getInstance("java_attraction", "root", "");
         attractionDao = new AttractionDao(daoFactory);
         clientDao = new ClientDao(daoFactory);
@@ -38,11 +37,9 @@ public class ControleurReservationClient {
     }
 
     private void setupvue() {
-        // Affichage du titre principal
         vue.titreResa.setText("Réserver l'attraction " + attraction.getNom() + " pour le " + date);
         vue.formPanel.add(Box.createRigidArea(new Dimension(0, 20)));
 
-        // === Formulaire Client Existant ===
         JPanel formEx = vue.formClientExistant;
         formEx.setLayout(new BoxLayout(formEx, BoxLayout.Y_AXIS));
 
@@ -57,8 +54,7 @@ public class ControleurReservationClient {
         formEx.add(Box.createRigidArea(new Dimension(0, 10)));
         vue.prixLabelExistant.setFont(new Font("SansSerif", Font.BOLD, 14));
         formEx.add(vue.prixLabelExistant);
-        formEx.setVisible(true);  // On montre uniquement le formulaire Client Existant
-
+        formEx.setVisible(true);
     }
 
     private void addLigne(JPanel panel, String label, JTextField field) {
@@ -89,7 +85,6 @@ public class ControleurReservationClient {
     }
 
     private void setupListeners(Client client) {
-        // === Actions boutons +/- ===
         setupCompteur(vue.nbAdultesField, vue.moinsBtnAdultes, vue.plusBtnAdultes);
         setupCompteur(vue.nbEnfantsField, vue.moinsBtnEnfants, vue.plusBtnEnfants);
         setupCompteur(vue.nbEtudiantsField, vue.moinsBtnEtudiants, vue.plusBtnEtudiants);
@@ -98,26 +93,23 @@ public class ControleurReservationClient {
         setupCompteur(vue.nbFamNbField, vue.moinsBtnFamNb, vue.plusBtnFamNb);
         setupCompteur(vue.nbEnfantsFamNbField, vue.moinsBtnEnfantsFamNb, vue.plusBtnEnfantsFamNb);
 
-        // === INFO Réductions ===
         setupInfoReduction(vue.infoBtnEnfant, 4);
         setupInfoReduction(vue.infoBtnEtudiant, 6);
         setupInfoReduction(vue.infoBtnSenior, 5);
         setupInfoReduction(vue.infoBtnFam, 2);
         setupInfoReduction(vue.infoBtnFamNb, 7);
 
-        // === Valider réservation ===
         vue.reserverButton.addActionListener(e -> {
             reserver(client);
             VueClient vueClient = new VueClient(client);
-            new ControleurClient(vueClient,client);
+            new ControleurClient(vueClient, client);
             vueClient.setVisible(true);
             vue.dispose();
         });
 
-        // === Menu boutons (Compte / Infos / Calendrier) ===
         vue.compte.addActionListener(e -> {
             VueClient vueClient = new VueClient(client);
-            new ControleurClient(vueClient,client);
+            new ControleurClient(vueClient, client);
             vueClient.setVisible(true);
             vue.dispose();
         });
@@ -136,7 +128,6 @@ public class ControleurReservationClient {
             vue.dispose();
         });
     }
-
 
     private void setupCompteur(JTextField field, JButton moins, JButton plus) {
         setupCompteur(field, moins, plus, vue.prixLabelExistant, false);
@@ -183,6 +174,10 @@ public class ControleurReservationClient {
         try {
             double prix = attraction.getPrix();
 
+            // Récupérer la réduction sur l'attraction
+            double reducAttraction = reductionDao.getPourcentageAttraction(attraction.getId_attraction()) / 100.0;
+
+            // Récupération des quantités de personnes
             int nbAdultes = Integer.parseInt(vue.nbAdultesField.getText());
             int nbEnfants = Integer.parseInt(vue.nbEnfantsField.getText());
             int nbEtudiants = Integer.parseInt(vue.nbEtudiantsField.getText());
@@ -191,31 +186,47 @@ public class ControleurReservationClient {
             int nbFamNb = Integer.parseInt(vue.nbFamNbField.getText());
             int nbEnfantsFamNb = Integer.parseInt(vue.nbEnfantsFamNbField.getText());
 
+            // Récupérer les réductions spécifiques
             double reducEnfant = reductionDao.getPourcentageById(4) / 100.0;
             double reducSenior = reductionDao.getPourcentageById(5) / 100.0;
             double reducEtudiant = reductionDao.getPourcentageById(6) / 100.0;
             double reducFam = reductionDao.getPourcentageById(2) / 100.0;
             double reducFamNb = reductionDao.getPourcentageById(7) / 100.0;
 
+            // Calcul du nombre total de personnes dans la catégorie "famille nombreuse"
             int totalFamNb = nbFamNb * (2 + nbEnfantsFamNb);
 
-            double total = nbAdultes * prix +
-                    nbEnfants * prix * (1 - reducEnfant) +
-                    nbEtudiants * prix * (1 - reducEtudiant) +
-                    nbSeniors * prix * (1 - reducSenior) +
-                    4 * nbFam * prix * (1 - reducFam) +
-                    totalFamNb * prix * (1 - reducFamNb);
+            // Calcul du prix sans réduction
+            double totalSansReduction = nbAdultes * prix +
+                    nbEnfants * prix +
+                    nbEtudiants * prix +
+                    nbSeniors * prix +
+                    4 * nbFam * prix +
+                    totalFamNb * prix;
 
-            double reduc = nbEnfants * prix * reducEnfant +
-                    nbEtudiants * prix * reducEtudiant +
-                    nbSeniors * prix * reducSenior +
-                    4 * nbFam * prix * reducFam +
-                    totalFamNb * prix * reducFamNb;
+            // Calcul du prix avec réduction
+            double prixApresAttraction = prix * (1 - reducAttraction);
 
-            label.setText(String.format("Prix total: %.2f € (Réduction totale: %.2f €)", total, reduc));
+            double totalAvecReduction = nbAdultes * prixApresAttraction +
+                    nbEnfants * prixApresAttraction * (1 - reducEnfant) +
+                    nbEtudiants * prixApresAttraction * (1 - reducEtudiant) +
+                    nbSeniors * prixApresAttraction * (1 - reducSenior) +
+                    4 * nbFam * prixApresAttraction * (1 - reducFam) +
+                    totalFamNb * prixApresAttraction * (1 - reducFamNb);
+
+            // Affichage des informations
+            if (totalAvecReduction < totalSansReduction) {
+                double difference = totalSansReduction - totalAvecReduction;
+                label.setText(String.format("Prix total avec réductions: %.2f € (Réduction totale: %.2f €)\n",totalAvecReduction, difference));
+            } else {
+                label.setText(String.format("Prix total sans réductions: %.2f €", totalSansReduction));
+            }
+
         } catch (Exception ignored) {
+            // En cas d'erreur de conversion ou autre
         }
     }
+
 
     private void reserver(Client client) {
         try {
@@ -234,6 +245,9 @@ public class ControleurReservationClient {
             }
 
             double prix = attraction.getPrix();
+            double reducAttraction = reductionDao.getPourcentageAttraction(attraction.getId_attraction()) / 100.0;
+            double prixApresAttraction = prix * (1 - reducAttraction);
+
             double reducEnfant = reductionDao.getPourcentageById(4) / 100.0;
             double reducSenior = reductionDao.getPourcentageById(5) / 100.0;
             double reducEtudiant = reductionDao.getPourcentageById(6) / 100.0;
@@ -242,12 +256,12 @@ public class ControleurReservationClient {
 
             int totalFamNb = nbFamNb * (2 + nbEnfantsFamNb);
 
-            double prixBrut = nbAdultes * prix +
-                    nbEnfants * prix * (1 - reducEnfant) +
-                    nbEtudiants * prix * (1 - reducEtudiant) +
-                    nbSeniors * prix * (1 - reducSenior) +
-                    4 * nbFam * prix * (1 - reducFam) +
-                    totalFamNb * prix * (1 - reducFamNb);
+            double prixBrut = nbAdultes * prixApresAttraction +
+                    nbEnfants * prixApresAttraction * (1 - reducEnfant) +
+                    nbEtudiants * prixApresAttraction * (1 - reducEtudiant) +
+                    nbSeniors * prixApresAttraction * (1 - reducSenior) +
+                    4 * nbFam * prixApresAttraction * (1 - reducFam) +
+                    totalFamNb * prixApresAttraction * (1 - reducFamNb);
 
             int nbResa = reductionDao.NbResaClient(client.getid_client());
             int pourcentageReduction = 0;
@@ -288,9 +302,7 @@ public class ControleurReservationClient {
             vue.dispose();
 
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(vue,
-                    e.getMessage(),
-                    "Erreur", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(vue, e.getMessage(), "Erreur", JOptionPane.ERROR_MESSAGE);
         }
     }
 
@@ -306,5 +318,4 @@ public class ControleurReservationClient {
             }
         });
     }
-
 }

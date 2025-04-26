@@ -27,8 +27,8 @@ public class ControleurClient {
             @Override
             public void actionPerformed(ActionEvent e) {
                 vueClient.dispose(); // Ferme la fenêtre actuelle
-                VueAccueil vueAccueil = new VueAccueil(client,null);
-                new ControleurAccueil(vueAccueil,client, null);
+                VueAccueil vueAccueil = new VueAccueil(client, null);
+                new ControleurAccueil(vueAccueil, client, null);
                 vueAccueil.setVisible(true);
             }
         });
@@ -63,6 +63,17 @@ public class ControleurClient {
                 VueLogin vueLogin = new VueLogin();
                 new ControleurLogin(vueLogin);
                 vueLogin.setVisible(true);
+            }
+        });
+
+        // Listener pour le bouton "Loupe" (recherche)
+        vueClient.getBtnLoupe().addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                vueClient.dispose(); // Ferme la fenêtre actuelle
+                VueRecherche vueRecherche = new VueRecherche(client, null);
+                new ControleurRecherche(vueRecherche, client, null);
+                vueRecherche.setVisible(true);
             }
         });
     }

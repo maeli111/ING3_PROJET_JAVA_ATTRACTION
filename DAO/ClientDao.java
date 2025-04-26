@@ -403,6 +403,7 @@ public class ClientDao implements ClientDaoInt{
         return client;
     }
 
+    @Override
     public Client getByEmail(String email) {
         Client client = null;
         Connection conn = null;
@@ -448,6 +449,7 @@ public class ClientDao implements ClientDaoInt{
         return client;
     }
 
+    @Override
     // Méthode pour récupérer les réservations en cours du client
     public ArrayList<Reservation> getReservationsEnCours(Client client) {
         ArrayList<Reservation> reservations = new ArrayList<>();
@@ -487,6 +489,7 @@ public class ClientDao implements ClientDaoInt{
         return reservations;
     }
 
+    @Override
     public ArrayList<Reservation> getReservationsArchivees(Client client) {
         ArrayList<Reservation> reservationsArchivees = new ArrayList<>();
 

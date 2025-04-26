@@ -42,6 +42,13 @@ public class ControleurAccueil {
             vue.dispose();
         });
 
+        vue.getLoupeBtn().addActionListener(e ->{
+            VueRecherche v = new VueRecherche(client, admin);
+            new ControleurRecherche(v, client, admin);
+            v.setVisible(true);
+            vue.dispose();
+        });
+
         vue.getInfos().addActionListener(e -> {
             VuePlusInfos v = new VuePlusInfos(client, admin);
             new ControleurPlusInfos(v, client, admin);

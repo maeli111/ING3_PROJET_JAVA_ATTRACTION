@@ -1,6 +1,7 @@
 package DAO;
 
 import Modele.Client;
+import Modele.Reservation;
 
 import java.util.ArrayList;
 
@@ -33,4 +34,9 @@ public interface ClientDaoInt {
     public Client getById(int id_client);
 
     public Client getByEmail(String email);
+
+    // Méthode pour récupérer les réservations en cours du client
+    public ArrayList<Reservation> getReservationsEnCours(Client client);
+
+    public ArrayList<Reservation> getReservationsArchivees(Client client);
 }

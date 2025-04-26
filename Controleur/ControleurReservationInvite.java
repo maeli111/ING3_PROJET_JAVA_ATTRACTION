@@ -170,11 +170,6 @@ public class ControleurReservationInvite {
                     String.format("Réservation confirmée pour %s %s\nEmail : %s\nNombre de personnes : %d\nPrix total : %.2f €",
                             prenom, nom, email, nbPersonnes, prixTotal));
 
-            // Retourner à l'accueil
-            VueAccueil a = new VueAccueil(null, null);
-            new ControleurAccueil(a, null, null);
-            a.setVisible(true);
-            vue.dispose();
 
         } catch (Exception e) {
             JOptionPane.showMessageDialog(vue, "Erreur : " + e.getMessage(), "Erreur", JOptionPane.ERROR_MESSAGE);
