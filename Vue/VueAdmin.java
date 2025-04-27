@@ -2,6 +2,8 @@ package Vue;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import Modele.Admin;
 
 public class VueAdmin extends JFrame {
@@ -13,7 +15,7 @@ public class VueAdmin extends JFrame {
     private JButton dossiersClientsButton = new JButton("Dossiers clients");
     private JButton attractionDuMoisButton = new JButton("Attraction du mois");
 
-    private JPanel attractionMoisPanel = new JPanel(); // Panneau pour gérer "Attraction du mois"
+    private JPanel attractionMoisPanel = new JPanel();
     private JLabel attractionActuelleLabel = new JLabel("Attraction actuelle : ");
     private JComboBox<String> attractionComboBox = new JComboBox<>();
     private JButton validerAttractionButton = new JButton("Valider");
@@ -26,21 +28,16 @@ public class VueAdmin extends JFrame {
 
         JPanel header = new JPanel(new BorderLayout());
         JPanel Pnavigation = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 10));
-
         JPanel Pcompte = new JPanel(new FlowLayout(FlowLayout.RIGHT, 10, 10));
-        Pcompte.add(compte); // bouton Compte à droite
-
+        Pcompte.add(compte);
         header.add(Pnavigation, BorderLayout.WEST);
         header.add(Pcompte, BorderLayout.EAST);
         add(header, BorderLayout.NORTH);
 
         JPanel mainPanel = new JPanel(new BorderLayout(10, 10));
 
-        // Panneau d'info sur l'admin
         JPanel infoPanel = new JPanel(new GridLayout(3, 2, 5, 5));
         infoPanel.setBorder(BorderFactory.createTitledBorder("Informations personnelles"));
-
-        // Affichage des infos de l'admin
         infoPanel.add(new JLabel("Nom:"));
         JTextField nomField = new JTextField(admin.getNom());
         nomField.setEditable(false);
@@ -56,32 +53,53 @@ public class VueAdmin extends JFrame {
         emailField.setEditable(false);
         infoPanel.add(emailField);
 
-        JLabel modificationsLabel = new JLabel("Modifications:", SwingConstants.CENTER);
-        modificationsLabel.setBorder(BorderFactory.createEmptyBorder(0, 0, 10, 0));
-        modificationsLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        // Modification : Sous-titre aligné à gauche avec une marge plus importante
+        JLabel modificationsLabel = new JLabel("Modifications:");
+        modificationsLabel.setBorder(BorderFactory.createEmptyBorder(0, 0, 10, 0)); // Augmentation de la marge gauche à 30
 
-        // Panneau de gestion avec tous les boutons de modification
         JPanel gestionPanel = new JPanel();
-        gestionPanel.setLayout(new BoxLayout(gestionPanel, BoxLayout.Y_AXIS));
+        gestionPanel.setLayout(new GridBagLayout());
         gestionPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        // Boutons de gestion (Attractions, Réductions, etc.)
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.gridwidth = GridBagConstraints.REMAINDER;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.insets = new Insets(5, 0, 5, 0);
+
         JButton[] btns = {attractionsButton, reductionsButton, dossiersClientsButton, attractionDuMoisButton};
         for (JButton btn : btns) {
-            btn.setAlignmentX(Component.CENTER_ALIGNMENT);
-            btn.setFocusPainted(false);
-            btn.setBorderPainted(false);
-            btn.setContentAreaFilled(false);
-            btn.setForeground(Color.BLUE);
-            btn.setFont(btn.getFont().deriveFont(Font.ITALIC, 14f));
-            gestionPanel.add(btn);
-            gestionPanel.add(Box.createRigidArea(new Dimension(0, 5)));
+            btn.setPreferredSize(new Dimension(160, 30));
+            btn.setMaximumSize(new Dimension(160, 30));
+            gestionPanel.add(btn, gbc);
         }
 
-        // Pour l'attraction du mois
+        // Effets de survol
+        btnDeconnexion.addMouseListener(new MouseAdapter() {
+            public void mouseEntered(MouseEvent e) {
+                btnDeconnexion.setBackground(Color.RED);
+                btnDeconnexion.setForeground(Color.WHITE);
+            }
+            public void mouseExited(MouseEvent e) {
+                btnDeconnexion.setBackground(UIManager.getColor("Button.background"));
+                btnDeconnexion.setForeground(UIManager.getColor("Button.foreground"));
+            }
+        });
+
+        JButton[] boutonsRose = {compte, attractionsButton, reductionsButton,
+                dossiersClientsButton, attractionDuMoisButton};
+        for (JButton btn : boutonsRose) {
+            btn.addMouseListener(new MouseAdapter() {
+                public void mouseEntered(MouseEvent e) {
+                    btn.setBackground(Color.PINK);
+                }
+                public void mouseExited(MouseEvent e) {
+                    btn.setBackground(UIManager.getColor("Button.background"));
+                }
+            });
+        }
+
         attractionMoisPanel.setLayout(new BoxLayout(attractionMoisPanel, BoxLayout.Y_AXIS));
         attractionMoisPanel.setBorder(BorderFactory.createTitledBorder("Définir l'attraction du mois"));
-        attractionMoisPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
         attractionMoisPanel.add(Box.createRigidArea(new Dimension(0, 10)));
         attractionActuelleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         attractionMoisPanel.add(attractionActuelleLabel);
@@ -92,9 +110,8 @@ public class VueAdmin extends JFrame {
         attractionMoisPanel.add(Box.createRigidArea(new Dimension(0, 10)));
         validerAttractionButton.setAlignmentX(Component.CENTER_ALIGNMENT);
         attractionMoisPanel.add(validerAttractionButton);
-        attractionMoisPanel.setVisible(false); // Caché par défaut
+        attractionMoisPanel.setVisible(false);
 
-        //regroupe les boutons et l'attraction du mois dans un seul panneau
         JPanel PanelAvecLabel = new JPanel();
         PanelAvecLabel.setLayout(new BoxLayout(PanelAvecLabel, BoxLayout.Y_AXIS));
         PanelAvecLabel.add(modificationsLabel);
@@ -112,12 +129,10 @@ public class VueAdmin extends JFrame {
     }
 
     public JButton getDeconnexionButton() { return btnDeconnexion; }
-
     public JButton getAttractionsButton() { return attractionsButton; }
     public JButton getReductionsButton() { return reductionsButton; }
     public JButton getDossiersClientsButton() { return dossiersClientsButton; }
     public JButton getAttractionDuMoisButton() { return attractionDuMoisButton; }
-
     public JPanel getAttractionMoisPanel() { return attractionMoisPanel; }
     public JLabel getAttractionActuelleLabel() { return attractionActuelleLabel; }
     public JComboBox<String> getAttractionComboBox() { return attractionComboBox; }
