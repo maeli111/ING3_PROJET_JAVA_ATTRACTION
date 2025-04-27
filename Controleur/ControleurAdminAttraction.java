@@ -65,9 +65,10 @@ public class ControleurAdminAttraction {
                     double prix = Double.parseDouble(prixField.getText());
                     int capacite = Integer.parseInt(capaciteField.getText());
                     String type = typeField.getText();
+                    int mois = 0;
 
                     // Puis on crée et ajoute cette nv attraction
-                    Attraction nouvelle = new Attraction(0, nom, desc, prix, capacite, type);
+                    Attraction nouvelle = new Attraction(0, nom, desc, prix, capacite, type,mois);
                     attractionDao.ajouter(nouvelle);
                     chargerAttractions();
                 } catch (NumberFormatException ex) {
@@ -118,6 +119,7 @@ public class ControleurAdminAttraction {
                 JOptionPane.showMessageDialog(vue, "Veuillez sélectionner une attraction à modifier.");
             }
         });
+
 
         // Bouton pour supprimer une attraction
         vue.getSupprimerButton().addActionListener(e -> {
