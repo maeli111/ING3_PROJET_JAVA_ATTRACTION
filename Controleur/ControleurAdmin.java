@@ -25,26 +25,6 @@ public class ControleurAdmin {
     }
 
     private void ajouterListeners() {
-        vue.getAccueilButton().addActionListener(e -> {
-            vue.dispose();
-            VueAccueil vueAccueil = new VueAccueil(null, admin);
-            new ControleurAccueil(vueAccueil, null, admin);
-            vueAccueil.setVisible(true);
-        });
-
-        vue.getInformationsButton().addActionListener(e -> {
-            vue.dispose();
-            VuePlusInfos v = new VuePlusInfos(null, admin);
-            new ControleurPlusInfos(v, null, admin);
-            v.setVisible(true);
-        });
-
-        vue.getCalendrierButton().addActionListener(e -> {
-            vue.dispose();
-            VueCalendrier vueCalendrier = new VueCalendrier(null, admin);
-            new ControleurCalendrier(vueCalendrier, null, admin);
-            vueCalendrier.setVisible(true);
-        });
 
         vue.getDeconnexionButton().addActionListener(e -> {
             vue.dispose();

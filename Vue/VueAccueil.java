@@ -119,21 +119,21 @@ public class VueAccueil extends JFrame {
         JPanel images = new JPanel(new GridLayout(1, 3, 20, 0));
 
         try {
-            BufferedImage image1 = ImageIO.read(new File("C:\\wamp64\\www\\ING3_PROJET_JAVA_ATTRACTION\\Images\\gauche.png"));
+            BufferedImage image1 = ImageIO.read(new File("images/gauche.png"));
             Image scaledImg1 = image1.getScaledInstance(300, 300, Image.SCALE_SMOOTH);
             JLabel img1 = new JLabel(new ImageIcon(scaledImg1));
             images.add(img1);
         } catch (Exception e) { System.out.println("Erreur image 1 : " + e.getMessage()); }
 
         try {
-            BufferedImage image2 = ImageIO.read(new File("C:\\wamp64\\www\\ING3_PROJET_JAVA_ATTRACTION\\Images\\milieu.png"));
+            BufferedImage image2 = ImageIO.read(new File("images/milieu.png"));
             Image scaledImg2 = image2.getScaledInstance(300, 300, Image.SCALE_SMOOTH);
             JLabel img2 = new JLabel(new ImageIcon(scaledImg2));
             images.add(img2);
         } catch (Exception e) { System.out.println("Erreur image 2 : " + e.getMessage()); }
 
         try {
-            BufferedImage image3 = ImageIO.read(new File("C:\\wamp64\\www\\ING3_PROJET_JAVA_ATTRACTION\\Images\\droite.png"));
+            BufferedImage image3 = ImageIO.read(new File("images/droite.png"));
             Image scaledImg3 = image3.getScaledInstance(300, 300, Image.SCALE_SMOOTH);
             JLabel img3 = new JLabel(new ImageIcon(scaledImg3));
             images.add(img3);
@@ -237,7 +237,7 @@ public class VueAccueil extends JFrame {
 
         // Charger et afficher l'image de l'attraction
         try {
-            String imagePath = "C:\\wamp64\\www\\ING3_PROJET_JAVA_ATTRACTION\\Images\\" + attraction.getId_attraction() + ".jpg";
+            String imagePath = "images/" + attraction.getId_attraction() + ".jpg";
             BufferedImage image = ImageIO.read(new File(imagePath));
             Image scaledImg = image.getScaledInstance(200, 200, Image.SCALE_SMOOTH);
             attractionImageLabel.setIcon(new ImageIcon(scaledImg));
