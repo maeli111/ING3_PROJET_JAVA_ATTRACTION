@@ -104,13 +104,17 @@ public class ControleurReservationInvite {
         vue.plusBtnNouveau.addActionListener(e -> {
             int val = Integer.parseInt(vue.nbPersonneFieldNouveau.getText());
             int placesRestantes = attractionDao.getPlacesDisponibles(date, attraction.getId_attraction());
-            if (val < 10 && val < placesRestantes) {
+
+            if (val >= 10) {
+                JOptionPane.showMessageDialog(vue, "Vous ne pouvez réserver que 10 places maximum.", "Limite de réservation", JOptionPane.WARNING_MESSAGE);
+            } else if (val >= placesRestantes) {
+                JOptionPane.showMessageDialog(vue, "Il ne reste que " + placesRestantes + " places disponibles.", "Limite atteinte", JOptionPane.WARNING_MESSAGE);
+            } else {
                 vue.nbPersonneFieldNouveau.setText(String.valueOf(val + 1));
                 updatePrixTotal();
-            } else {
-                JOptionPane.showMessageDialog(vue, "Il ne reste que " + placesRestantes + " places disponibles", "Limite atteinte", JOptionPane.WARNING_MESSAGE);
             }
         });
+
     }
 
     // méthode qui met à jour le pix total en fonction du nombre de personne choisi par le client
