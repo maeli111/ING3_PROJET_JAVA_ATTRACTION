@@ -37,6 +37,7 @@ public class ControleurAdminRA {
         vue.getCompteButton().addActionListener(e -> {
             vue.dispose();
             VueAdmin vueAdmin = new VueAdmin(admin);
+            new ControleurAdmin(vueAdmin, admin);
             vueAdmin.setVisible(true);
         });
 
