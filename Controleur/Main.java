@@ -4,15 +4,15 @@
 
 package Controleur;
 import Vue.VueLogin;
+import Vue.VueInscription;
 
 import javax.swing.*;
 
 public class Main {
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
-            VueLogin vueLogin = new VueLogin();
-            new ControleurLogin(vueLogin);
-            vueLogin.setVisible(true);
+            VueInscription VueConnexionClient = new VueInscription();
+            VueConnexionClient.setVisible(true);
         });
     }
 }
