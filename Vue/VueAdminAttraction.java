@@ -20,6 +20,10 @@ public class VueAdminAttraction extends JFrame {
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLayout(new BorderLayout());
 
+        Color hoverColor = new Color(255, 182, 193); // Rose clair au survol
+        Color defaultColor = new Color(230, 230, 250); // Fond lavande clair pour les boutons
+        Color textColor = new Color(60, 60, 60); // Texte gris foncé
+
         JPanel hautPanel = new JPanel(new BorderLayout());
         JPanel buttonBar = new JPanel(new BorderLayout());
         JPanel gauchePanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
@@ -60,6 +64,24 @@ public class VueAdminAttraction extends JFrame {
         bottomPanel.add(supprimerButton);
 
         add(bottomPanel, BorderLayout.SOUTH);
+
+        applyHoverEffect(ajouterButton, hoverColor, defaultColor);
+        applyHoverEffect(modifierButton, hoverColor, defaultColor);
+        applyHoverEffect(supprimerButton, hoverColor, defaultColor);
+        applyHoverEffect(compteButton, hoverColor, UIManager.getColor("Button.background")); // Compte reste normal
+    }
+
+    private void applyHoverEffect(JButton button, Color hoverColor, Color defaultColor) {
+        button.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                button.setBackground(hoverColor);
+            }
+            @Override
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                button.setBackground(defaultColor);
+            }
+        });
     }
 
     public JButton getCompteButton() { return compteButton; }

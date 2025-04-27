@@ -49,7 +49,7 @@ public class VueAdminClient extends JFrame {
         titrePanel.add(parc);
 
         JPanel gestionPanel = new JPanel();
-        JLabel gestionLabel = new JLabel("Gestion Clients");
+        JLabel gestionLabel = new JLabel("Gestion des Clients");
         gestionLabel.setHorizontalAlignment(JTextField.CENTER);
         gestionLabel.setFont(new Font("Segoe UI", Font.PLAIN, 18));
         gestionLabel.setForeground(new Color(0, 0, 0));
