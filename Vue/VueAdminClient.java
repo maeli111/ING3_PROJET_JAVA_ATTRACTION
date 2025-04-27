@@ -24,6 +24,9 @@ public class VueAdminClient extends JFrame {
         DaoFactory daoFactory = DaoFactory.getInstance("java_attraction", "root", "");
         ClientDao clientDao = new ClientDao(daoFactory);
 
+        Color hoverColor = new Color(255, 182, 193);
+        Color defaultColor = UIManager.getColor("Button.background");
+
         JPanel topPanel = new JPanel(new BorderLayout());
         JPanel buttonBar = new JPanel(new BorderLayout());
         JPanel leftPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
@@ -36,9 +39,22 @@ public class VueAdminClient extends JFrame {
         buttonBar.add(rightPanel, BorderLayout.EAST);
 
         JPanel titrePanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-        JLabel titreLabel = new JLabel("PalasiLand - Gestion des clients");
-        titreLabel.setFont(new Font("Serif", Font.BOLD, 24));
-        titrePanel.add(titreLabel);
+        JLabel parc = new JLabel("Palasi Land");
+        parc.setHorizontalAlignment(JTextField.CENTER);
+        parc.setFont(new Font("Bodoni MT", Font.BOLD, 32));
+        parc.setBorder(null);
+        parc.setOpaque(false);
+        titrePanel.add(parc);
+
+        JPanel gestionPanel = new JPanel();
+        JLabel gestionLabel = new JLabel("Gestion Réductions Clients");
+        gestionLabel.setHorizontalAlignment(JTextField.CENTER);
+        gestionLabel.setFont(new Font("Segoe UI", Font.PLAIN, 18));
+        gestionLabel.setForeground(new Color(100, 100, 100));  // Gris foncé pour le texte
+        gestionPanel.add(gestionLabel);
+        topPanel.add(gestionPanel, BorderLayout.SOUTH);
+
+        add(topPanel, BorderLayout.NORTH);
 
         topPanel.add(buttonBar, BorderLayout.NORTH);
         topPanel.add(titrePanel, BorderLayout.CENTER);
@@ -59,6 +75,16 @@ public class VueAdminClient extends JFrame {
         bottomPanel.add(supprimerButton);
         add(bottomPanel, BorderLayout.SOUTH);
 
+        Font boutonFont = new Font("Segoe UI", Font.BOLD, 16);
+        ajouterButton.setFont(boutonFont);
+        modifierButton.setFont(boutonFont);
+        supprimerButton.setFont(boutonFont);
+
+        applyHoverEffect(ajouterButton, hoverColor, defaultColor);
+        applyHoverEffect(modifierButton, hoverColor, defaultColor);
+        applyHoverEffect(supprimerButton, hoverColor, defaultColor);
+        applyHoverEffect(compteButton, hoverColor, defaultColor);
+
         chargerClients(new ArrayList<>());
     }
 
@@ -76,6 +102,21 @@ public class VueAdminClient extends JFrame {
                     c.getType_client()
             });
         }
+    }
+
+    // Méthode pour appliquer l'effet de survol à un bouton
+    private void applyHoverEffect(JButton button, Color hoverColor, Color defaultColor) {
+        button.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                button.setBackground(hoverColor);
+            }
+
+            @Override
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                button.setBackground(defaultColor);
+            }
+        });
     }
 
     public JButton getCompteButton() {
