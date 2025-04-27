@@ -5,11 +5,11 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import javax.swing.table.DefaultTableModel;
 import Modele.*;
 
+// interface pour rechercher des attractions en fonction de filtres
 public class VueRecherche extends JFrame {
-
+    // boutons du header
     private JButton accueil = new JButton("Accueil");
     private JButton informations = new JButton("Informations");
     private JButton calendrier = new JButton("Calendrier");
@@ -18,11 +18,14 @@ public class VueRecherche extends JFrame {
     private JButton rechercherBtn = new JButton("Rechercher");
     private JTextField parc = new JTextField("Palasi Land");
 
+    // menu déroulant des filtres
     private JComboBox<String> filtreCombo;
 
+    // résultats de la recherche
     private JPanel panelResultats;
 
     public VueRecherche(Client client, Admin admin) {
+        // paramètres fenêtre principale
         setTitle("Recherche");
         setSize(1250, 680);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -65,7 +68,7 @@ public class VueRecherche extends JFrame {
         header.add(parc, BorderLayout.CENTER);
         add(header, BorderLayout.NORTH);
 
-        // ---- Zone principale de recherche (avec juste un filtre) ----
+        // contenu principal
         JPanel contenu = new JPanel();
         contenu.setLayout(new BoxLayout(contenu, BoxLayout.Y_AXIS));
         contenu.setBorder(BorderFactory.createEmptyBorder(30, 50, 30, 50));
@@ -80,6 +83,7 @@ public class VueRecherche extends JFrame {
         JPanel panelFiltre = new JPanel();
         panelFiltre.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 10));
 
+        // options de filtrage
         String[] options = {
                 "Prix croissant",
                 "Prix décroissant",
@@ -97,7 +101,7 @@ public class VueRecherche extends JFrame {
 
         contenu.add(panelFiltre);
 
-        // Panel qui contiendra tous les boutons de résultats
+        // Panel des résultats
         panelResultats = new JPanel();
         panelResultats.setLayout(new BoxLayout(panelResultats, BoxLayout.Y_AXIS));
         panelResultats.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -105,14 +109,14 @@ public class VueRecherche extends JFrame {
         contenu.add(Box.createRigidArea(new Dimension(0, 30)));
         contenu.add(panelResultats);
 
-        // Ajout d'un JScrollPane autour du contenu pour permettre le défilement vertical
+        // zone de scroll
         JScrollPane scrollPane = new JScrollPane(contenu);
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS); // Afficher la barre de défilement verticale toujours
 
         add(scrollPane, BorderLayout.CENTER);
     }
 
-    // --- Getters pour le Contrôleur ---
+    // getters pour le contrôleur
     public JButton getAccueil() { return accueil; }
     public JButton getInformations() { return informations; }
     public JButton getCalendrier() { return calendrier; }

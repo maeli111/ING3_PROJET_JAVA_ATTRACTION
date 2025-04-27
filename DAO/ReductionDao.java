@@ -8,12 +8,11 @@ import java.util.ArrayList;
 public class ReductionDao  implements ReductionDaoInt{
     private DaoFactory daoFactory;
 
-    // constructeur dépendant de la classe DaoFactory
     public ReductionDao(DaoFactory daoFactory){
         this.daoFactory = daoFactory;
     }
 
-    /**
+    /*
      * Récupérer de la base de données tous les objets des Reductions dans une liste
      *
      * @return : liste retournée des objets des Reductions récupérés
@@ -44,8 +43,11 @@ public class ReductionDao  implements ReductionDaoInt{
         return listeReduction;
     }
 
+    // méthode qui vérifie si un client a déjà effectué une réservation à l'aide de son ID
+    // + retourne le pourcentage de réduction si c'est sa première visite
     @Override
     public int getPourcentagePremiereVisite(int idClient) {
+        // on récupère le client correspondant à cet ID dans la bdd
         String queryCheck = "SELECT COUNT(*) FROM reservation WHERE id_client = ?";
         String queryReduction = "SELECT pourcentage FROM reduction WHERE nom = 'Première visite'";
 
@@ -53,14 +55,16 @@ public class ReductionDao  implements ReductionDaoInt{
              PreparedStatement stmtCheck = connexion.prepareStatement(queryCheck);
              PreparedStatement stmtReduction = connexion.prepareStatement(queryReduction)) {
 
-            // Vérification si le client a déjà une réservation
+            // on regarde si le client a déjà fait une réservation
             stmtCheck.setInt(1, idClient);
             ResultSet resCheck = stmtCheck.executeQuery();
+
+            // pas de réduction si le client a déjà réservé
             if (resCheck.next() && resCheck.getInt(1) > 0) {
-                return 0; // Pas de réduction si le client a déjà réservé
+                return 0;
             }
 
-            // Si c'est une première visite, on récupère la réduction
+            // si c'est sa première visite on récupère le pourcentage de réduction
             ResultSet resReduction = stmtReduction.executeQuery();
             if (resReduction.next()) {
                 return resReduction.getInt("pourcentage");
@@ -74,8 +78,11 @@ public class ReductionDao  implements ReductionDaoInt{
         return 0;
     }
 
+    // méthode qui vérifie si le client a effectué 5 réservations à l'aide de son ID
+    // + retourne la réduction de fidélité
     @Override
     public int getPourcentageFidelite(int idClient) {
+        // on récupère le client correspondant à cet ID dans la bdd
         String queryCountReservations = "SELECT COUNT(*) AS nb_reservations FROM reservation WHERE id_client = ?";
         String queryFidelite = "SELECT pourcentage FROM reduction WHERE nom = 'Fidélité'";
 
@@ -83,15 +90,15 @@ public class ReductionDao  implements ReductionDaoInt{
              PreparedStatement stmtCountReservations = connexion.prepareStatement(queryCountReservations);
              PreparedStatement stmtFidelite = connexion.prepareStatement(queryFidelite)) {
 
-            // Vérification du nombre de réservations
+            // on vérifie le nombre de réservations faite par le client
             stmtCountReservations.setInt(1, idClient);
             ResultSet res = stmtCountReservations.executeQuery();
             if (res.next()) {
                 int nbReservations = res.getInt("nb_reservations");
 
-                // Vérification si c'est un multiple de 5
+                // on vérifie si c'est un multiple de 5
                 if (nbReservations > 0 && nbReservations % 5 == 0) {
-                    // On récupère la réduction de fidélité
+                    // on récupère la réduction de fidélité
                     ResultSet resReduction = stmtFidelite.executeQuery();
                     if (resReduction.next()) {
                         return resReduction.getInt("pourcentage");
@@ -107,8 +114,10 @@ public class ReductionDao  implements ReductionDaoInt{
         return 0;
     }
 
+    // méthode qui récupère le pourcentage de réduction d'une attraction
     @Override
     public int getPourcentageAttraction(int idAttraction) {
+        // on récupère l'attraction et le pourcentage
         String queryCheckAttraction = "SELECT id_reduction FROM reduction_attraction WHERE id_attraction = ?";
         String queryReduction = "SELECT pourcentage FROM reduction WHERE id_reduction = ?";
 
@@ -116,13 +125,14 @@ public class ReductionDao  implements ReductionDaoInt{
              PreparedStatement stmtCheckAttraction = connexion.prepareStatement(queryCheckAttraction);
              PreparedStatement stmtReduction = connexion.prepareStatement(queryReduction)) {
 
-            // Vérifier si l'attraction a une réduction
+            // on regarde si l'attraction a une réduction
             stmtCheckAttraction.setInt(1, idAttraction);
             ResultSet resCheckAttraction = stmtCheckAttraction.executeQuery();
+
             if (resCheckAttraction.next()) {
                 int idReduction = resCheckAttraction.getInt("id_reduction");
 
-                // Récupérer le pourcentage associé à cette réduction
+                // on récupère le pourcentage associé à cette réduction
                 stmtReduction.setInt(1, idReduction);
                 ResultSet resReduction = stmtReduction.executeQuery();
                 if (resReduction.next()) {
@@ -135,10 +145,10 @@ public class ReductionDao  implements ReductionDaoInt{
             System.out.println("Erreur lors de la récupération de la réduction pour l'attraction.");
         }
 
-        return 0; // Pas de réduction trouvée
+        return 0; // s'il n'y a pas de réduction trouvée
     }
 
-
+    // méthode qui ajoute une réduction à la base de données
     @Override
     public void ajouter(Reduction reduction) {
         String query = "INSERT INTO Reduction (nom, pourcentage, description) VALUES (?, ?, ?)";
@@ -151,11 +161,10 @@ public class ReductionDao  implements ReductionDaoInt{
 
             stmt.executeUpdate();
 
-            // Récupérer l'ID généré
             ResultSet rs = stmt.getGeneratedKeys();
             if (rs.next()) {
                 int idGenere = rs.getInt(1);
-                reduction.setId_reduction(idGenere); // Mets à jour ton objet avec le bon ID
+                reduction.setId_reduction(idGenere);
             }
 
         } catch (SQLException e) {
@@ -163,7 +172,7 @@ public class ReductionDao  implements ReductionDaoInt{
         }
     }
 
-
+    // méthode qui modifie une réduction existante dans la bdd
     @Override
     public void modifier(int ancienId, Reduction reduction) {
         String sql = "UPDATE reduction SET id_reduction = ?,nom = ?, pourcentage = ?, description = ? WHERE id_reduction = ?";
@@ -182,6 +191,7 @@ public class ReductionDao  implements ReductionDaoInt{
         }
     }
 
+    // méthode pour supprimer une réduction de la bdd
     @Override
     public void supprimer(int idReduction) {
         String sql = "DELETE FROM reduction WHERE id_reduction = ?";
@@ -195,6 +205,7 @@ public class ReductionDao  implements ReductionDaoInt{
         }
     }
 
+    // méthode qui retourne toutes les réductions (sans attraction associée)
     @Override
     public ArrayList<Reduction> getReductionsSansAttraction() {
         ArrayList<Reduction> liste = new ArrayList<>();
@@ -222,6 +233,7 @@ public class ReductionDao  implements ReductionDaoInt{
         return liste;
     }
 
+    // méthode qui retourne toutes les réductions liées à une attraction
     @Override
     public ArrayList<Reduction> getReductionsAvecAttraction() {
         ArrayList<Reduction> liste = new ArrayList<>();
@@ -251,6 +263,7 @@ public class ReductionDao  implements ReductionDaoInt{
         return liste;
     }
 
+    // méthode qui supprime toutes les liaisons entre une réduction et ses attractions
     @Override
     public void supprimerLiaisonsAttractions(int idReduction) {
         String sql = "DELETE FROM Reduction_Attraction WHERE id_reduction = ?";
@@ -266,6 +279,7 @@ public class ReductionDao  implements ReductionDaoInt{
         }
     }
 
+    // méthode qui retourne les attractions liées à une réduction donnée
     @Override
     public ArrayList<Attraction> getAttractionsLiees(int idReduction) {
         ArrayList<Attraction> attractions = new ArrayList<>();
@@ -296,6 +310,7 @@ public class ReductionDao  implements ReductionDaoInt{
         return attractions;
     }
 
+    // méthode qui retourne toutes les attractions qui ne sont pas liées à une réduction spécifique
     @Override
     public ArrayList<Attraction> getAttractionsNonLiees(int idReduction) {
         ArrayList<Attraction> attractions = new ArrayList<>();
@@ -325,6 +340,7 @@ public class ReductionDao  implements ReductionDaoInt{
         return attractions;
     }
 
+    // méthode qui  lie une réduction à une attraction
     @Override
     public void lierReductionAttraction(int idReduction, int idAttraction) {
         String sql = "INSERT INTO Reduction_Attraction (id_reduction, id_attraction) VALUES (?, ?)";
@@ -340,9 +356,10 @@ public class ReductionDao  implements ReductionDaoInt{
             e.printStackTrace();
         }
     }
+
+    // méthode qui vérifie si une réduction n'est liée à aucune attraction
     @Override
     public boolean isEmpty(int id_reduction) {
-        // Requête pour vérifier si des attractions sont liées à cette réduction
         String query = "SELECT COUNT(*) FROM Reduction_Attraction WHERE id_reduction = ?";
 
         try (Connection conn = daoFactory.getConnection();
@@ -350,15 +367,15 @@ public class ReductionDao  implements ReductionDaoInt{
             stmt.setInt(1, id_reduction);
             ResultSet rs = stmt.executeQuery();
             if (rs.next()) {
-                return rs.getInt(1) == 0;  // Si aucune attraction n'est liée, retourne true
+                return rs.getInt(1) == 0;  // retourne true si aucune attraction n'est liée
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return true;  // Par défaut, retourne true si une erreur se produit
+        return true;  // par défaut retourne true si une erreur se produit
     }
 
-
+    // méthode qui récupère le pourcentage de réduction en fonction de son ID
     @Override
     public double getPourcentageById(int idReduction) {
         double pourcentage = 0.0;
@@ -378,20 +395,25 @@ public class ReductionDao  implements ReductionDaoInt{
         return pourcentage;
     }
 
+    // méthode qui retourne le nombre de réservations faites par un client
     @Override
     public int NbResaClient(int idClient) throws SQLException {
         String query = "SELECT COUNT(DISTINCT id_reservation) FROM reservation WHERE id_client = ?";
+
         try (Connection conn = daoFactory.getConnection();
              PreparedStatement stmt = conn.prepareStatement(query)) {
             stmt.setInt(1, idClient);
             ResultSet rs = stmt.executeQuery();
+
             if (rs.next()) {
                 return rs.getInt(1);
             }
+
             return 0;
         }
     }
 
+    // méthode qui récupère la description d'une réduction avec son ID
     @Override
     public String getDescriptionById(int id) {
         try (Connection conn = daoFactory.getConnection();

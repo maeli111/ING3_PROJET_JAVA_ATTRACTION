@@ -3,7 +3,7 @@ package DAO;
 import java.sql.*;
 
 public class DaoFactory {
-    /**
+    /*
      * Attributs private pour la connexion JDBC
      */
     private static String url;
@@ -17,7 +17,7 @@ public class DaoFactory {
         this.password = password;
     }
 
-    /**
+    /*
      * Méthode qui retourne 1 objet de DaoFactory
      * @param : url, username et password de la base de données
      * @return : objet de la classe DaoFactoru
@@ -39,7 +39,7 @@ public class DaoFactory {
         return instance;
     }
 
-    /**
+    /*
      * Méthode qui retourne le driver de base de données approprié
      * @return : le driver approprié
      * @throws SQLException
@@ -49,7 +49,7 @@ public class DaoFactory {
         return DriverManager.getConnection(url, username, password);
     }
 
-    /**
+    /*
      *     Fermer la connexion à la base de données
      */
     public void disconnect() {

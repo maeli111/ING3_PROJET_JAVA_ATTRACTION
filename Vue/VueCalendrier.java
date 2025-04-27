@@ -8,8 +8,9 @@ import java.io.File;
 import javax.imageio.ImageIO;
 import java.time.*;
 
+// Fenêtre qui affiche le calendrier des attractions
 public class VueCalendrier extends JFrame {
-
+    // composants du header
     private JButton accueil = new JButton("Accueil");
     private JButton informations = new JButton("Informations");
     private JButton calendrier = new JButton("Calendrier");
@@ -17,29 +18,32 @@ public class VueCalendrier extends JFrame {
     private JButton loupeBtn;
     private JTextField parc = new JTextField("Palasi Land");
 
-    private JPanel calendarPanel;
-    private JPanel detailsPanel;
+    // composants du calendrier
+    private JPanel calendarPanel; // calendrier
+    private JPanel detailsPanel; // infos sur les attractions
+    private JLabel moisLabel; // nom du mois
+    private YearMonth moisActuel; // le mois affiché actuellement
 
-    private JLabel moisLabel;
-    private YearMonth currentMonth;
-
-    private final YearMonth minMonth = YearMonth.now();
-    private final YearMonth maxMonth = YearMonth.of(2026, 4);
+    // limitation de la navigation dans le celendrier (ne peux pas aller avant le mois actuel ni plus d'un an après)
+    private final YearMonth minMois = YearMonth.now();
+    private final YearMonth maxMois = YearMonth.now().plusYears(1);
 
     private Client client;
     private Admin admin;
 
-    private JButton prevButton;
-    private JButton nextButton;
+    // boutons pour naviguer entre les mois
+    private JButton precButton;
+    private JButton suivButton;
 
-    // Couleurs pour le survol
-    private final Color hoverColor = new Color(255, 182, 193); // Rose clair
-    private final Color defaultColor = UIManager.getColor("Button.background"); // Couleur par défaut
+    // couleurs pour le survol
+    private final Color dessusCouleur = new Color(255, 182, 193); // Rose clair
+    private final Color defaultCouleur = UIManager.getColor("Button.background"); // Couleur par défaut
 
     public VueCalendrier(Client client, Admin admin) {
         this.client = client;
         this.admin = admin;
 
+        // info de la fenêtre
         setTitle("Calendrier des Attractions");
         setSize(1250, 680);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -53,13 +57,13 @@ public class VueCalendrier extends JFrame {
         parc.setBorder(null);
         parc.setOpaque(false);
 
-        // Appliquer l'effet de survol à tous les boutons
-        applyHoverEffect(accueil, hoverColor, defaultColor);
-        applyHoverEffect(informations, hoverColor, defaultColor);
-        applyHoverEffect(calendrier, hoverColor, defaultColor);
-        applyHoverEffect(compte, hoverColor, defaultColor);
+        // appliquer l'effet de survol à tous les boutons
+        applyHoverEffect(accueil, dessusCouleur, defaultCouleur);
+        applyHoverEffect(informations, dessusCouleur, defaultCouleur);
+        applyHoverEffect(calendrier, dessusCouleur, defaultCouleur);
+        applyHoverEffect(compte, dessusCouleur, defaultCouleur);
 
-        calendrier.setBackground(hoverColor); // Bouton calendrier actif
+        calendrier.setBackground(dessusCouleur); // Bouton calendrier actif
 
         JPanel Pbarre = new JPanel(new BorderLayout());
         JPanel Pnavigation = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 10));
@@ -90,7 +94,7 @@ public class VueCalendrier extends JFrame {
         } catch (Exception e) {
             System.out.println("Erreur lors du chargement de l'image loupe : " + e.getMessage());
             loupeBtn = new JButton("🔍");
-            applyHoverEffect(loupeBtn, hoverColor, defaultColor);
+            applyHoverEffect(loupeBtn, dessusCouleur, defaultCouleur);
             Pcompte.add(loupeBtn);
             Pcompte.add(Box.createRigidArea(new Dimension(5, 0)));
         }
@@ -106,33 +110,36 @@ public class VueCalendrier extends JFrame {
         add(header, BorderLayout.NORTH);
 
         // CONTENU
-        currentMonth = YearMonth.now();
+        moisActuel = YearMonth.now();
         JPanel mainPanel = new JPanel(new BorderLayout());
 
+        // dle haut du calendrier
         JPanel wrapper = new JPanel(new BorderLayout());
         wrapper.setBorder(BorderFactory.createEmptyBorder(10, 20, 20, 10));
 
         JPanel topPanel = new JPanel(new BorderLayout());
-        prevButton = new JButton("←");
-        nextButton = new JButton("→");
+        precButton = new JButton("←");
+        suivButton = new JButton("→");
 
         // Appliquer l'effet aux boutons de navigation du calendrier
-        applyHoverEffect(prevButton, hoverColor, defaultColor);
-        applyHoverEffect(nextButton, hoverColor, defaultColor);
+        applyHoverEffect(precButton, dessusCouleur, defaultCouleur);
+        applyHoverEffect(suivButton, dessusCouleur, defaultCouleur);
 
         moisLabel = new JLabel("", SwingConstants.CENTER);
         moisLabel.setFont(new Font("SansSerif", Font.BOLD, 18));
 
-        topPanel.add(prevButton, BorderLayout.WEST);
+        topPanel.add(precButton, BorderLayout.WEST);
         topPanel.add(moisLabel, BorderLayout.CENTER);
-        topPanel.add(nextButton, BorderLayout.EAST);
+        topPanel.add(suivButton, BorderLayout.EAST);
 
         wrapper.add(topPanel, BorderLayout.NORTH);
 
+        // grille du calendrier
         calendarPanel = new JPanel(new GridLayout(0, 7, 5, 5));
         wrapper.add(calendarPanel, BorderLayout.CENTER);
         mainPanel.add(wrapper, BorderLayout.CENTER);
 
+        // partie pour afficher les attractions dispo le jour sélectionné
         detailsPanel = new JPanel();
         detailsPanel.setLayout(new BoxLayout(detailsPanel, BoxLayout.Y_AXIS));
         detailsPanel.setBorder(BorderFactory.createTitledBorder("Attractions disponibles"));
@@ -161,22 +168,22 @@ public class VueCalendrier extends JFrame {
         });
     }
 
-    // --- Méthodes accessibles au contrôleur ---
+    // getters pour le controleur
     public JButton getBtnAccueil() { return accueil; }
     public JButton getBtnInfos() { return informations; }
     public JButton getBtnCalendrier() { return calendrier; }
     public JButton getBtnCompte() { return compte; }
-    public JButton getBtnPrev() { return prevButton; }
-    public JButton getBtnNext() { return nextButton; }
+    public JButton getBtnPrev() { return precButton; }
+    public JButton getBtnNext() { return suivButton; }
     public JButton getLoupeBtn() { return loupeBtn; }
 
     public JPanel getCalendarPanel() { return calendarPanel; }
     public JPanel getDetailsPanel() { return detailsPanel; }
 
     public JLabel getMoisLabel() { return moisLabel; }
-    public YearMonth getCurrentMonth() { return currentMonth; }
-    public void setCurrentMonth(YearMonth ym) { this.currentMonth = ym; }
+    public YearMonth getMoisActuel() { return moisActuel; }
+    public void setMoisActuel(YearMonth ym) { this.moisActuel = ym; }
 
-    public YearMonth getMinMonth() { return minMonth; }
-    public YearMonth getMaxMonth() { return maxMonth; }
+    public YearMonth getMinMonth() { return minMois; }
+    public YearMonth getMaxMois() { return maxMois; }
 }

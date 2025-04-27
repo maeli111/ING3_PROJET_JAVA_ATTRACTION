@@ -9,6 +9,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.time.LocalDate;
 
+
 public class ControleurInfoAttraction {
     private VueInfoAttraction vue;
     private Client client;
@@ -16,6 +17,7 @@ public class ControleurInfoAttraction {
     private Attraction attraction;
     private LocalDate date;
 
+    // constructeur
     public ControleurInfoAttraction(VueInfoAttraction vue, Client client, Admin admin, Attraction attraction, LocalDate date) {
         this.vue = vue;
         this.client = client;
@@ -29,12 +31,11 @@ public class ControleurInfoAttraction {
 
     // Méthode pour vérifier s'il y a une réduction sur l'attraction
     private double hasReduction() {
-        // Supposons que id_attraction est un champ de la classe Attraction
-        int idAttraction = attraction.getId_attraction();  // Utilisation de l'ID de l'attraction actuelle
+        // on récupère l'id de l'attraction
+        int idAttraction = attraction.getId_attraction();
 
-        // Création du DAO pour les réductions
+        // Création du DAO pour les réductions + connexion à la bdd
         DaoFactory daoFactory = new DaoFactory("jdbc:mysql://localhost:3306/java_attraction", "root", "");
-        // Exemple, vous devez avoir un moyen de récupérer la fabrique du DAO
         ReductionDao reductionDao = new ReductionDao(daoFactory);
 
         // Appel de la méthode pour obtenir le pourcentage de réduction pour cette attraction
@@ -48,7 +49,7 @@ public class ControleurInfoAttraction {
 
     }
 
-
+    // configuration des listeners
     private void ajouterListeners() {
         vue.getReserverBtn().addActionListener(new ActionListener() {
             @Override

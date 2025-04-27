@@ -17,7 +17,7 @@ public class AttractionDao implements AttractionDaoInt{
         this.daoFactory = daoFactory;
     }
 
-    /**
+    /*
      * C'est une méthode pour récupérer toutes les attractions dans la base de données
      * return : ArrayList<Attraction> => liste qui contient tous les objets Attraction récupérés
      */
@@ -52,7 +52,7 @@ public class AttractionDao implements AttractionDaoInt{
         return listeAttraction;
     }
 
-    /**
+    /*
      * C'est une méthode qui ajoute une attraction à la base de données
      * paramètre attraction : c'est l'attraction à ajouter dans la bdd
      */
@@ -74,7 +74,7 @@ public class AttractionDao implements AttractionDaoInt{
         }
     }
 
-    /**
+    /*
      * C'est une méthode qui modifie une attraction existante dans la bdd
      * paramètre attraction : objet Attraction qui va être modifé
      */
@@ -97,8 +97,8 @@ public class AttractionDao implements AttractionDaoInt{
         }
     }
 
-    /**
-     * C4est une méthode pour supprimer une attraction de la bdd
+    /*
+     * C'est une méthode pour supprimer une attraction de la bdd
      * paramètre idAttraction : identifiant de l'attraction que l'on veut supprimer
      */
     @Override
@@ -114,7 +114,7 @@ public class AttractionDao implements AttractionDaoInt{
         }
     }
 
-    /**
+    /*
      * C'est une méthode qui récupére une attraction avec son identifiant
      * paramètre id : identifiant de l'attraction que l'on cherche
      * return Attraction : objet Attraction si on la trouve, ou null si on ne la trouve pas
@@ -122,6 +122,7 @@ public class AttractionDao implements AttractionDaoInt{
     @Override
     public Attraction getById(int id) {
         String requete = "SELECT * FROM attraction WHERE id_attraction = " + id;
+
         try (Connection connexion = daoFactory.getConnection();
              Statement statement = connexion.createStatement();
              ResultSet resultats = statement.executeQuery(requete)) {
@@ -143,6 +144,7 @@ public class AttractionDao implements AttractionDaoInt{
         return null;
     }
 
+    // méthode qui cherche une attraction à l'aide de son ID dans la bdd
     @Override
     public Attraction chercher(int id) {
         Attraction a = null;
@@ -169,13 +171,15 @@ public class AttractionDao implements AttractionDaoInt{
         return a;
     }
 
+    // méthode qui va regarder si une attraction est disponible pour une date donnée à l'aide de son ID
     @Override
     public boolean estDisponible(LocalDate date, int idAttraction) {
         boolean disponible = true;
 
         try (Connection connexion = daoFactory.getConnection();
-             PreparedStatement ps = connexion.prepareStatement("SELECT SUM(nb_personne) AS total FROM reservation WHERE date_reservation = ? AND id_attraction = ? AND est_archivee = 0")){
-            // 1. Récupérer le nombre total de personnes réservées pour l’attraction à cette date
+            PreparedStatement ps = connexion.prepareStatement("SELECT SUM(nb_personne) AS total FROM reservation WHERE date_reservation = ? AND id_attraction = ? AND est_archivee = 0")){
+
+            // on récupère le nombre total de places réservées pour l’attraction à cette date
             ps.setDate(1, java.sql.Date.valueOf(date));
             ps.setInt(2, idAttraction);
             ResultSet rs = ps.executeQuery();
@@ -185,7 +189,7 @@ public class AttractionDao implements AttractionDaoInt{
                 totalReservations = rs.getInt("total");
             }
 
-            // 2. Récupérer la capacité maximale de l’attraction
+            // on récupère la capacité maximale de l’attraction
             String sqlCapacite = "SELECT capacite FROM attraction WHERE id_attraction = ?";
             PreparedStatement ps2 = connexion.prepareStatement(sqlCapacite);
             ps2.setInt(1, idAttraction);
@@ -196,7 +200,7 @@ public class AttractionDao implements AttractionDaoInt{
                 capacite = rs2.getInt("capacite");
             }
 
-            // 3. Vérifier si la capacité est atteinte
+            // on vérifie si la capacité est atteinte
             if (totalReservations >= capacite) {
                 disponible = false;
             }
@@ -213,12 +217,13 @@ public class AttractionDao implements AttractionDaoInt{
         return disponible;
     }
 
+    // méthode qui va regarder le nombre de places diponibles pour une attraction pour une date donnée et l'ID de l'attraction
     @Override
     public int getPlacesDisponibles(LocalDate date, int idAttraction) {
         int placesDisponibles = 0;
 
         try (Connection connexion = daoFactory.getConnection()) {
-            // 1. Total réservé
+            //on regarde le nombre total de places déjà réservées pour cette attraction à cett date
             PreparedStatement ps = connexion.prepareStatement(
                     "SELECT SUM(nb_personne) AS total FROM reservation WHERE date_reservation = ? AND id_attraction = ? AND est_archivee = 0"
             );
@@ -231,7 +236,7 @@ public class AttractionDao implements AttractionDaoInt{
                 totalReservations = rs.getInt("total");
             }
 
-            // 2. Capacité max
+            // on regarde la capcité maximal
             PreparedStatement ps2 = connexion.prepareStatement(
                     "SELECT capacite FROM attraction WHERE id_attraction = ?"
             );
@@ -243,7 +248,7 @@ public class AttractionDao implements AttractionDaoInt{
                 capacite = rs2.getInt("capacite");
             }
 
-            // 3. Calcul places restantes
+            // on calcule le nombre de places restantes
             placesDisponibles = capacite - totalReservations;
 
             rs.close();
@@ -257,13 +262,12 @@ public class AttractionDao implements AttractionDaoInt{
         return placesDisponibles;
     }
 
-
+    // méthode qui cherche une attraction à l'aide de son ID dans la bdd
     @Override
     public Attraction getAttractionById(int idAttraction) {
         Attraction attraction = null;
         String query = "SELECT * FROM Attraction WHERE id_attraction = ?";
 
-        // Créer une instance de DaoFactory avant d'appeler getConnection()
         DaoFactory daoFactory = new DaoFactory("jdbc:mysql://localhost:3306/java_attraction", "root", "");
 
         try (Connection conn = daoFactory.getConnection();  // Appel à getConnection() sur l'instance de DaoFactory
@@ -285,6 +289,7 @@ public class AttractionDao implements AttractionDaoInt{
         return attraction;
     }
 
+    // méthode qui retourne l'attraction du mois
     public Attraction getAttractionMois() {
         Attraction attraction = null;
         String query = "SELECT * FROM attraction WHERE mois = 1 ";
@@ -312,12 +317,12 @@ public class AttractionDao implements AttractionDaoInt{
         return attraction;
     }
 
-    // Pour mettre à jour l'attraction du mois
+    // méthode pour mettre à jour l'attraction du mois
     public boolean modifAttractionMois(int idAttraction) {
         try {
             Connection conn = daoFactory.getConnection();
             PreparedStatement stmt = conn.prepareStatement("UPDATE attraction SET mois = 0");
-            stmt.executeUpdate(); // Remettre à 0 tout d'abord
+            stmt.executeUpdate();
 
             stmt = conn.prepareStatement("UPDATE attraction SET mois = 1 WHERE id_attraction = ?");
             stmt.setInt(1, idAttraction);
@@ -329,23 +334,20 @@ public class AttractionDao implements AttractionDaoInt{
         }
     }
 
+    // méthode qui cherche une attraction à l'aide de son nom dans la bdd
     @Override
     public Attraction getByName(String nom) {
         Attraction attraction = null;
 
-        // Requête SQL pour récupérer l'attraction par son nom
+        // requête sql pour récupérer l'attraction par son nom
         String sql = "SELECT * FROM attraction WHERE nom = ?";
 
         try (Connection connection = daoFactory.getConnection(); // Utiliser getConnection() de DaoFactory
              PreparedStatement statement = connection.prepareStatement(sql)) {
 
-            // Paramétrer la requête avec le nom de l'attraction
             statement.setString(1, nom);
-
-            // Exécuter la requête
             ResultSet resultSet = statement.executeQuery();
 
-            // Si l'attraction existe dans la base de données
             if (resultSet.next()) {
                 int id = resultSet.getInt("id_attraction");
                 String name = resultSet.getString("nom");
@@ -354,7 +356,6 @@ public class AttractionDao implements AttractionDaoInt{
                 int capacite = resultSet.getInt("capacite");
                 String typeAttraction = resultSet.getString("type_attraction");
 
-                // Créer l'objet Attraction à partir des résultats de la requête
                 attraction = new Attraction(id, name, description, prix, capacite, typeAttraction);
             }
         } catch (SQLException e) {
@@ -364,7 +365,5 @@ public class AttractionDao implements AttractionDaoInt{
 
         return attraction;
     }
-
-
 
 }

@@ -2,6 +2,7 @@ package Modele;
 import java.time.LocalDate;
 
 public class Reservation {
+    // attributs
     private int id_reservation;
     private int id_client;
     private String nom;
@@ -14,6 +15,9 @@ public class Reservation {
     private int nb_personne;
     private int est_archivee;
 
+    // constructeurs
+
+    // complet
     public Reservation(int id_reservation,int id_client, String nom, String prenom,String mail, LocalDate date_reservation, LocalDate date_achat, int id_attraction, double prix_total, int nb_personne, int est_archivee){
         this.id_reservation=id_reservation;
         this.id_client=id_client;
@@ -28,6 +32,7 @@ public class Reservation {
         this.est_archivee=est_archivee;
     }
 
+    // sans les informations du client et l'archivage
     public Reservation(int id_reservation,int id_client, LocalDate date_reservation, LocalDate date_achat, int id_attraction, double prix_total, int nb_personne){
         this.id_reservation=id_reservation;
         this.id_client=id_client;
@@ -37,11 +42,14 @@ public class Reservation {
         this.prix_total=prix_total;
         this.nb_personne=nb_personne;
     }
+
+    // avec juste date et attraction
     public Reservation(LocalDate date_reservation, int id_attraction){
         this.date_reservation=date_reservation;
         this.id_attraction=id_attraction;
     }
 
+    // getters
     public int getId_reservation(){return id_reservation;}
     public int getId_client(){return id_client;}
     public String getNom(){return nom;}
@@ -53,6 +61,4 @@ public class Reservation {
     public double getPrix_total(){return prix_total;}
     public int getNb_personne(){return nb_personne;}
     public int getEst_archivee(){return est_archivee;}
-
-
 }

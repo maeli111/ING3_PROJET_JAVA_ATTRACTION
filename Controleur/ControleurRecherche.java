@@ -5,19 +5,21 @@ import DAO.*;
 import Modele.*;
 
 import javax.swing.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.event.*;
 import java.sql.*;
 
 public class ControleurRecherche {
     private VueRecherche vue;
 
+    // connexion avec la bdd
     private static final String URL = "jdbc:mysql://localhost:3306/java_attraction";
     private static final String USER = "root";
     private static final String PASSWORD = "";
 
+    // constructeur
     public ControleurRecherche(VueRecherche vue, Client client, Admin admin) {
         this.vue = vue;
+
         vue.getRechercherBtn().addActionListener(e -> lancerRecherche(client, admin));
         vue.getLoupeBtn().addActionListener(e -> ouvrirRecherche(client, admin));
         vue.getAccueil().addActionListener(e -> retourAccueil(client, admin));
@@ -27,11 +29,14 @@ public class ControleurRecherche {
 
     }
 
+    // lance la recherche selon le critère sélectionné
     private void lancerRecherche(Client client, Admin admin) {
         String filtre = (String) vue.getFiltreCombo().getSelectedItem();
         String sql = "";
 
+        // si on sélectionne type
         if ("Type".equals(filtre)) {
+            // on va chercher les différents types présents dans la bdd
             try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
                  Statement stmt = conn.createStatement();
                  ResultSet rs = stmt.executeQuery("SELECT DISTINCT type_attraction FROM attraction")) {
@@ -41,11 +46,13 @@ public class ControleurRecherche {
                     types.add(rs.getString("type_attraction"));
                 }
 
+                // s'il n'y a pas de types
                 if (types.isEmpty()) {
                     JOptionPane.showMessageDialog(vue, "Aucun type trouvé !");
                     return;
                 }
 
+                // l'utilisateur choisi le type d'attractions qu'il veut
                 String typeChoisi = (String) JOptionPane.showInputDialog(
                         vue,
                         "Choisissez un type d'attraction :",
@@ -57,9 +64,10 @@ public class ControleurRecherche {
                 );
 
                 if (typeChoisi == null) {
-                    return; // L'utilisateur a annulé
+                    return; // l'utilisateur a annulé
                 }
 
+                // requête sql qui va filtrer les attractions par type
                 sql = "SELECT id_attraction, nom, prix, type_attraction, capacite FROM attraction WHERE type_attraction = '" + typeChoisi + "'";
 
             } catch (SQLException e) {
@@ -68,8 +76,12 @@ public class ControleurRecherche {
                 return;
             }
 
-        } else if ("Prix".equals(filtre)) {
+        }
+
+        // si on sélectionne prix
+        else if ("Prix".equals(filtre)) {
             try {
+                // on demande à l'utilisateur de saisir un prix minimum et un maximum
                 String minStr = JOptionPane.showInputDialog(vue, "Prix minimum (€) :", "0");
                 if (minStr == null) return;
                 double prixMin = Double.parseDouble(minStr);
@@ -78,11 +90,13 @@ public class ControleurRecherche {
                 if (maxStr == null) return;
                 double prixMax = Double.parseDouble(maxStr);
 
+                // on vérifie que le prix minimum soit bien inférieur ou égal au prix max
                 if (prixMin > prixMax) {
                     JOptionPane.showMessageDialog(vue, "Le prix minimum doit être inférieur ou égal au prix maximum !");
                     return;
                 }
 
+                // requête sql qui va filtrer les attractions dont le prix est dans la plage choisie par l'utilisateur
                 sql = "SELECT id_attraction, nom, prix, type_attraction, capacite FROM attraction WHERE prix BETWEEN " + prixMin + " AND " + prixMax;
 
             } catch (NumberFormatException ex) {
@@ -90,8 +104,13 @@ public class ControleurRecherche {
                 return;
             }
 
-        } else {
+        }
+
+        // si on sélectionne un autre critère
+        else {
             String orderBy = "";
+
+            // on trie les attraction selon le critère sélectionné
             switch (filtre) {
                 case "Prix croissant":
                     orderBy = "prix ASC";
@@ -109,18 +128,20 @@ public class ControleurRecherche {
                     orderBy = "nom ASC";
             }
 
+            // requête sql qui va les trier
             sql = "SELECT id_attraction, nom, prix, type_attraction, capacite FROM attraction ORDER BY " + orderBy;
         }
 
-        // Maintenant on exécute le SQL
+        // exécution de la requête SQL
         try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
              Statement stmt = conn.createStatement();
              ResultSet rs = stmt.executeQuery(sql)) {
 
-            vue.viderResultats(); // Vide les anciens résultats
+            vue.viderResultats(); // vide les anciens résultats
 
             DaoFactory daoFactory = DaoFactory.getInstance("java_attraction", "root", "");
 
+            // on regarde tous les résultats et on crée un bouton pour chaque attraction
             while (rs.next()) {
                 int id = rs.getInt("id_attraction");
                 String nom = rs.getString("nom");
@@ -128,10 +149,12 @@ public class ControleurRecherche {
                 String type = rs.getString("type_attraction");
                 int capacite = rs.getInt("capacite");
 
+                // création du bouton avec les infos
                 String texteBouton = nom + " — " + prix + "€ — " + type + " — Capacité: " + capacite;
 
                 JButton attractionBtn = new JButton(texteBouton);
 
+                // envoie l'utilisateur sur la page des infos de l'attraction s'il clique dessus
                 attractionBtn.addActionListener(e -> {
                     AttractionDao attractionDao = new AttractionDao(daoFactory);
                     Attraction attraction = attractionDao.chercher(id);
@@ -155,11 +178,10 @@ public class ControleurRecherche {
         }
     }
 
-    private void ouvrirRecherche(Client client, Admin admin) {
-        // Fermer la vue actuelle si nécessaire (optionnel)
-        vue.setVisible(false);
+    // méthodes pour aller dans les différentes pages de l'application
 
-        // Créer et afficher la vue recherche
+    private void ouvrirRecherche(Client client, Admin admin) {
+        vue.setVisible(false);
         VueRecherche vueRecherche = new VueRecherche(client, admin);
         new ControleurRecherche(vueRecherche, client, admin); // Si vous avez un contrôleur dédié
         vueRecherche.setVisible(true);

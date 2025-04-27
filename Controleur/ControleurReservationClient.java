@@ -15,12 +15,14 @@ public class ControleurReservationClient {
     private final Attraction attraction;
     private final LocalDate date;
 
+    // dao
     private final DaoFactory daoFactory;
     private final AttractionDao attractionDao;
     private final ClientDao clientDao;
     private final ReductionDao reductionDao;
     private final ReservationDao reservationDao;
 
+    // constructeur
     public ControleurReservationClient(VueReservationClient vue, Attraction attraction, LocalDate date, Client client) {
         this.vue = vue;
         this.attraction = attraction;
@@ -36,6 +38,7 @@ public class ControleurReservationClient {
         setupListeners(client);
     }
 
+    // configuration de la vue
     private void setupvue() {
         vue.titreResa.setText("Réserver l'attraction " + attraction.getNom() + " pour le " + date);
         vue.formPanel.add(Box.createRigidArea(new Dimension(0, 20)));
@@ -43,6 +46,7 @@ public class ControleurReservationClient {
         JPanel formEx = vue.formClientExistant;
         formEx.setLayout(new BoxLayout(formEx, BoxLayout.Y_AXIS));
 
+        // champs pour les différents type de places
         addLigne(formEx, "Nombre d'adultes :", vue.nbAdultesField, vue.moinsBtnAdultes, vue.plusBtnAdultes);
         addLigne(formEx, "Nombre d'enfants :", vue.nbEnfantsField, vue.moinsBtnEnfants, vue.plusBtnEnfants, vue.infoBtnEnfant);
         addLigne(formEx, "Nombre d'étudiants :", vue.nbEtudiantsField, vue.moinsBtnEtudiants, vue.plusBtnEtudiants, vue.infoBtnEtudiant);
@@ -57,6 +61,7 @@ public class ControleurReservationClient {
         formEx.setVisible(true);
     }
 
+    // ajoute ligne dans le form avec un champ/label
     private void addLigne(JPanel panel, String label, JTextField field) {
         JPanel ligne = new JPanel(new BorderLayout());
         ligne.add(new JLabel(label), BorderLayout.WEST);
@@ -65,6 +70,7 @@ public class ControleurReservationClient {
         panel.add(Box.createRigidArea(new Dimension(0, 10)));
     }
 
+    // ajoute ligne dans le form avec des boutons + et - pour ajuster le nombre de places
     private void addLigne(JPanel panel, String label, JTextField field, JButton moins, JButton plus) {
         JPanel ligne = new JPanel(new FlowLayout(FlowLayout.LEFT));
         ligne.add(new JLabel(label));
@@ -74,6 +80,8 @@ public class ControleurReservationClient {
         panel.add(ligne);
     }
 
+    // ajoute ligne dans le form avec des boutons + et - pour ajuster le nombre de places
+    // avec un bouton "?" pour afficher la description
     private void addLigne(JPanel panel, String label, JTextField field, JButton moins, JButton plus, JButton info) {
         JPanel ligne = new JPanel(new FlowLayout(FlowLayout.LEFT));
         ligne.add(new JLabel(label));
@@ -84,6 +92,7 @@ public class ControleurReservationClient {
         panel.add(ligne);
     }
 
+    // configuration des listeners
     private void setupListeners(Client client) {
         setupCompteur(vue.nbAdultesField, vue.moinsBtnAdultes, vue.plusBtnAdultes);
         setupCompteur(vue.nbEnfantsField, vue.moinsBtnEnfants, vue.plusBtnEnfants);

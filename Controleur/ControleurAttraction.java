@@ -5,8 +5,8 @@ import Modele.Attraction;
 import Modele.Client;
 import Modele.Admin;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.event.*;
+
 
 public class ControleurAttraction {
     private VueAttraction vueAttraction;
@@ -14,16 +14,17 @@ public class ControleurAttraction {
     private Client client;
     private Admin admin;
 
+    // constructeur
     public ControleurAttraction(VueAttraction vueAttraction, Attraction attraction, Client client, Admin admin) {
         this.vueAttraction = vueAttraction;
         this.attraction = attraction;
         this.client = client;
         this.admin = admin;
 
-        // Ajouter les listeners d'événements pour les boutons
         addListeners();
     }
 
+    // configuration des listeners
     private void addListeners() {
         // Listener pour le bouton "Accueil"
         vueAttraction.getAccueilButton().addActionListener(new ActionListener() {
