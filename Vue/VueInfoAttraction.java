@@ -11,8 +11,9 @@ import java.io.File;
 import java.time.LocalDate;
 import javax.imageio.ImageIO;
 
+// interface pour afficher les informations d'une attraction
 public class VueInfoAttraction extends JFrame {
-    // Boutons accessibles par le contrôleur
+    // boutons du header
     public JButton accueil = new JButton("Accueil");
     public JButton informations = new JButton("Informations");
     public JButton calendrier = new JButton("Calendrier");
@@ -20,13 +21,13 @@ public class VueInfoAttraction extends JFrame {
     public JButton reserverBtn = new JButton("Réserver");
     private JButton loupeBtn;
 
-
-    // Couleurs harmonisées
+    // définition des couleurs
     private final Color ROSE_PRINCIPAL = new Color(255, 105, 180);
     private final Color ROSE_FONCE = new Color(255, 20, 147);
     private final Color ROSE_SURVOL = new Color(255, 182, 193); // Rose clair pour le survol des boutons de navigation
 
     public VueInfoAttraction(Attraction attraction, LocalDate date, Client client, Admin admin) {
+        // config de la page
         setTitle("Informations de l'attraction");
         setSize(1250, 680);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -34,7 +35,7 @@ public class VueInfoAttraction extends JFrame {
         setLayout(new BorderLayout());
         getContentPane().setBackground(new Color(240, 240, 240)); // Fond gris très clair
 
-        // === HEADER ===
+        // HEADER
         JTextField parc = new JTextField("Palasi Land");
         parc.setHorizontalAlignment(JTextField.CENTER);
         parc.setEditable(false);
@@ -42,14 +43,15 @@ public class VueInfoAttraction extends JFrame {
         parc.setBorder(null);
         parc.setOpaque(false);
 
-        // Appliquer l'effet de survol aux boutons de navigation
+        // effet de survol sur les boutons de navigation
         applyHoverEffect(accueil, ROSE_SURVOL);
         applyHoverEffect(informations, ROSE_SURVOL);
         applyHoverEffect(calendrier, ROSE_SURVOL);
         applyHoverEffect(compte, ROSE_SURVOL);
 
-        // Mettre en surbrillance le bouton Informations
+        // surbrillance sur le bouton Informations
         informations.setBackground(ROSE_SURVOL);
+
 
         JPanel Pbarre = new JPanel(new BorderLayout());
         Pbarre.setOpaque(false);
@@ -61,6 +63,8 @@ public class VueInfoAttraction extends JFrame {
         Pnavigation.add(calendrier);
 
         JPanel Pcompte = new JPanel(new FlowLayout(FlowLayout.RIGHT, 10, 10));
+
+        // bouton loupe
         try {
             BufferedImage loupeImage = ImageIO.read(new File("images/loupe.png"));
             Image scaledLoupe = loupeImage.getScaledInstance(20, 20, Image.SCALE_SMOOTH);
@@ -84,12 +88,12 @@ public class VueInfoAttraction extends JFrame {
         header.add(parc, BorderLayout.CENTER);
         add(header, BorderLayout.NORTH);
 
-        // === CONTENU PRINCIPAL ===
+        // CONTENU PRINCIPAL
         JPanel mainPanel = new JPanel(new BorderLayout(20, 20));
         mainPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
         mainPanel.setOpaque(false);
 
-        // Panel image
+        // image
         JPanel imagePanel = new JPanel(new BorderLayout());
         imagePanel.setOpaque(false);
         imagePanel.setPreferredSize(new Dimension(getWidth() / 2, getHeight()));
@@ -110,7 +114,7 @@ public class VueInfoAttraction extends JFrame {
         imagePanel.add(photoLabel, BorderLayout.CENTER);
         mainPanel.add(imagePanel, BorderLayout.WEST);
 
-        // Panel informations
+        // informations
         JPanel infoPanel = new JPanel(new GridBagLayout());
         infoPanel.setOpaque(false);
 
@@ -126,7 +130,7 @@ public class VueInfoAttraction extends JFrame {
         titreAttraction.setForeground(ROSE_PRINCIPAL);
         infoPanel.add(titreAttraction, gbc);
 
-        // Informations
+        // Informations sur l'attraction
         Font infoFont = new Font("Bodoni MT", Font.PLAIN, 16);
         Color infoColor = new Color(70, 70, 70);
 
@@ -145,7 +149,7 @@ public class VueInfoAttraction extends JFrame {
         mainPanel.add(infoPanel, BorderLayout.CENTER);
         add(mainPanel, BorderLayout.CENTER);
 
-        // === BOUTON RÉSERVER ===
+        // BOUTON RÉSERVER
         JPanel buttonPanel = new JPanel();
         buttonPanel.setBorder(BorderFactory.createEmptyBorder(10, 0, 20, 0));
         buttonPanel.setOpaque(false);
@@ -193,6 +197,7 @@ public class VueInfoAttraction extends JFrame {
         panel.add(lbl, gbc);
     }
 
+    // getters pour le controleur
     public JButton getAccueil() { return accueil; }
     public JButton getInformations() { return informations; }
     public JButton getCalendrier() { return calendrier; }

@@ -10,9 +10,9 @@ import java.io.File;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 
-// VueAttraction.java
-
+// interface pour afficher les informations d'une attraction
 public class VueAttraction extends JFrame {
+    // boutons du header
     private JButton accueil = new JButton("Accueil");
     private JButton informations = new JButton("Informations");
     private JButton calendrier = new JButton("Calendrier");
@@ -21,13 +21,14 @@ public class VueAttraction extends JFrame {
     private JButton loupeBtn;
     private JTextField parc = new JTextField("Palasi Land");
 
-    // Couleurs harmonisées
+    // définition des couleurs
     private final Color ROSE_PRINCIPAL = new Color(255, 105, 180);
     private final Color ROSE_FONCE = new Color(255, 20, 147);
     private final Color ROSE_SURVOL = new Color(255, 182, 193); // Rose clair pour le survol des boutons de navigation
 
 
     public VueAttraction(Attraction attraction, Client client, Admin admin) {
+        // paramètres de la fenêtre
         setTitle("Informations de l'attraction");
         setSize(1250, 680);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -43,13 +44,13 @@ public class VueAttraction extends JFrame {
         parc.setBorder(null);
         parc.setOpaque(false);
 
-        // Appliquer l'effet de survol aux boutons de navigation
+        // appliquer l'effet de survol aux boutons de navigation
         applyHoverEffect(accueil, ROSE_SURVOL);
         applyHoverEffect(informations, ROSE_SURVOL);
         applyHoverEffect(calendrier, ROSE_SURVOL);
         applyHoverEffect(compte, ROSE_SURVOL);
 
-        // Mettre en surbrillance le bouton Informations
+        // surbrillance  pour le bouton Informations
         informations.setBackground(ROSE_SURVOL);
 
         JPanel Pbarre = new JPanel(new BorderLayout());
@@ -128,7 +129,7 @@ public class VueAttraction extends JFrame {
         titreAttraction.setForeground(ROSE_PRINCIPAL);
         infoPanel.add(titreAttraction, gbc);
 
-        // Informations
+        // Informations sur l'attraction
         Font infoFont = new Font("Bodoni MT", Font.PLAIN, 16);
         Color infoColor = new Color(70, 70, 70);
 
@@ -172,6 +173,7 @@ public class VueAttraction extends JFrame {
 
         setVisible(true);
     }
+
     // Méthode pour appliquer l'effet de survol aux boutons de navigation
     private void applyHoverEffect(JButton button, Color hoverColor) {
         Color defaultColor = button.getBackground();
@@ -194,7 +196,7 @@ public class VueAttraction extends JFrame {
         panel.add(lbl, gbc);
     }
 
-    // Getters pour les boutons à utiliser dans le contrôleur
+    // getters pour le contrôleur
     public JButton getAccueilButton() {
         return accueil;
     }
