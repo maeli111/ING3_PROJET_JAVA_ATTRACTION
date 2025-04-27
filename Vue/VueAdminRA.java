@@ -1,6 +1,7 @@
 package Vue;
 
 import javax.swing.*;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import Modele.*;
@@ -28,8 +29,8 @@ public class VueAdminRA extends JFrame {
         JPanel buttonBar = new JPanel(new BorderLayout());
 
         JPanel gauchePanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-
         JPanel droitePanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+
         compteButton = new JButton("Compte");
         droitePanel.add(compteButton);
 
@@ -52,6 +53,7 @@ public class VueAdminRA extends JFrame {
         // tableau des réductions des attractions
         String[] columns = {"ID", "Nom", "Pourcentage", "Description", "Attractions Concernées"};
         model = new DefaultTableModel(columns, 0) {
+            @Override
             public boolean isCellEditable(int row, int column) {
                 return false;
             }
@@ -59,8 +61,26 @@ public class VueAdminRA extends JFrame {
         table = new JTable(model);
         table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
+        table.getTableHeader().setFont(new Font("Segoe UI", Font.BOLD, 16));
+        table.getTableHeader().setBackground(new Color(230, 230, 250));
+        table.getTableHeader().setForeground(new Color(60, 60, 60));
+        table.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+        table.setRowHeight(28); // Hauteur des lignes
+        table.setGridColor(new Color(220, 220, 220));
+        table.setBackground(Color.WHITE); // Fond du tableau
+        table.setSelectionBackground(new Color(255, 192, 203));
+        table.setSelectionForeground(Color.BLACK);
+
+
+        DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+        centerRenderer.setHorizontalAlignment(JLabel.CENTER);
+        for (int i = 0; i < table.getColumnCount(); i++) {
+            table.getColumnModel().getColumn(i).setCellRenderer(centerRenderer);
+        }
+
         JScrollPane scrollPane = new JScrollPane(table);
         scrollPane.setPreferredSize(new Dimension(800, 300));
+        scrollPane.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         add(scrollPane, BorderLayout.CENTER);
 
         JPanel buttonPanel = new JPanel();
@@ -74,6 +94,7 @@ public class VueAdminRA extends JFrame {
 
         add(buttonPanel, BorderLayout.SOUTH);
 
+        // Appliquer l'effet hover aux boutons
         applyHoverEffect(compteButton, hoverColor, defaultColor);
         applyHoverEffect(ajouterButton, hoverColor, defaultColor);
         applyHoverEffect(modifierButton, hoverColor, defaultColor);
