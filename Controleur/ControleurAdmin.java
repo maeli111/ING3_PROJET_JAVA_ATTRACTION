@@ -5,7 +5,7 @@ import Vue.*;
 import DAO.*;
 
 import javax.swing.*;
-import java.util.List;
+import java.util.ArrayList;
 
 public class ControleurAdmin {
     private VueAdmin vue;
@@ -13,6 +13,7 @@ public class ControleurAdmin {
     private DaoFactory daoFactory;
     private AttractionDao attractionDao;
 
+    // Constructeur
     public ControleurAdmin(VueAdmin vue, Admin admin) {
         this.admin = admin;
         this.vue = vue;
@@ -25,27 +26,8 @@ public class ControleurAdmin {
     }
 
     private void ajouterListeners() {
-        vue.getAccueilButton().addActionListener(e -> {
-            vue.dispose();
-            VueAccueil vueAccueil = new VueAccueil(null, admin);
-            new ControleurAccueil(vueAccueil, null, admin);
-            vueAccueil.setVisible(true);
-        });
 
-        vue.getInformationsButton().addActionListener(e -> {
-            vue.dispose();
-            VuePlusInfos v = new VuePlusInfos(null, admin);
-            new ControleurPlusInfos(v, null, admin);
-            v.setVisible(true);
-        });
-
-        vue.getCalendrierButton().addActionListener(e -> {
-            vue.dispose();
-            VueCalendrier vueCalendrier = new VueCalendrier(null, admin);
-            new ControleurCalendrier(vueCalendrier, null, admin);
-            vueCalendrier.setVisible(true);
-        });
-
+        // Déconnexion de l'admin et mène à la page Login
         vue.getDeconnexionButton().addActionListener(e -> {
             vue.dispose();
             VueLogin vueLogin = new VueLogin();
@@ -53,6 +35,7 @@ public class ControleurAdmin {
             vueLogin.setVisible(true);
         });
 
+        // mène à la page qui permet de modifier/ajouter/supprimer les attractions
         vue.getAttractionsButton().addActionListener(e -> {
             vue.dispose();
             VueAdminAttraction vueAdminAttraction = new VueAdminAttraction(admin);
@@ -60,6 +43,7 @@ public class ControleurAdmin {
             vueAdminAttraction.setVisible(true);
         });
 
+        // mène à la page qui permet de modifier/ajouter/supprimer les réductions soit des client soit des attractions
         vue.getReductionsButton().addActionListener(e -> {
             String[] options = {"Réductions clients", "Réductions attractions"};
             int choix = JOptionPane.showOptionDialog(
@@ -75,17 +59,18 @@ public class ControleurAdmin {
 
             vue.dispose();
 
-            if (choix == 0) {
+            if (choix == 0) { // Si l'admin choisit Réductions clients
                 VueAdminRC vueAdminRC = new VueAdminRC(admin);
                 new ControleurAdminRC(vueAdminRC, admin);
                 vueAdminRC.setVisible(true);
-            } else if (choix == 1) {
+            } else if (choix == 1) { // Si l'admin choisit Réductions attractions
                 VueAdminRA vueAdminRA = new VueAdminRA(admin);
                 new ControleurAdminRA(vueAdminRA, admin);
                 vueAdminRA.setVisible(true);
             }
         });
 
+        //mène à la page qui permet de modifier/ajouter/supprimer des clients
         vue.getDossiersClientsButton().addActionListener(e -> {
             vue.dispose();
             VueAdminClient vueAdminClient = new VueAdminClient(admin);
@@ -93,11 +78,11 @@ public class ControleurAdmin {
             vueAdminClient.setVisible(true);
         });
 
-        // --------- Attraction du mois -----------
+        // Permet de modifier l'attraction du mois (affichée dans accueil)
         vue.getAttractionDuMoisButton().addActionListener(e -> {
             vue.getAttractionMoisPanel().setVisible(true);
 
-            // Afficher l'attraction actuelle
+            // On précise l'attraction actuelle du mois
             Attraction attractionActuelle = attractionDao.getAttractionMois();
             if (attractionActuelle != null) {
                 vue.getAttractionActuelleLabel().setText(
@@ -107,24 +92,23 @@ public class ControleurAdmin {
                 vue.getAttractionActuelleLabel().setText("Aucune attraction du mois actuellement");
             }
 
-            // Remplir le ComboBox avec toutes les attractions
+            // On a le choix avec toutes les attractions dans un ComboBox
             vue.getAttractionComboBox().removeAllItems();
-            List<Attraction> attractions = attractionDao.getAll();
+            ArrayList<Attraction> attractions = attractionDao.getAll();
             for (Attraction attraction : attractions) {
                 vue.getAttractionComboBox().addItem(attraction.getId_attraction() + " - " + attraction.getNom());
             }
 
-            // Listener sur le bouton valider
+            // Puis on valide la nouvelle attraction du mois
             vue.getValiderAttractionButton().addActionListener(event -> {
-                String selectedItem = (String) vue.getAttractionComboBox().getSelectedItem();
-                if (selectedItem != null) {
-                    // Récupérer l'id de l'attraction sélectionnée
-                    int idSelectionne = Integer.parseInt(selectedItem.split(" - ")[0]);
-                    boolean success = attractionDao.modifAttractionMois(idSelectionne);
+                String nvAttraction = (String) vue.getAttractionComboBox().getSelectedItem();
+                if (nvAttraction != null) {
+                    int idAttraction = Integer.parseInt(nvAttraction.split(" - ")[0]);
+                    boolean succes = attractionDao.modifAttractionMois(idAttraction);
 
-                    if (success) {
+                    if (succes) {
                         JOptionPane.showMessageDialog(vue, "Attraction du mois mise à jour !");
-                        vue.getAttractionActuelleLabel().setText("Attraction actuelle : " + selectedItem);
+                        vue.getAttractionActuelleLabel().setText("Attraction actuelle : " + nvAttraction);
                     } else {
                         JOptionPane.showMessageDialog(vue, "Erreur lors de la mise à jour.", "Erreur", JOptionPane.ERROR_MESSAGE);
                     }

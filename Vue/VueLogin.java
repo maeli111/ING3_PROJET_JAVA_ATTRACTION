@@ -24,6 +24,7 @@ public class VueLogin extends JFrame {
 
         buttonPanel.add(Box.createVerticalStrut(20));
 
+        //Boutons
         btnConnect = new JButton("Se connecter");
         buttonPanel.add(btnConnect);
         buttonPanel.add(Box.createVerticalStrut(10));
@@ -47,7 +48,6 @@ public class VueLogin extends JFrame {
         mainPanel.add(bottomPanel, BorderLayout.SOUTH);
     }
 
-    // Getters pour le contrôleur
     public JButton getBtnConnect() {
         return btnConnect;
     }

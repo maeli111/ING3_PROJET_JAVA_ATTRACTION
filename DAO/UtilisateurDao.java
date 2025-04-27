@@ -12,27 +12,24 @@ import java.util.ArrayList;
 public class UtilisateurDao implements UtilisateurDaoInt{
     private DaoFactory daoFactory;
 
-    // constructeur dépendant de la classe DaoFactory
     public UtilisateurDao(DaoFactory daoFactory) {
         this.daoFactory = daoFactory;
     }
 
     /**
-     * Récupérer de la base de données tous les objets des Utilisateurs dans une liste
-     * @return : liste retournée des objets des Utilisateurs récupérés
+     * Cette méthode récupère de la bdd tous les objets des Utilisateurs dans une liste
+     * return : liste retournée des objets des Utilisateurs récupérés
      */
     @Override
     public ArrayList<Utilisateur> getAll() {
         ArrayList<Utilisateur> listeUtilisateur = new ArrayList<Utilisateur>();
 
         try {
-            // connexion
             Connection connexion = daoFactory.getConnection();;
             Statement statement = connexion.createStatement();
 
             ResultSet resultats = statement.executeQuery("select * from utilisateur");
 
-            // 	Se déplacer sur le prochain enregistrement : retourne false si la fin est atteinte
             while (resultats.next()) {
                 int id_utilisateur = resultats.getInt(1);
                 String email = resultats.getString(2);
@@ -43,7 +40,6 @@ public class UtilisateurDao implements UtilisateurDaoInt{
             }
         }
         catch (SQLException e) {
-            //traitement de l'exception
             e.printStackTrace();
             System.out.println("Création de la liste de Utilisateur impossible");
         }

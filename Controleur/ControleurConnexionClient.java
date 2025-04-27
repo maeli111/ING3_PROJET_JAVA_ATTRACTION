@@ -10,13 +10,13 @@ import javax.swing.*;
 public class ControleurConnexionClient {
     private VueConnexionClient vue;
 
+    //Constructeur
     public ControleurConnexionClient(VueConnexionClient vueConnexionClient) {
         this.vue = vueConnexionClient;
-
         DaoFactory daoFactory = new DaoFactory("jdbc:mysql://localhost:3306/java_attraction", "root", "");
         ClientDao clientDao = new ClientDao(daoFactory);
 
-        // Action bouton Connexion
+        // Bouton qui permet de se connecter en tant que client
         vue.getBtnConnexion().addActionListener(e -> {
             String email = vue.getEmail();
             String mdp = vue.getMotDePasse();
@@ -38,7 +38,7 @@ public class ControleurConnexionClient {
             }
         });
 
-        // Action bouton Retour/Compte
+        // Bouton qui fait un retour à login
         vue.getBtnCompte().addActionListener(e -> {
             vue.dispose();
             VueLogin vueLogin = new VueLogin();

@@ -403,6 +403,11 @@ public class ClientDao implements ClientDaoInt{
         return client;
     }
 
+    /**
+     * Cette méthode trouve le client grace à son mail qui est unique dans la bdd
+     * paramètre mail
+     * return le client à qui appartient le mail
+     */
     @Override
     public Client getByEmail(String email) {
         Client client = null;
@@ -411,10 +416,8 @@ public class ClientDao implements ClientDaoInt{
         ResultSet rs = null;
 
         try {
-            // Connexion à la base
             conn = daoFactory.getConnection();
 
-            // Requête SQL avec condition sur l'email (dans la table utilisateur)
             String sql = "SELECT * FROM client INNER JOIN utilisateur ON client.id_utilisateur = utilisateur.id_utilisateur WHERE utilisateur.email = ?";
             stmt = conn.prepareStatement(sql);
             stmt.setString(1, email);  // On remplace setInt par setString
@@ -436,7 +439,6 @@ public class ClientDao implements ClientDaoInt{
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
-            // Libération des ressources
             try {
                 if (rs != null) rs.close();
                 if (stmt != null) stmt.close();
@@ -449,8 +451,12 @@ public class ClientDao implements ClientDaoInt{
         return client;
     }
 
+    /**
+     * Cette méthode récupére les réservations en cours du client
+     * paramètre client
+     * return Une ArrayList avec les réservations qui ne sont pas archivées
+     */
     @Override
-    // Méthode pour récupérer les réservations en cours du client
     public ArrayList<Reservation> getReservationsEnCours(Client client) {
         ArrayList<Reservation> reservations = new ArrayList<>();
         String query = "SELECT * FROM Reservation WHERE id_client = ? AND est_archivee = 0";
@@ -458,13 +464,12 @@ public class ClientDao implements ClientDaoInt{
         try (Connection conn = daoFactory.getConnection();
              PreparedStatement ps = conn.prepareStatement(query)) {
 
-            ps.setInt(1, client.getid_client()); // On lie l'ID du client à la requête
+            ps.setInt(1, client.getid_client());
 
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
                     int idReservation = rs.getInt("id_reservation");
 
-                    // Convert the SQL Date to LocalDate
                     Date dateReservationSql = rs.getDate("date_reservation");
                     LocalDate dateReservation = (dateReservationSql != null) ? ((java.sql.Date) dateReservationSql).toLocalDate() : null;
 
@@ -475,7 +480,6 @@ public class ClientDao implements ClientDaoInt{
                     double prixTotal = rs.getDouble("prix_total");
                     int nbPersonne = rs.getInt("nb_personne");
 
-                    // Créer une nouvelle réservation et l'ajouter à la liste
                     Reservation reservation = new Reservation(idReservation, client.getid_client(), dateReservation,
                             dateAchat, idAttraction, prixTotal, nbPersonne);
                     reservations.add(reservation);
@@ -489,6 +493,11 @@ public class ClientDao implements ClientDaoInt{
         return reservations;
     }
 
+    /**
+     * Récupère la liste des réservations archivées d'un client
+     * paramètre client
+     * return Une ArrayList avec les réservations archivées
+     */
     @Override
     public ArrayList<Reservation> getReservationsArchivees(Client client) {
         ArrayList<Reservation> reservationsArchivees = new ArrayList<>();
@@ -497,11 +506,10 @@ public class ClientDao implements ClientDaoInt{
              PreparedStatement ps = connexion.prepareStatement(
                      "SELECT * FROM reservation WHERE id_client = ? AND est_archivee = 1")) {
 
-            ps.setInt(1, client.getid_client());  // Assurez-vous que vous avez une méthode getId() dans la classe Client.
+            ps.setInt(1, client.getid_client());
 
             ResultSet resultSet = ps.executeQuery();
             while (resultSet.next()) {
-                // Récupérez les données de la réservation
                 int id_reservation = resultSet.getInt(1);
                 String nom = resultSet.getString(3);
                 String prenom = resultSet.getString(4);

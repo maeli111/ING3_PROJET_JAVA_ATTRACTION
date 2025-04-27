@@ -1,18 +1,13 @@
 package Vue;
 
 import Modele.Admin;
-import Modele.Attraction;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
-import java.util.ArrayList;
 
 public class VueAdminAttraction extends JFrame {
     private JTable table;
     private DefaultTableModel tableModel;
-    private JButton accueilButton;
-    private JButton informationsButton;
-    private JButton calendrierButton;
     private JButton compteButton;
     private JButton ajouterButton;
     private JButton modifierButton;
@@ -20,72 +15,62 @@ public class VueAdminAttraction extends JFrame {
 
     public VueAdminAttraction(Admin admin) {
         setTitle("Attractions - Admin");
-        setSize(900, 500);
+        setSize(1250, 680);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLayout(new BorderLayout());
 
-        // --- TOP PANEL ---
-        JPanel topPanel = new JPanel(new BorderLayout());
+        JPanel hautPanel = new JPanel(new BorderLayout());
         JPanel buttonBar = new JPanel(new BorderLayout());
-        JPanel leftPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        JPanel gauchePanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        JPanel droitePanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
 
-        JPanel rightPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         compteButton = new JButton("Compte");
-        rightPanel.add(compteButton);
+        droitePanel.add(compteButton);
 
-        buttonBar.add(leftPanel, BorderLayout.WEST);
-        buttonBar.add(rightPanel, BorderLayout.EAST);
+        buttonBar.add(gauchePanel, BorderLayout.WEST);
+        buttonBar.add(droitePanel, BorderLayout.EAST);
 
+        // Titre centré
         JPanel titrePanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
         JLabel titreLabel = new JLabel("PalasiLand - Gestion des attractions");
         titreLabel.setFont(new Font("Serif", Font.BOLD, 24));
         titrePanel.add(titreLabel);
 
-        topPanel.add(buttonBar, BorderLayout.NORTH);
-        topPanel.add(titrePanel, BorderLayout.CENTER);
-        add(topPanel, BorderLayout.NORTH);
+        hautPanel.add(buttonBar, BorderLayout.NORTH);
+        hautPanel.add(titrePanel, BorderLayout.CENTER);
+        add(hautPanel, BorderLayout.NORTH);
 
-        // --- TABLE ---
+        //colonnes du tableau
         tableModel = new DefaultTableModel(new Object[]{"ID", "Nom", "Description", "Prix", "Capacité", "Type"}, 0);
         table = new JTable(tableModel);
-        JScrollPane scrollPane = new JScrollPane(table);
+
+        JScrollPane scrollPane = new JScrollPane(table); //scrollable
         add(scrollPane, BorderLayout.CENTER);
 
-        // --- BOTTOM PANEL ---
         JPanel bottomPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+
         ajouterButton = new JButton("Ajouter");
         modifierButton = new JButton("Modifier");
         supprimerButton = new JButton("Supprimer");
+
+        //Boutons dans le panneau du bas
         bottomPanel.add(ajouterButton);
         bottomPanel.add(modifierButton);
         bottomPanel.add(supprimerButton);
+
         add(bottomPanel, BorderLayout.SOUTH);
     }
 
-    // Getters pour les boutons et la table
+    public JButton getCompteButton() { return compteButton; }
 
-    public JButton getCompteButton() {
-        return compteButton;
-    }
+    public JButton getAjouterButton() { return ajouterButton; }
 
-    public JButton getAjouterButton() {
-        return ajouterButton;
-    }
+    public JButton getModifierButton() { return modifierButton; }
 
-    public JButton getModifierButton() {
-        return modifierButton;
-    }
+    public JButton getSupprimerButton() { return supprimerButton; }
 
-    public JButton getSupprimerButton() {
-        return supprimerButton;
-    }
+    public JTable getTable() { return table; }
 
-    public JTable getTable() {
-        return table;
-    }
-
-    public DefaultTableModel getTableModel() {
-        return tableModel;
-    }
+    public DefaultTableModel getTableModel() { return tableModel; }
 }

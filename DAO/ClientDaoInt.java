@@ -33,10 +33,12 @@ public interface ClientDaoInt {
     /// Cette méthode récupère un client spécifique à partir de son ID
     public Client getById(int id_client);
 
+    /// Cette méthode trouve le client grace à son mail qui est unique dans la bdd
     public Client getByEmail(String email);
 
-    // Méthode pour récupérer les réservations en cours du client
+    /// Cette méthode récupére les réservations en cours du client
     public ArrayList<Reservation> getReservationsEnCours(Client client);
 
+    /// Cette méthode récupère la liste des réservations archivées d'un client
     public ArrayList<Reservation> getReservationsArchivees(Client client);
 }

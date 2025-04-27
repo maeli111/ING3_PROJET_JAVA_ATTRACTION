@@ -14,15 +14,16 @@ public class ControleurConnexionAdmin {
     private DaoFactory daoFactory;
     private AdminDao adminDao;
 
+    //Constructeur
     public ControleurConnexionAdmin(VueConnexionAdmin vue) {
         this.vue = vue;
         this.daoFactory = new DaoFactory("jdbc:mysql://localhost:3306/java_attraction", "root", "");
         this.adminDao = new AdminDao(daoFactory);
-
-        initControl();
+        initControle();
     }
 
-    private void initControl() {
+    private void initControle() {
+        //Bouton qui fait un retour vers login
         vue.btnCompte.addActionListener(e -> {
             vue.dispose();
             VueLogin vueLogin = new VueLogin();
@@ -30,6 +31,7 @@ public class ControleurConnexionAdmin {
             vueLogin.setVisible(true);
         });
 
+        //Bouton pour se connecter en tant qu'admin
         vue.btnConnexion.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {

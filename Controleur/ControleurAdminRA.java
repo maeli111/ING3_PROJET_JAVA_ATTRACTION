@@ -34,9 +34,11 @@ public class ControleurAdminRA {
     }
 
     private void initListeners() {
+        //Bouton pour retourner sur le compte de l'admin
         vue.getCompteButton().addActionListener(e -> {
             vue.dispose();
             VueAdmin vueAdmin = new VueAdmin(admin);
+            new ControleurAdmin(vueAdmin, admin);
             vueAdmin.setVisible(true);
         });
 
@@ -45,6 +47,7 @@ public class ControleurAdminRA {
         vue.getSupprimerButton().addActionListener(e -> supprimerReduction());
     }
 
+    //Méthode qui charge toutes les réductions liées à une ou des attrcations dans une table
     private void chargerDonnees() {
         DefaultTableModel model = vue.getModel();
         model.setRowCount(0);
@@ -63,36 +66,37 @@ public class ControleurAdminRA {
         }
     }
 
+    //Méthode pour ajouter une réduction liées à une ou des attractions
     private void ajouterReduction() {
         JTextField nomField = new JTextField();
         JTextField pourcentageField = new JTextField();
         JTextField descriptionField = new JTextField();
 
         ArrayList<Attraction> attractions = attractionDao.getAll();
-        JPanel attractionCheckboxPanel = new JPanel();
-        attractionCheckboxPanel.setLayout(new BoxLayout(attractionCheckboxPanel, BoxLayout.Y_AXIS));
+        JPanel attractionPanel = new JPanel();
+        attractionPanel.setLayout(new BoxLayout(attractionPanel, BoxLayout.Y_AXIS));
 
         ArrayList<JCheckBox> checkBoxes = new ArrayList<>();
         for (Attraction attraction : attractions) {
             JCheckBox cb = new JCheckBox(attraction.getNom());
             cb.putClientProperty("attraction", attraction);
             checkBoxes.add(cb);
-            attractionCheckboxPanel.add(cb);
+            attractionPanel.add(cb);
         }
 
-        JScrollPane listScrollPane = new JScrollPane(attractionCheckboxPanel);
-        listScrollPane.setPreferredSize(new Dimension(300, 150));
+        JScrollPane ScrollPane = new JScrollPane(attractionPanel);
+        ScrollPane.setPreferredSize(new Dimension(300, 150));
 
         Object[] fields = {
                 "Nom :", nomField,
                 "Pourcentage :", pourcentageField,
                 "Description :", descriptionField,
-                "Sélectionnez les attractions :", listScrollPane
+                "Sélectionnez les attractions :", ScrollPane
         };
 
-        int res = JOptionPane.showConfirmDialog(null, fields, "Nouvelle réduction", JOptionPane.OK_CANCEL_OPTION);
+        int nvReduc = JOptionPane.showConfirmDialog(null, fields, "Nouvelle réduction", JOptionPane.OK_CANCEL_OPTION);
 
-        if (res == JOptionPane.OK_OPTION) {
+        if (nvReduc == JOptionPane.OK_OPTION) {
             try {
                 String nom = nomField.getText();
                 int pourcentage = Integer.parseInt(pourcentageField.getText());
@@ -115,47 +119,48 @@ public class ControleurAdminRA {
         }
     }
 
+    //Méthode pour modifier une réduction liées à une ou plusieurs attractions
     private void modifierReduction() {
-        int row = vue.getTable().getSelectedRow();
-        if (row == -1) {
+        int ligne = vue.getTable().getSelectedRow();
+        if (ligne == -1) {
             JOptionPane.showMessageDialog(null, "Sélectionnez une réduction.");
             return;
         }
 
         DefaultTableModel model = vue.getModel();
-        int oldId = (int) model.getValueAt(row, 0);
-        String nom = (String) model.getValueAt(row, 1);
-        String pourcentage = model.getValueAt(row, 2).toString();
-        String description = (String) model.getValueAt(row, 3);
+        int ancienneId = (int) model.getValueAt(ligne, 0);
+        String nom = (String) model.getValueAt(ligne, 1);
+        String pourcentage = model.getValueAt(ligne, 2).toString();
+        String description = (String) model.getValueAt(ligne, 3);
 
         JTextField nomField = new JTextField(nom);
         JTextField pourcentageField = new JTextField(pourcentage);
         JTextField descriptionField = new JTextField(description);
 
-        ArrayList<Attraction> linkedAttractions = reductionDao.getAttractionsLiees(oldId);
-        ArrayList<Attraction> nonLinkedAttractions = reductionDao.getAttractionsNonLiees(oldId);
+        ArrayList<Attraction> AttractionsLies = reductionDao.getAttractionsLiees(ancienneId);
+        ArrayList<Attraction> AttractionPasLies = reductionDao.getAttractionsNonLiees(ancienneId);
 
-        JPanel attractionCheckboxPanel = new JPanel();
-        attractionCheckboxPanel.setLayout(new BoxLayout(attractionCheckboxPanel, BoxLayout.Y_AXIS));
+        JPanel attractionPanel = new JPanel();
+        attractionPanel.setLayout(new BoxLayout(attractionPanel, BoxLayout.Y_AXIS));
 
         ArrayList<JCheckBox> checkBoxes = new ArrayList<>();
 
-        for (Attraction attraction : linkedAttractions) {
+        for (Attraction attraction : AttractionsLies) {
             JCheckBox cb = new JCheckBox(attraction.getNom());
             cb.putClientProperty("attraction", attraction);
             cb.setSelected(true);
             checkBoxes.add(cb);
-            attractionCheckboxPanel.add(cb);
+            attractionPanel.add(cb);
         }
 
-        for (Attraction attraction : nonLinkedAttractions) {
+        for (Attraction attraction : AttractionPasLies) {
             JCheckBox cb = new JCheckBox(attraction.getNom());
             cb.putClientProperty("attraction", attraction);
             checkBoxes.add(cb);
-            attractionCheckboxPanel.add(cb);
+            attractionPanel.add(cb);
         }
 
-        JScrollPane listScrollPane = new JScrollPane(attractionCheckboxPanel);
+        JScrollPane listScrollPane = new JScrollPane(attractionPanel);
         listScrollPane.setPreferredSize(new Dimension(300, 150));
 
         Object[] fields = {
@@ -168,22 +173,22 @@ public class ControleurAdminRA {
         int res = JOptionPane.showConfirmDialog(null, fields, "Modifier la réduction", JOptionPane.OK_CANCEL_OPTION);
         if (res == JOptionPane.OK_OPTION) {
             try {
-                String newNom = nomField.getText();
-                int newPourcentage = Integer.parseInt(pourcentageField.getText());
-                String newDesc = descriptionField.getText();
+                String nvNom = nomField.getText();
+                int nvPourcentage = Integer.parseInt(pourcentageField.getText());
+                String nvDesc = descriptionField.getText();
 
-                reductionDao.modifier(oldId, new Reduction(oldId, newNom, newPourcentage, newDesc));
-                reductionDao.supprimerLiaisonsAttractions(oldId);
+                reductionDao.modifier(ancienneId, new Reduction(ancienneId, nvNom, nvPourcentage, nvDesc));
+                reductionDao.supprimerLiaisonsAttractions(ancienneId);
 
                 for (JCheckBox cb : checkBoxes) {
                     if (cb.isSelected()) {
                         Attraction attraction = (Attraction) cb.getClientProperty("attraction");
-                        reductionDao.lierReductionAttraction(oldId, attraction.getId_attraction());
+                        reductionDao.lierReductionAttraction(ancienneId, attraction.getId_attraction());
                     }
                 }
 
-                if (reductionDao.isEmpty(oldId)) {
-                    reductionDao.supprimer(oldId);
+                if (reductionDao.isEmpty(ancienneId)) {
+                    reductionDao.supprimer(ancienneId);
                     JOptionPane.showMessageDialog(null, "Réduction supprimée, aucune attraction concernée.");
                 }
 
@@ -194,14 +199,15 @@ public class ControleurAdminRA {
         }
     }
 
+    //Méthode qui supprime une attraction
     private void supprimerReduction() {
-        int row = vue.getTable().getSelectedRow();
-        if (row == -1) {
+        int ligne = vue.getTable().getSelectedRow();
+        if (ligne == -1) {
             JOptionPane.showMessageDialog(null, "Sélectionnez une réduction.");
             return;
         }
 
-        int id = (int) vue.getModel().getValueAt(row, 0);
+        int id = (int) vue.getModel().getValueAt(ligne, 0);
         int confirm = JOptionPane.showConfirmDialog(null, "Supprimer cette réduction ?", "Confirmer", JOptionPane.YES_NO_OPTION);
         if (confirm == JOptionPane.YES_OPTION) {
             try {

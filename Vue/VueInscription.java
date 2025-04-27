@@ -10,12 +10,9 @@ public class VueInscription extends JFrame {
 
     public VueInscription() {
         setTitle("Inscription");
-        setSize(600, 500);
+        setSize(1250, 680);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new BorderLayout(10, 10));
-
-        // ----------- HEADER -----------
-
         JPanel header = new JPanel(new BorderLayout());
 
         JPanel Pnavigation = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 10));
@@ -28,8 +25,7 @@ public class VueInscription extends JFrame {
 
         add(header, BorderLayout.NORTH);
 
-        // ----------- FORMULAIRE -----------
-
+        //pour le form d'inscription
         JPanel formPanel = new JPanel(new GridLayout(7, 2, 10, 10));
         formPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
 
@@ -55,12 +51,10 @@ public class VueInscription extends JFrame {
 
         add(formPanel, BorderLayout.CENTER);
 
-        // ----------- BOUTON INSCRIPTION -----------
-
         btnRegister = new JButton("S'inscrire");
 
-        JPanel registerButtonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-        registerButtonPanel.add(btnRegister);
-        add(registerButtonPanel, BorderLayout.SOUTH);
+        JPanel inscriptionBtnPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        inscriptionBtnPanel.add(btnRegister);
+        add(inscriptionBtnPanel, BorderLayout.SOUTH);
     }
 }

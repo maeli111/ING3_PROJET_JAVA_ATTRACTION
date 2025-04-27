@@ -1,6 +1,5 @@
 package Vue;
 
-import Controleur.ControleurConnexionAdmin;
 
 import javax.swing.*;
 import java.awt.*;
@@ -13,19 +12,17 @@ public class VueConnexionAdmin extends JFrame {
 
     public VueConnexionAdmin() {
         setTitle("Connexion Admin");
-        setSize(600, 500);
+        setSize(1250, 680);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new BorderLayout(10, 10));
 
-        // PANEL TOP
-        JPanel topPanel = new JPanel(new BorderLayout());
-        JPanel rightPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        JPanel PanelHaut = new JPanel(new BorderLayout());
+        JPanel PanelDroit = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         btnCompte = new JButton("Compte");
-        rightPanel.add(btnCompte);
-        topPanel.add(rightPanel, BorderLayout.EAST);
-        add(topPanel, BorderLayout.NORTH);
+        PanelDroit.add(btnCompte);
+        PanelHaut.add(PanelDroit, BorderLayout.EAST);
+        add(PanelHaut, BorderLayout.NORTH);
 
-        // MAIN PANEL
         JPanel mainPanel = new JPanel();
         mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
         mainPanel.setBorder(BorderFactory.createEmptyBorder(30, 20, 20, 20));
