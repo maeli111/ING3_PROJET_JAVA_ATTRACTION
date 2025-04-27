@@ -25,8 +25,8 @@
         </SOURCES>
       </library>
     </orderEntry>
-    <orderEntry type="library" name="mysql-connector-j-9.2.0" level="project" />
     <orderEntry type="library" exported="" name="javafx-sdk-24.0" level="project" />
     <orderEntry type="library" exported="" name="lib" level="project" />
+    <orderEntry type="library" name="mysql-connector-j-9.3" level="project" />
   </component>
 </module>

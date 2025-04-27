@@ -21,6 +21,18 @@ public class VuePlusInfos extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new BorderLayout());
 
+        // Couleurs
+        Color hoverColor = new Color(255, 182, 193); // Rose clair
+        Color defaultColor = UIManager.getColor("Button.background"); // Couleur par défaut des boutons
+
+        // Appliquer le style de survol à tous les boutons
+        applyHoverEffect(accueil, hoverColor, defaultColor);
+        applyHoverEffect(informations, hoverColor, defaultColor);
+        applyHoverEffect(calendrier, hoverColor, defaultColor);
+        applyHoverEffect(compte, hoverColor, defaultColor);
+
+
+
         informations.setBackground(new Color(255, 182, 193));
         parc.setHorizontalAlignment(JTextField.CENTER);
         parc.setEditable(false);
@@ -82,6 +94,12 @@ public class VuePlusInfos extends JFrame {
                         .append(Character.toUpperCase(type.charAt(0))).append(type.substring(1)).append(" :</b><br>");
                 for (Attraction a : attractionsParType.get(type)) {
                     htmlBuilder.append("• ").append(a.getNom()).append(" - ").append(a.getPrix()).append("€<br>");
+
+
+                    // Ajouter l'image correspondant à l'attraction
+                    int attractionId = a.getId_attraction();
+                    String imagePath = "C:\\wamp64\\www\\ING3_PROJET_JAVA_ATTRACTION\\Images\\" + attractionId + ".jpg";
+                    htmlBuilder.append("<img src='file:///" + imagePath + "' width='200' height='150'/> <br>");
                 }
                 htmlBuilder.append("<br>");
             }
@@ -116,5 +134,20 @@ public class VuePlusInfos extends JFrame {
         JScrollPane scrollPane = new JScrollPane(contenu);
         scrollPane.setBorder(null);
         add(scrollPane, BorderLayout.CENTER);
+    }
+    // Méthode pour appliquer l'effet de survol à un bouton
+    private void applyHoverEffect(JButton button, Color hoverColor, Color defaultColor) {
+        button.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                button.setBackground(hoverColor);
+            }
+
+
+            @Override
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                button.setBackground(defaultColor);
+            }
+        });
     }
 }

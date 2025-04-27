@@ -14,7 +14,7 @@ public class VueCalendrier extends JFrame {
     private JButton informations = new JButton("Informations");
     private JButton calendrier = new JButton("Calendrier");
     private JButton compte = new JButton("Compte");
-    private JButton loupeBtn; // AJOUT du bouton loupe
+    private JButton loupeBtn;
     private JTextField parc = new JTextField("Palasi Land");
 
     private JPanel calendarPanel;
@@ -32,12 +32,16 @@ public class VueCalendrier extends JFrame {
     private JButton prevButton;
     private JButton nextButton;
 
+    // Couleurs pour le survol
+    private final Color hoverColor = new Color(255, 182, 193); // Rose clair
+    private final Color defaultColor = UIManager.getColor("Button.background"); // Couleur par défaut
+
     public VueCalendrier(Client client, Admin admin) {
         this.client = client;
         this.admin = admin;
 
         setTitle("Calendrier des Attractions");
-        setSize(1000, 600);
+        setSize(1250, 680);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new BorderLayout());
         setLocationRelativeTo(null);
@@ -48,7 +52,14 @@ public class VueCalendrier extends JFrame {
         parc.setFont(new Font("Bodoni MT", Font.BOLD, 32));
         parc.setBorder(null);
         parc.setOpaque(false);
-        calendrier.setBackground(new Color(255, 182, 193));
+
+        // Appliquer l'effet de survol à tous les boutons
+        applyHoverEffect(accueil, hoverColor, defaultColor);
+        applyHoverEffect(informations, hoverColor, defaultColor);
+        applyHoverEffect(calendrier, hoverColor, defaultColor);
+        applyHoverEffect(compte, hoverColor, defaultColor);
+
+        calendrier.setBackground(hoverColor); // Bouton calendrier actif
 
         JPanel Pbarre = new JPanel(new BorderLayout());
         JPanel Pnavigation = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 10));
@@ -65,11 +76,21 @@ public class VueCalendrier extends JFrame {
             loupeBtn = new JButton(new ImageIcon(scaledLoupe));
             loupeBtn.setBorder(BorderFactory.createEmptyBorder());
             loupeBtn.setContentAreaFilled(false);
+            // Effet de survol spécial pour la loupe
+            loupeBtn.addMouseListener(new java.awt.event.MouseAdapter() {
+                public void mouseEntered(java.awt.event.MouseEvent evt) {
+                    loupeBtn.setCursor(new Cursor(Cursor.HAND_CURSOR));
+                }
+                public void mouseExited(java.awt.event.MouseEvent evt) {
+                    loupeBtn.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+                }
+            });
             Pcompte.add(loupeBtn);
             Pcompte.add(Box.createRigidArea(new Dimension(5, 0)));
         } catch (Exception e) {
             System.out.println("Erreur lors du chargement de l'image loupe : " + e.getMessage());
             loupeBtn = new JButton("🔍");
+            applyHoverEffect(loupeBtn, hoverColor, defaultColor);
             Pcompte.add(loupeBtn);
             Pcompte.add(Box.createRigidArea(new Dimension(5, 0)));
         }
@@ -95,6 +116,10 @@ public class VueCalendrier extends JFrame {
         prevButton = new JButton("←");
         nextButton = new JButton("→");
 
+        // Appliquer l'effet aux boutons de navigation du calendrier
+        applyHoverEffect(prevButton, hoverColor, defaultColor);
+        applyHoverEffect(nextButton, hoverColor, defaultColor);
+
         moisLabel = new JLabel("", SwingConstants.CENTER);
         moisLabel.setFont(new Font("SansSerif", Font.BOLD, 18));
 
@@ -119,6 +144,23 @@ public class VueCalendrier extends JFrame {
         setVisible(true);
     }
 
+    // Méthode pour appliquer l'effet de survol
+    private void applyHoverEffect(JButton button, Color hoverColor, Color defaultColor) {
+        button.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                button.setBackground(hoverColor);
+            }
+
+            @Override
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                if (!button.equals(calendrier)) { // Ne pas changer si c'est le bouton actif
+                    button.setBackground(defaultColor);
+                }
+            }
+        });
+    }
+
     // --- Méthodes accessibles au contrôleur ---
     public JButton getBtnAccueil() { return accueil; }
     public JButton getBtnInfos() { return informations; }
@@ -126,7 +168,7 @@ public class VueCalendrier extends JFrame {
     public JButton getBtnCompte() { return compte; }
     public JButton getBtnPrev() { return prevButton; }
     public JButton getBtnNext() { return nextButton; }
-    public JButton getLoupeBtn() { return loupeBtn; } // GETTER pour la loupe
+    public JButton getLoupeBtn() { return loupeBtn; }
 
     public JPanel getCalendarPanel() { return calendarPanel; }
     public JPanel getDetailsPanel() { return detailsPanel; }
