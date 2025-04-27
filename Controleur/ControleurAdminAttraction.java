@@ -7,8 +7,7 @@ import DAO.AttractionDao;
 import DAO.DaoFactory;
 
 import javax.swing.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.event.*;
 import java.util.ArrayList;
 
 public class ControleurAdminAttraction {
@@ -16,6 +15,7 @@ public class ControleurAdminAttraction {
     private Admin admin;
     private AttractionDao attractionDao;
 
+    // Constructeur
     public ControleurAdminAttraction(VueAdminAttraction vue, Admin admin) {
         this.vue = vue;
         this.admin = admin;
@@ -29,6 +29,7 @@ public class ControleurAdminAttraction {
 
     private void ajouterListeners() {
 
+        // Bouton pour revenir au compte Admin
         vue.getCompteButton().addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -39,8 +40,8 @@ public class ControleurAdminAttraction {
             }
         });
 
+        // Bouton pour ajouter une nv attraction
         vue.getAjouterButton().addActionListener(e -> {
-            // Logique pour ajouter une attraction
             JTextField nomField = new JTextField();
             JTextField descriptionField = new JTextField();
             JTextField prixField = new JTextField();
@@ -58,12 +59,14 @@ public class ControleurAdminAttraction {
             int option = JOptionPane.showConfirmDialog(vue, message, "Ajouter une attraction", JOptionPane.OK_CANCEL_OPTION);
             if (option == JOptionPane.OK_OPTION) {
                 try {
+                    // On récupère le nom,description,prix, capacité et type de l'attraction saisie par l'admin
                     String nom = nomField.getText();
                     String desc = descriptionField.getText();
                     double prix = Double.parseDouble(prixField.getText());
                     int capacite = Integer.parseInt(capaciteField.getText());
                     String type = typeField.getText();
 
+                    // Puis on crée et ajoute cette nv attraction
                     Attraction nouvelle = new Attraction(0, nom, desc, prix, capacite, type);
                     attractionDao.ajouter(nouvelle);
                     chargerAttractions();
@@ -73,21 +76,23 @@ public class ControleurAdminAttraction {
             }
         });
 
+        // Bouton pour modifier une des attractions
         vue.getModifierButton().addActionListener(e -> {
-            int selectedRow = vue.getTable().getSelectedRow();
-            if (selectedRow >= 0) {
-                int id = Integer.parseInt(vue.getTableModel().getValueAt(selectedRow, 0).toString());
-                Attraction existante = attractionDao.getById(id);
+            int ligne = vue.getTable().getSelectedRow(); // on prend la ligne choisie
+            if (ligne >= 0) {
+                int id = Integer.parseInt(vue.getTableModel().getValueAt(ligne, 0).toString());
+                Attraction existante = attractionDao.getById(id); // et on récupère l'attraction qui correspond à cette ligne choisie
 
+                // On remplit les lignes avec les données de l'attraction
                 JTextField nomField = new JTextField(existante.getNom());
-                JTextField descField = new JTextField(existante.getDescription());
+                JTextField descriptionField = new JTextField(existante.getDescription());
                 JTextField prixField = new JTextField(String.valueOf(existante.getPrix()));
                 JTextField capaciteField = new JTextField(String.valueOf(existante.getCapacite()));
                 JTextField typeField = new JTextField(existante.getType_attraction());
 
                 Object[] message = {
                         "Nom:", nomField,
-                        "Description:", descField,
+                        "Description:", descriptionField,
                         "Prix:", prixField,
                         "Capacité:", capaciteField,
                         "Type:", typeField
@@ -96,8 +101,9 @@ public class ControleurAdminAttraction {
                 int option = JOptionPane.showConfirmDialog(vue, message, "Modifier l'attraction", JOptionPane.OK_CANCEL_OPTION);
                 if (option == JOptionPane.OK_OPTION) {
                     try {
+                        // On met à jour l'attraction
                         existante.setNom(nomField.getText());
-                        existante.setDescription(descField.getText());
+                        existante.setDescription(descriptionField.getText());
                         existante.setPrix(Double.parseDouble(prixField.getText()));
                         existante.setCapacite(Integer.parseInt(capaciteField.getText()));
                         existante.setType_attraction(typeField.getText());
@@ -113,10 +119,11 @@ public class ControleurAdminAttraction {
             }
         });
 
+        // Bouton pour supprimer une attraction
         vue.getSupprimerButton().addActionListener(e -> {
-            int selectedRow = vue.getTable().getSelectedRow();
-            if (selectedRow >= 0) {
-                int id = Integer.parseInt(vue.getTableModel().getValueAt(selectedRow, 0).toString());
+            int ligne = vue.getTable().getSelectedRow();
+            if (ligne >= 0) {
+                int id = Integer.parseInt(vue.getTableModel().getValueAt(ligne, 0).toString());
                 attractionDao.supprimer(id);
                 chargerAttractions();
             } else {
@@ -125,8 +132,9 @@ public class ControleurAdminAttraction {
         });
     }
 
+    // Méthode qui charge les attractions dans la table
     private void chargerAttractions() {
-        vue.getTableModel().setRowCount(0); // Clear the table before loading new data
+        vue.getTableModel().setRowCount(0);
         ArrayList<Attraction> attractions = attractionDao.getAll();
         for (Attraction attraction : attractions) {
             vue.getTableModel().addRow(new Object[] {

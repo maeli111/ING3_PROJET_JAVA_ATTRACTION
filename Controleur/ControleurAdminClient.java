@@ -16,15 +16,14 @@ public class ControleurAdminClient {
     private Admin admin;
     private ClientDao clientDao;
 
+    //Constructeur
     public ControleurAdminClient(VueAdminClient vue, Admin admin) {
         this.vue = vue;
         this.admin = admin;
 
-        // Connexion à la base de données
         DaoFactory daoFactory = DaoFactory.getInstance("java_attraction", "root", "");
         clientDao = new ClientDao(daoFactory);
 
-        // Initialiser les actions des boutons
         ajouterListeners();
         vue.setVisible(true);
         chargerClients();
@@ -32,6 +31,7 @@ public class ControleurAdminClient {
 
     private void ajouterListeners() {
 
+        //retour sur le compte de l'admin
         vue.getCompteButton().addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -42,6 +42,7 @@ public class ControleurAdminClient {
             }
         });
 
+        //Bouton qui ajoute un client
         vue.getAjouterButton().addActionListener(e -> {
             JTextField nomField = new JTextField();
             JTextField prenomField = new JTextField();
@@ -75,10 +76,11 @@ public class ControleurAdminClient {
             }
         });
 
+        //Bouton qui modifie un client
         vue.getModifierButton().addActionListener(e -> {
-            int selectedRow = vue.getTable().getSelectedRow();
-            if (selectedRow >= 0) {
-                int idClient = Integer.parseInt(vue.getTableModel().getValueAt(selectedRow, 0).toString());
+            int ligne = vue.getTable().getSelectedRow();
+            if (ligne >= 0) {
+                int idClient = Integer.parseInt(vue.getTableModel().getValueAt(ligne, 0).toString());
                 Client clientExistant = clientDao.getById(idClient);
 
                 JTextField nomField = new JTextField(clientExistant.getNom());
@@ -114,10 +116,11 @@ public class ControleurAdminClient {
             }
         });
 
+        //Bouton qui supprime un client
         vue.getSupprimerButton().addActionListener(e -> {
-            int selectedRow = vue.getTable().getSelectedRow();
-            if (selectedRow >= 0) {
-                int idClient = Integer.parseInt(vue.getTableModel().getValueAt(selectedRow, 0).toString());
+            int ligne = vue.getTable().getSelectedRow();
+            if (ligne >= 0) {
+                int idClient = Integer.parseInt(vue.getTableModel().getValueAt(ligne, 0).toString());
                 clientDao.supprimer(idClient);
                 chargerClients();
             } else {
@@ -126,6 +129,7 @@ public class ControleurAdminClient {
         });
     }
 
+    // Méthode qui charge la liste de tous les clients dans vue
     private void chargerClients() {
         ArrayList<Client> clients = clientDao.getAll();
         vue.chargerClients(clients);

@@ -11,15 +11,16 @@ public class ControleurInscription {
     private DaoFactory daoFactory;
     private ClientDao clientDao;
 
+    //Constructeur
     public ControleurInscription(VueInscription vue) {
         this.vue = vue;
         this.daoFactory = new DaoFactory("jdbc:mysql://localhost:3306/java_attraction", "root", "");
         this.clientDao = new ClientDao(daoFactory);
-
-        initControl();
+        initControle();
     }
 
-    private void initControl() {
+    private void initControle() {
+        //Bouton qui fait un retour vers login
         vue.btnCompte.addActionListener(e -> {
             vue.dispose();
             VueLogin vueLogin = new VueLogin();
@@ -27,6 +28,7 @@ public class ControleurInscription {
             vueLogin.setVisible(true);
         });
 
+        //Bouton pour s'inscrire
         vue.btnRegister.addActionListener(e -> {
             String nom = vue.txtNom.getText();
             String prenom = vue.txtPrenom.getText();
@@ -48,7 +50,7 @@ public class ControleurInscription {
             }
 
             if (clientDao.emailExiste(email)) {
-                JOptionPane.showMessageDialog(null, "Cet e-mail est déjà utilisé.", "Erreur", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(null, "Ce mail est déjà utilisé.", "Erreur", JOptionPane.ERROR_MESSAGE);
                 return;
             }
 
