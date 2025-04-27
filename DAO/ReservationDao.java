@@ -14,12 +14,12 @@ import java.sql.*;
 public class ReservationDao implements ReservationDaoInt{
     private DaoFactory daoFactory;
 
-    // constructeur dépendant de la classe DaoFactory
+    // constructeur
     public ReservationDao(DaoFactory daoFactory) {
         this.daoFactory = daoFactory;
     }
 
-    /**
+    /*
      * Récupérer de la base de données tous les objets des Reservations dans une liste
      * @return : liste retournée des objets des Reservations récupérés
      */
@@ -28,13 +28,11 @@ public class ReservationDao implements ReservationDaoInt{
         ArrayList<Reservation> listeReservation = new ArrayList<Reservation>();
 
         try {
-            // connexion
             Connection connexion = daoFactory.getConnection();;
             Statement statement = connexion.createStatement();
 
             ResultSet resultats = statement.executeQuery("select * from reservation");
 
-            // 	Se déplacer sur le prochain enregistrement : retourne false si la fin est atteinte
             while (resultats.next()) {
                 int id_reservation = resultats.getInt(1);
                 int id_client = resultats.getInt(2);
@@ -56,7 +54,6 @@ public class ReservationDao implements ReservationDaoInt{
             }
         }
         catch (SQLException e) {
-            //traitement de l'exception
             e.printStackTrace();
             System.out.println("Création de la liste de Reservation impossible");
         }
@@ -64,6 +61,7 @@ public class ReservationDao implements ReservationDaoInt{
         return listeReservation;
     }
 
+    // méthode qui ajoute une réservation à la bdd
     @Override
     public void ajouter(Reservation reservation) {
         try (Connection connexion = daoFactory.getConnection();
@@ -94,28 +92,28 @@ public class ReservationDao implements ReservationDaoInt{
         }
     }
 
+    // méthode qui récupère le nom de l'attraction en fonction de l'ID de l'attraction
     @Override
     public String getNomAttraction(int id_attraction) {
-        // Créer une instance de AttractionDao
         AttractionDao attractionDao = new AttractionDao(daoFactory);
-
-        // Appeler la méthode sur l'instance de AttractionDao
         Attraction attraction = attractionDao.getAttractionById(id_attraction);
+
         return attraction != null ? attraction.getNom() : "Inconnu";
     }
 
+    // méthode qui archive une réservation déjà passée
     @Override
     public void archiverReservationsPassées() {
-        LocalDate currentDate = LocalDate.now();  // Récupère la date actuelle
+        // on récupère la date actuelle
+        LocalDate currentDate = LocalDate.now();
 
         try (Connection connexion = daoFactory.getConnection();
              PreparedStatement ps = connexion.prepareStatement(
                      "UPDATE reservation SET est_archivee = 1 WHERE date_reservation < ? AND est_archivee = 0")) {
 
-            // Set la date actuelle dans la requête préparée
             ps.setDate(1, java.sql.Date.valueOf(currentDate));
 
-            // Exécute la mise à jour
+            // on met à jour
             int rowsUpdated = ps.executeUpdate();
             System.out.println(rowsUpdated + " réservations archivées avec succès.");
 
@@ -124,6 +122,5 @@ public class ReservationDao implements ReservationDaoInt{
             System.out.println("Erreur lors de l'archivage des réservations passées.");
         }
     }
-
 
 }

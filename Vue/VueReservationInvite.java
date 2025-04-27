@@ -5,8 +5,7 @@ import java.awt.*;
 import java.awt.event.ActionListener;
 
 public class VueReservationInvite extends JFrame {
-
-    // Déclaration des composants
+    // déclaration des composants
     public JTextField nbPersonneFieldNouveau;
     public JButton moinsBtnNouveau, plusBtnNouveau;
     public JLabel prixLabelNouveau;
@@ -14,17 +13,19 @@ public class VueReservationInvite extends JFrame {
     public JButton reserverButton;
     public JLabel titreResa = new JLabel();  // Utilisez cette variable directement
 
-    // Boutons de navigation
+    // boutons de navigation
     public JButton btnAccueil, btnInformations, btnCalendrier, btnCompte;
 
+    // constructeur
     public VueReservationInvite() {
+        // configuration de la fenêtre
         setTitle("Réservation");
         setSize(400, 600);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new BorderLayout());
 
-        // --- BARRE DE NAVIGATION ---
+        // header
         JPanel topPanel = new JPanel(new BorderLayout());
 
         JPanel navGauche = new JPanel(new FlowLayout(FlowLayout.LEFT));
@@ -44,33 +45,33 @@ public class VueReservationInvite extends JFrame {
         topPanel.add(navGauche, BorderLayout.WEST);
         topPanel.add(navDroite, BorderLayout.EAST);
 
-        // --- FORMULAIRE ---
+        // formulaire
         JPanel formPanel = new JPanel();
         formPanel.setLayout(new BoxLayout(formPanel, BoxLayout.Y_AXIS));
         formPanel.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
 
-        // Champ Nom
+        // champ nom
         JPanel panelNom = new JPanel(new FlowLayout(FlowLayout.CENTER));
         panelNom.add(new JLabel("Nom :"));
         nomField = new JTextField(12);
         panelNom.add(nomField);
         formPanel.add(panelNom);
 
-        // Champ Prénom
+        // champ prénom
         JPanel panelPrenom = new JPanel(new FlowLayout(FlowLayout.CENTER));
         panelPrenom.add(new JLabel("Prénom :"));
         prenomField = new JTextField(12);
         panelPrenom.add(prenomField);
         formPanel.add(panelPrenom);
 
-        // Champ Email
+        // champ email
         JPanel panelEmail = new JPanel(new FlowLayout(FlowLayout.CENTER));
         panelEmail.add(new JLabel("Email :"));
         emailFieldNouveau = new JTextField(12);
         panelEmail.add(emailFieldNouveau);
         formPanel.add(panelEmail);
 
-        // Nombre de personnes
+        // nb de personnes
         JPanel panelNb = new JPanel(new FlowLayout(FlowLayout.CENTER));
         panelNb.add(new JLabel("Nombre de personnes :"));
         moinsBtnNouveau = new JButton("-");
@@ -82,11 +83,11 @@ public class VueReservationInvite extends JFrame {
         panelNb.add(plusBtnNouveau);
         formPanel.add(panelNb);
 
-        // Prix total
+        // prix total
         prixLabelNouveau = new JLabel("Prix total: 0.00 €", SwingConstants.CENTER);
         formPanel.add(prixLabelNouveau);
 
-        // --- ASSEMBLAGE ---
+        // panel central
         JPanel centerPanel = new JPanel();
         centerPanel.setLayout(new BorderLayout());
         centerPanel.add(titreResa, BorderLayout.NORTH); // Utilisez titreResa ici
@@ -95,11 +96,12 @@ public class VueReservationInvite extends JFrame {
         add(topPanel, BorderLayout.NORTH);
         add(centerPanel, BorderLayout.CENTER);
 
+        // bouton pour valider la réservation
         reserverButton = new JButton("Réserver");
         add(reserverButton, BorderLayout.SOUTH);
     }
 
-    // Ajouter tous les listeners d'un coup
+    // ajout de tous les listeners
     public void addListeners(ActionListener listener) {
         btnAccueil.addActionListener(listener);
         btnInformations.addActionListener(listener);

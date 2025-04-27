@@ -17,34 +17,37 @@ public class ControleurReservationInvite {
     private final AttractionDao attractionDao;
     private final ReservationDao reservationDao;
 
+    // constructeur
     public ControleurReservationInvite(VueReservationInvite vue, Attraction attraction, LocalDate date) {
         this.vue = vue;
         this.attraction = attraction;
         this.date = date;
 
-        // DAO
+        // DAO + connexion à la bdd
         daoFactory = DaoFactory.getInstance("java_attraction", "root", "");
         attractionDao = new AttractionDao(daoFactory);
         reservationDao = new ReservationDao(daoFactory);
 
-        // Initialisation du nombre de personnes à 0
+        // initialisation du nombre de personnes à 0
         vue.nbPersonneFieldNouveau.setText("0");
 
         // Setup des vues et des listeners
         setupVue();
         setupListeners();
+
+        // affichage pour nouveau client
         JOptionPane.showMessageDialog(vue,
                 "En tant que nouveau client, aucune réduction ne peut être appliquée.\nCréez un compte pour en bénéficier.",
                 "Information", JOptionPane.INFORMATION_MESSAGE);
     }
 
+    // titre de la vue
     private void setupVue() {
-        // Si tu veux continuer d'afficher le titre dans la fenêtre (non obligatoire si c'est déjà fait)
         vue.titreResa.setText("Réserver l'attraction " + attraction.getNom() + " pour le " + date);
     }
 
+    // configuration des listeners
     private void setupListeners() {
-        // Ajouter des listeners aux boutons de navigation
         vue.addListeners(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -110,6 +113,7 @@ public class ControleurReservationInvite {
         });
     }
 
+    // méthode qui met à jour le pix total en fonction du nombre de personne choisi par le client
     private void updatePrixTotal() {
         try {
             int nbPersonnes = Integer.parseInt(vue.nbPersonneFieldNouveau.getText());
@@ -120,8 +124,9 @@ public class ControleurReservationInvite {
         }
     }
 
+    // méthode pour vérifier que les champs nom, prénom, email et nombre de personnes sont remplis
     private boolean verifierInformations() {
-        // Vérifier si les champs nom, prénom, email et nombre de personnes sont remplis
+        // on récupère la valeur des champs
         String nom = vue.nomField.getText().trim();
         String prenom = vue.prenomField.getText().trim();
         String email = vue.emailFieldNouveau.getText().trim();
@@ -143,6 +148,7 @@ public class ControleurReservationInvite {
         return true;
     }
 
+    // méthode pour effectuer la réservation
     private void reserver() {
         try {
             String nom = vue.nomField.getText().trim();
@@ -150,6 +156,7 @@ public class ControleurReservationInvite {
             String email = vue.emailFieldNouveau.getText().trim();
             int nbPersonnes = Integer.parseInt(vue.nbPersonneFieldNouveau.getText());
 
+            // le client ne peut pas prendre plus de place qu'il n'en reste
             int placesRestantes = attractionDao.getPlacesDisponibles(date, attraction.getId_attraction());
             if (nbPersonnes > placesRestantes) {
                 throw new IllegalArgumentException("Il ne reste que " + placesRestantes + " places disponibles.");
@@ -163,6 +170,7 @@ public class ControleurReservationInvite {
                     date, LocalDate.now(), attraction.getId_attraction(), prixTotal, nbPersonnes, 0
             );
 
+            // enregistrement de la résevation dans la bdd
             reservationDao.ajouter(reservation);
 
             // Afficher un message de confirmation
