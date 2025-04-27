@@ -53,6 +53,11 @@ public class AdminDao implements AdminDaoInt {
      * paramètres email : email et mot de passe entrées par l’utilisateur
      * return : un objet Admin si les identifiants existent et qu’il s’agit bien d’un administrateur, sinon null
      */
+    /**
+     * @param email
+     * @param mdp
+     * @return
+     */
     @Override
     public Admin connexionAdmin(String email, String mdp) {
         Admin adminConnecte = null;
