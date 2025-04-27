@@ -6,7 +6,6 @@ import DAO.*;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
 import java.time.*;
 import java.util.Locale;
 import java.sql.*;
@@ -78,17 +77,17 @@ public class ControleurCalendrier {
         });
 
         vue.getBtnPrev().addActionListener(e -> {
-            YearMonth curr = vue.getCurrentMonth();
+            YearMonth curr = vue.getMoisActuel();
             if (curr.isAfter(vue.getMinMonth())) {
-                vue.setCurrentMonth(curr.minusMonths(1));
+                vue.setMoisActuel(curr.minusMonths(1));
                 updateCalendar();
             }
         });
 
         vue.getBtnNext().addActionListener(e -> {
-            YearMonth curr = vue.getCurrentMonth();
-            if (curr.isBefore(vue.getMaxMonth())) {
-                vue.setCurrentMonth(curr.plusMonths(1));
+            YearMonth curr = vue.getMoisActuel();
+            if (curr.isBefore(vue.getMaxMois())) {
+                vue.setMoisActuel(curr.plusMonths(1));
                 updateCalendar();
             }
         });
@@ -104,7 +103,7 @@ public class ControleurCalendrier {
             calendar.add(label);
         }
 
-        YearMonth month = vue.getCurrentMonth();
+        YearMonth month = vue.getMoisActuel();
         vue.getMoisLabel().setText(month.getMonth().getDisplayName(java.time.format.TextStyle.FULL, Locale.FRENCH).toUpperCase() + " " + month.getYear());
 
         LocalDate firstDay = month.atDay(1);
