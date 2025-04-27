@@ -5,7 +5,8 @@ import java.awt.*;
 import Modele.*;
 import DAO.*;
 import Modele.Reservation;
-
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 
 public class VueClient extends JFrame {
@@ -29,6 +30,29 @@ public class VueClient extends JFrame {
         add(mainPanel, BorderLayout.CENTER);
         add(PanelBas, BorderLayout.SOUTH);
 
+        // Ajout des effets de survol
+        btnDeconnexion.addMouseListener(new MouseAdapter() {
+            public void mouseEntered(MouseEvent e) {
+                btnDeconnexion.setBackground(Color.RED);
+                btnDeconnexion.setForeground(Color.WHITE);
+            }
+            public void mouseExited(MouseEvent e) {
+                btnDeconnexion.setBackground(UIManager.getColor("Button.background"));
+                btnDeconnexion.setForeground(UIManager.getColor("Button.foreground"));
+            }
+        });
+
+        JButton[] boutonsRose = {btnAccueil, btnInfo, btnCalendrier, btnLoupe };
+        for (JButton btn : boutonsRose) {
+            btn.addMouseListener(new MouseAdapter() {
+                public void mouseEntered(MouseEvent e) {
+                    btn.setBackground(Color.PINK);
+                }
+                public void mouseExited(MouseEvent e) {
+                    btn.setBackground(UIManager.getColor("Button.background"));
+                }
+            });
+        }
     }
 
     private JPanel createTopPanel() {
