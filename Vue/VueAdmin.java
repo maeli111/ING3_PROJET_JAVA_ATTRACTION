@@ -5,9 +5,6 @@ import java.awt.*;
 import Modele.Admin;
 
 public class VueAdmin extends JFrame {
-    private JButton accueil = new JButton("Accueil");
-    private JButton informations = new JButton("Informations");
-    private JButton calendrier = new JButton("Calendrier");
     private JButton compte = new JButton("Compte");
     private JButton btnDeconnexion = new JButton("Déconnexion");
 
@@ -31,9 +28,6 @@ public class VueAdmin extends JFrame {
         // ----------- HEADER -----------
         JPanel header = new JPanel(new BorderLayout());
         JPanel Pnavigation = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 10));
-        Pnavigation.add(accueil);
-        Pnavigation.add(informations);
-        Pnavigation.add(calendrier);
 
         JPanel Pcompte = new JPanel(new FlowLayout(FlowLayout.RIGHT, 10, 10));
         Pcompte.add(compte);
@@ -119,10 +113,6 @@ public class VueAdmin extends JFrame {
     }
 
     // ===== GETTERS =====
-    public JButton getAccueilButton() { return accueil; }
-    public JButton getInformationsButton() { return informations; }
-    public JButton getCalendrierButton() { return calendrier; }
-    public JButton getCompteButton() { return compte; }
     public JButton getDeconnexionButton() { return btnDeconnexion; }
 
     public JButton getAttractionsButton() { return attractionsButton; }

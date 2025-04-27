@@ -50,7 +50,7 @@ public class ControleurInfoAttraction {
 
 
     private void ajouterListeners() {
-        vue.reserverBtn.addActionListener(new ActionListener() {
+        vue.getReserverBtn().addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 // Vérification de la réduction
@@ -117,6 +117,13 @@ public class ControleurInfoAttraction {
             VueCalendrier vueCalendrier = new VueCalendrier(client, admin);
             new ControleurCalendrier(vueCalendrier, client, admin);
             vueCalendrier.setVisible(true);
+            vue.dispose();
+        });
+
+        vue.getLoupeButton().addActionListener(e ->{
+            VueRecherche vueRecherche = new VueRecherche(client,admin);
+            new ControleurRecherche(vueRecherche,client, admin);
+            vueRecherche.setVisible(true);
             vue.dispose();
         });
     }
