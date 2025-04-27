@@ -167,7 +167,6 @@ public class VueCalendrier extends JFrame {
             }
         });
     }
-
     // getters pour le controleur
     public JButton getBtnAccueil() { return accueil; }
     public JButton getBtnInfos() { return informations; }

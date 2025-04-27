@@ -16,6 +16,9 @@ public class ControleurCalendrier {
     private final Admin admin;
     private final AttractionDaoInt attractionDAO;
 
+    private final Color dessusCouleur = new Color(255, 182, 193); // Rose clair
+    private final Color defaultCouleur = UIManager.getColor("Button.background"); // Couleur par défaut
+
     // constructeur
     public ControleurCalendrier(VueCalendrier vue, Client client, Admin admin) {
         this.vue = vue;
@@ -121,12 +124,38 @@ public class ControleurCalendrier {
         for (int day = 1; day <= month.lengthOfMonth(); day++) {
             LocalDate date = month.atDay(day);
             JButton btn = new JButton(String.valueOf(day));
+
+            // style de base
+            btn.setBackground(defaultCouleur);
+            btn.setOpaque(true);
+            btn.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY));
+
+            // effet de survol
+            applyHoverEffect(btn, dessusCouleur, defaultCouleur);
+
             btn.addActionListener(e -> afficherAttractions(date));
             calendar.add(btn);
         }
 
         calendar.revalidate();
         calendar.repaint();
+    }
+
+    // effet de survol sur les boutons
+    private void applyHoverEffect(JButton button, Color hoverColor, Color defaultColor) {
+        button.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                button.setBackground(hoverColor);
+                button.setBorder(BorderFactory.createLineBorder(new Color(255, 105, 180))); // Bordure rose plus foncée
+            }
+
+            @Override
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                button.setBackground(defaultColor);
+                button.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY));
+            }
+        });
     }
 
     // affichage des attractions en fonction de la date sélectionnée
@@ -136,7 +165,7 @@ public class ControleurCalendrier {
 
         // mise en page
         JLabel titre = new JLabel("Attractions disponibles le " + date);
-        titre.setFont(new Font("SansSerif", Font.BOLD, 16));
+        titre.setFont(new Font("Bodoni MT", Font.BOLD, 16));
         titre.setAlignmentX(Component.CENTER_ALIGNMENT);
         details.add(titre);
         details.add(Box.createRigidArea(new Dimension(0, 10)));
@@ -158,6 +187,12 @@ public class ControleurCalendrier {
                     // création d'un bouton qui mène à la page avec les informations de l'attraction
                     found = true;
                     JButton btn = new JButton(nom);
+                    btn.setBackground(defaultCouleur);
+                    btn.setOpaque(true);
+                    btn.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY));
+
+                    // Appliquer l'effet de survol
+                    applyHoverEffect(btn, dessusCouleur, defaultCouleur);
 
                     btn.setAlignmentX(Component.CENTER_ALIGNMENT);
                     btn.addActionListener(ev -> {
