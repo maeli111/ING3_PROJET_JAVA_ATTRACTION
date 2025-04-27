@@ -41,10 +41,15 @@ public class ControleurReservationClient {
     // configuration de la vue
     private void setupvue() {
         vue.titreResa.setText("Réserver l'attraction " + attraction.getNom() + " pour le " + date);
+        vue.titreResa.setForeground(new Color(255, 105, 180));
+        vue.titreResa.setFont(new Font("Arial", Font.BOLD, 22));
+
         vue.formPanel.add(Box.createRigidArea(new Dimension(0, 20)));
 
         JPanel formEx = vue.formClientExistant;
         formEx.setLayout(new BoxLayout(formEx, BoxLayout.Y_AXIS));
+        formEx.setBackground(Color.WHITE);
+        formEx.setOpaque(true);
 
         // champs pour les différents type de places
         addLigne(formEx, "Nombre d'adultes :", vue.nbAdultesField, vue.moinsBtnAdultes, vue.plusBtnAdultes);
@@ -56,15 +61,29 @@ public class ControleurReservationClient {
         addLigne(formEx, "Nombre d'enfants (famille nombreuse):", vue.nbEnfantsFamNbField, vue.moinsBtnEnfantsFamNb, vue.plusBtnEnfantsFamNb);
 
         formEx.add(Box.createRigidArea(new Dimension(0, 10)));
-        vue.prixLabelExistant.setFont(new Font("SansSerif", Font.BOLD, 14));
-        formEx.add(vue.prixLabelExistant);
+        vue.prixLabelExistant.setFont(new Font("Arial", Font.BOLD, 22));
+        vue.prixLabelExistant.setForeground(new Color(255, 20, 147));
+        vue.prixLabelExistant.setBackground(Color.WHITE);
+        vue.prixLabelExistant.setOpaque(true);
+        vue.prixLabelExistant.setHorizontalAlignment(SwingConstants.CENTER);
+        vue.prixLabelExistant.setBorder(BorderFactory.createEmptyBorder(20, 0, 20, 0));
+
+        JPanel prixPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        prixPanel.setOpaque(false);
+        prixPanel.add(vue.prixLabelExistant);
+        formEx.add(prixPanel);
+
         formEx.setVisible(true);
     }
 
     // ajoute ligne dans le form avec un champ/label
     private void addLigne(JPanel panel, String label, JTextField field) {
         JPanel ligne = new JPanel(new BorderLayout());
-        ligne.add(new JLabel(label), BorderLayout.WEST);
+        ligne.setBackground(Color.WHITE);
+        JLabel lbl = new JLabel(label);
+        lbl.setForeground(new Color(255, 105, 180));
+        lbl.setFont(new Font("Arial", Font.BOLD, 18));
+        ligne.add(lbl, BorderLayout.WEST);
         ligne.add(field, BorderLayout.CENTER);
         panel.add(ligne);
         panel.add(Box.createRigidArea(new Dimension(0, 10)));
@@ -73,7 +92,11 @@ public class ControleurReservationClient {
     // ajoute ligne dans le form avec des boutons + et - pour ajuster le nombre de places
     private void addLigne(JPanel panel, String label, JTextField field, JButton moins, JButton plus) {
         JPanel ligne = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        ligne.add(new JLabel(label));
+        ligne.setBackground(Color.WHITE);
+        JLabel lbl = new JLabel(label);
+        lbl.setForeground(new Color(255, 105, 180));
+        lbl.setFont(new Font("Arial", Font.BOLD, 18));
+        ligne.add(lbl);
         ligne.add(moins);
         ligne.add(field);
         ligne.add(plus);
@@ -84,7 +107,11 @@ public class ControleurReservationClient {
     // avec un bouton "?" pour afficher la description
     private void addLigne(JPanel panel, String label, JTextField field, JButton moins, JButton plus, JButton info) {
         JPanel ligne = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        ligne.add(new JLabel(label));
+        ligne.setBackground(Color.WHITE);
+        JLabel lbl = new JLabel(label);
+        lbl.setForeground(new Color(255, 105, 180));
+        lbl.setFont(new Font("Arial", Font.BOLD, 18));
+        ligne.add(lbl);
         ligne.add(moins);
         ligne.add(field);
         ligne.add(plus);
@@ -235,7 +262,6 @@ public class ControleurReservationClient {
             // En cas d'erreur de conversion ou autre
         }
     }
-
 
     private void reserver(Client client) {
         try {

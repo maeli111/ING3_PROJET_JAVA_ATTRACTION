@@ -29,7 +29,6 @@ public class VueReservationInvite extends JFrame {
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new BorderLayout());
-        getContentPane().setBackground(ROSE_FOND);
 
         Color hoverColor = ROSE_SURVOL;
         Color defaultColor = UIManager.getColor("Button.background");
@@ -99,6 +98,8 @@ public class VueReservationInvite extends JFrame {
         header.add(Pbarre, BorderLayout.NORTH);
         header.add(parc, BorderLayout.CENTER);
         add(header, BorderLayout.NORTH);
+
+
 
         JPanel formPanel = new JPanel();
         formPanel.setLayout(new BoxLayout(formPanel, BoxLayout.Y_AXIS));
