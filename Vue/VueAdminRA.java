@@ -21,6 +21,9 @@ public class VueAdminRA extends JFrame {
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLayout(new BorderLayout());
 
+        Color hoverColor = new Color(255, 182, 193);
+        Color defaultColor = UIManager.getColor("Button.background");
+
         JPanel hautPanel = new JPanel(new BorderLayout());
         JPanel buttonBar = new JPanel(new BorderLayout());
 
@@ -34,16 +37,19 @@ public class VueAdminRA extends JFrame {
         buttonBar.add(droitePanel, BorderLayout.EAST);
 
         JPanel titrePanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-        JLabel titreLabel = new JLabel("PalasiLand");
-        titreLabel.setFont(new Font("Serif", Font.BOLD, 28));
-        titrePanel.add(titreLabel);
+        JLabel parc = new JLabel("Palasi Land");
+        parc.setHorizontalAlignment(JTextField.CENTER);
+        parc.setFont(new Font("Bodoni MT", Font.BOLD, 32));
+        parc.setBorder(null);
+        parc.setOpaque(false);
+        titrePanel.add(parc);
 
         hautPanel.add(buttonBar, BorderLayout.NORTH);
         hautPanel.add(titrePanel, BorderLayout.CENTER);
 
         add(hautPanel, BorderLayout.NORTH);
 
-        //tableau des reductions des attractions
+        // tableau des réductions des attractions
         String[] columns = {"ID", "Nom", "Pourcentage", "Description", "Attractions Concernées"};
         model = new DefaultTableModel(columns, 0) {
             public boolean isCellEditable(int row, int column) {
@@ -67,6 +73,26 @@ public class VueAdminRA extends JFrame {
         buttonPanel.add(supprimerButton);
 
         add(buttonPanel, BorderLayout.SOUTH);
+
+        applyHoverEffect(compteButton, hoverColor, defaultColor);
+        applyHoverEffect(ajouterButton, hoverColor, defaultColor);
+        applyHoverEffect(modifierButton, hoverColor, defaultColor);
+        applyHoverEffect(supprimerButton, hoverColor, defaultColor);
+    }
+
+    // Méthode pour appliquer l'effet de survol à un bouton
+    private void applyHoverEffect(JButton button, Color hoverColor, Color defaultColor) {
+        button.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                button.setBackground(hoverColor);
+            }
+
+            @Override
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                button.setBackground(defaultColor);
+            }
+        });
     }
 
     public JButton getAjouterButton() { return ajouterButton; }
