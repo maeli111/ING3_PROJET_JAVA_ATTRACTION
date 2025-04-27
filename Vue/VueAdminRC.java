@@ -48,7 +48,7 @@ public class VueAdminRC extends JFrame {
 
         // On ajoute le titre "Gestion Réduction Client" sous Palasi Land
         JPanel gestionPanel = new JPanel();
-        JLabel gestionLabel = new JLabel("Gestion Réduction Client");
+        JLabel gestionLabel = new JLabel("Gestion Réductions Clients");
         gestionLabel.setHorizontalAlignment(JTextField.CENTER);
         gestionLabel.setFont(new Font("Segoe UI", Font.PLAIN, 18));
         gestionLabel.setForeground(new Color(100, 100, 100));  // Gris foncé pour le texte

@@ -25,6 +25,7 @@ public class VueAdminRA extends JFrame {
         Color hoverColor = new Color(255, 182, 193);
         Color defaultColor = UIManager.getColor("Button.background");
 
+        // Haut Panel
         JPanel hautPanel = new JPanel(new BorderLayout());
         JPanel buttonBar = new JPanel(new BorderLayout());
 
@@ -37,20 +38,28 @@ public class VueAdminRA extends JFrame {
         buttonBar.add(gauchePanel, BorderLayout.WEST);
         buttonBar.add(droitePanel, BorderLayout.EAST);
 
-        JPanel titrePanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        // Titre principal
+        JPanel titrePanel = new JPanel(new GridLayout(2, 1));
         JLabel parc = new JLabel("Palasi Land");
-        parc.setHorizontalAlignment(JTextField.CENTER);
+        parc.setHorizontalAlignment(JLabel.CENTER);
         parc.setFont(new Font("Bodoni MT", Font.BOLD, 32));
         parc.setBorder(null);
         parc.setOpaque(false);
+
+        JLabel gestionLabel = new JLabel("Gestion Réduction Attractions");
+        gestionLabel.setHorizontalAlignment(JLabel.CENTER);
+        gestionLabel.setFont(new Font("Segoe UI", Font.PLAIN, 20));
+        gestionLabel.setForeground(new Color(100, 100, 100));
+
         titrePanel.add(parc);
+        titrePanel.add(gestionLabel);
 
         hautPanel.add(buttonBar, BorderLayout.NORTH);
         hautPanel.add(titrePanel, BorderLayout.CENTER);
 
         add(hautPanel, BorderLayout.NORTH);
 
-        // tableau des réductions des attractions
+        // Tableau
         String[] columns = {"ID", "Nom", "Pourcentage", "Description", "Attractions Concernées"};
         model = new DefaultTableModel(columns, 0) {
             @Override
@@ -65,9 +74,9 @@ public class VueAdminRA extends JFrame {
         table.getTableHeader().setBackground(new Color(230, 230, 250));
         table.getTableHeader().setForeground(new Color(60, 60, 60));
         table.setFont(new Font("Segoe UI", Font.PLAIN, 14));
-        table.setRowHeight(28); // Hauteur des lignes
+        table.setRowHeight(28);
         table.setGridColor(new Color(220, 220, 220));
-        table.setBackground(Color.WHITE); // Fond du tableau
+        table.setBackground(Color.WHITE);
         table.setSelectionBackground(new Color(255, 192, 203));
         table.setSelectionForeground(Color.BLACK);
 
@@ -82,6 +91,7 @@ public class VueAdminRA extends JFrame {
         scrollPane.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         add(scrollPane, BorderLayout.CENTER);
 
+        // Boutons en bas
         JPanel buttonPanel = new JPanel();
         ajouterButton = new JButton("Ajouter");
         modifierButton = new JButton("Modifier");
@@ -104,7 +114,7 @@ public class VueAdminRA extends JFrame {
         applyHoverEffect(supprimerButton, hoverColor, defaultColor);
     }
 
-    // Méthode pour appliquer l'effet de survol à un bouton
+    // Méthode pour effet hover
     private void applyHoverEffect(JButton button, Color hoverColor, Color defaultColor) {
         button.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
@@ -119,6 +129,7 @@ public class VueAdminRA extends JFrame {
         });
     }
 
+    // Getters
     public JButton getAjouterButton() { return ajouterButton; }
     public JButton getModifierButton() { return modifierButton; }
     public JButton getSupprimerButton() { return supprimerButton; }
