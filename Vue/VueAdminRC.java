@@ -46,7 +46,6 @@ public class VueAdminRC extends JFrame {
         HautPanel.add(buttonBar, BorderLayout.NORTH);
         HautPanel.add(titrePanel, BorderLayout.CENTER);
 
-        // On ajoute le titre "Gestion Réduction Client" sous Palasi Land
         JPanel gestionPanel = new JPanel();
         JLabel gestionLabel = new JLabel("Gestion Réductions Clients");
         gestionLabel.setHorizontalAlignment(JTextField.CENTER);
