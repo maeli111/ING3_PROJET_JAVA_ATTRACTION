@@ -1,11 +1,13 @@
 package Modele;
 
 public class Client extends Utilisateur {
+    //Attributs
     private int id_client;
     private int age;
     private String type_client;
     private String type_membre;
 
+    //Constructeur1
     public Client(int id_client, int id_utilisateur, String email, String nom, String prenom, String mdp, int age, String type_client, String type_membre) {
         super(id_utilisateur, email, nom, prenom, mdp);
         this.id_client = id_client;
@@ -14,6 +16,7 @@ public class Client extends Utilisateur {
         this.type_membre = type_membre;
     }
 
+    //Constructeur2
     public Client(int id_client, int id_utilisateur, int age, String type_client, String type_membre) {
         super(id_utilisateur, "", "", "", "");
         this.id_client = id_client;
@@ -22,11 +25,12 @@ public class Client extends Utilisateur {
         this.type_membre = type_membre;
     }
 
-    // Constructeur vide
+    //Constructeur3
     public Client() {
         super(0, "", "", "", "");
     }
 
+    //Constructeur4
     public Client(String nom, String prenom, String email, String mdp, int age, String type_client) {
         super(0, email, nom, prenom, mdp);
         this.age = age;
@@ -62,7 +66,7 @@ public class Client extends Utilisateur {
         return super.getMdp();
     }
 
-    // Setter pour l'id client (utile quand il est auto-généré)
+    // Setter
     public void setid_client(int id_client) {
         this.id_client = id_client;
     }

@@ -13,35 +13,34 @@ public class VueAdmin extends JFrame {
     private JButton dossiersClientsButton = new JButton("Dossiers clients");
     private JButton attractionDuMoisButton = new JButton("Attraction du mois");
 
-    // Nouveaux éléments pour Attraction du Mois
-    private JPanel attractionMoisPanel = new JPanel();
+    private JPanel attractionMoisPanel = new JPanel(); // Panneau pour gérer "Attraction du mois"
     private JLabel attractionActuelleLabel = new JLabel("Attraction actuelle : ");
     private JComboBox<String> attractionComboBox = new JComboBox<>();
     private JButton validerAttractionButton = new JButton("Valider");
 
     public VueAdmin(Admin admin) {
         setTitle("Infos Administrateur");
-        setSize(800, 600);
+        setSize(1250, 680);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new BorderLayout(10, 10));
 
-        // ----------- HEADER -----------
         JPanel header = new JPanel(new BorderLayout());
         JPanel Pnavigation = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 10));
 
         JPanel Pcompte = new JPanel(new FlowLayout(FlowLayout.RIGHT, 10, 10));
-        Pcompte.add(compte);
+        Pcompte.add(compte); // bouton Compte à droite
 
         header.add(Pnavigation, BorderLayout.WEST);
         header.add(Pcompte, BorderLayout.EAST);
         add(header, BorderLayout.NORTH);
 
-        // ----------- MAIN -----------
         JPanel mainPanel = new JPanel(new BorderLayout(10, 10));
 
+        // Panneau d'info sur l'admin
         JPanel infoPanel = new JPanel(new GridLayout(3, 2, 5, 5));
         infoPanel.setBorder(BorderFactory.createTitledBorder("Informations personnelles"));
 
+        // Affichage des infos de l'admin
         infoPanel.add(new JLabel("Nom:"));
         JTextField nomField = new JTextField(admin.getNom());
         nomField.setEditable(false);
@@ -61,58 +60,57 @@ public class VueAdmin extends JFrame {
         modificationsLabel.setBorder(BorderFactory.createEmptyBorder(0, 0, 10, 0));
         modificationsLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
+        // Panneau de gestion avec tous les boutons de modification
+        JPanel gestionPanel = new JPanel();
+        gestionPanel.setLayout(new BoxLayout(gestionPanel, BoxLayout.Y_AXIS));
+        gestionPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        JPanel managementPanel = new JPanel();
-        managementPanel.setLayout(new BoxLayout(managementPanel, BoxLayout.Y_AXIS));
-        managementPanel.setAlignmentX(Component.CENTER_ALIGNMENT); // Centre le panneau
-
+        // Boutons de gestion (Attractions, Réductions, etc.)
         JButton[] btns = {attractionsButton, reductionsButton, dossiersClientsButton, attractionDuMoisButton};
         for (JButton btn : btns) {
-            btn.setAlignmentX(Component.CENTER_ALIGNMENT); // Centre chaque bouton
+            btn.setAlignmentX(Component.CENTER_ALIGNMENT);
             btn.setFocusPainted(false);
             btn.setBorderPainted(false);
             btn.setContentAreaFilled(false);
             btn.setForeground(Color.BLUE);
-            btn.setFont(btn.getFont().deriveFont(Font.ITALIC, 14f)); // Taille de texte un peu plus grande
-            managementPanel.add(btn);
-            managementPanel.add(Box.createRigidArea(new Dimension(0, 5))); // Petit espace entre les boutons
+            btn.setFont(btn.getFont().deriveFont(Font.ITALIC, 14f));
+            gestionPanel.add(btn);
+            gestionPanel.add(Box.createRigidArea(new Dimension(0, 5)));
         }
 
-        // ----------- ATTRACTION DU MOIS PANEL -----------
+        // Pour l'attraction du mois
         attractionMoisPanel.setLayout(new BoxLayout(attractionMoisPanel, BoxLayout.Y_AXIS));
         attractionMoisPanel.setBorder(BorderFactory.createTitledBorder("Définir l'attraction du mois"));
-        attractionMoisPanel.setAlignmentX(Component.CENTER_ALIGNMENT); // Centre aussi ce panneau
+        attractionMoisPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
         attractionMoisPanel.add(Box.createRigidArea(new Dimension(0, 10)));
         attractionActuelleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         attractionMoisPanel.add(attractionActuelleLabel);
         attractionMoisPanel.add(Box.createRigidArea(new Dimension(0, 10)));
-        attractionComboBox.setMaximumSize(new Dimension(200, 25)); // Taille fixée pour ne pas être trop large
+        attractionComboBox.setMaximumSize(new Dimension(200, 25));
         attractionComboBox.setAlignmentX(Component.CENTER_ALIGNMENT);
         attractionMoisPanel.add(attractionComboBox);
         attractionMoisPanel.add(Box.createRigidArea(new Dimension(0, 10)));
         validerAttractionButton.setAlignmentX(Component.CENTER_ALIGNMENT);
         attractionMoisPanel.add(validerAttractionButton);
-        attractionMoisPanel.setVisible(false); // Masqué par défaut
+        attractionMoisPanel.setVisible(false); // Caché par défaut
 
-        // Panel qui contient les boutons + le panneau AttractionMois
-        JPanel leftPanelWithLabel = new JPanel();
-        leftPanelWithLabel.setLayout(new BoxLayout(leftPanelWithLabel, BoxLayout.Y_AXIS));
-        leftPanelWithLabel.add(modificationsLabel);
-        leftPanelWithLabel.add(managementPanel);
-        leftPanelWithLabel.add(Box.createRigidArea(new Dimension(0, 20))); // espace
-        leftPanelWithLabel.add(attractionMoisPanel); // <= ajouté ici
+        //regroupe les boutons et l'attraction du mois dans un seul panneau
+        JPanel PanelAvecLabel = new JPanel();
+        PanelAvecLabel.setLayout(new BoxLayout(PanelAvecLabel, BoxLayout.Y_AXIS));
+        PanelAvecLabel.add(modificationsLabel);
+        PanelAvecLabel.add(gestionPanel);
+        PanelAvecLabel.add(Box.createRigidArea(new Dimension(0, 20)));
+        PanelAvecLabel.add(attractionMoisPanel);
 
         mainPanel.add(infoPanel, BorderLayout.NORTH);
-        mainPanel.add(leftPanelWithLabel, BorderLayout.CENTER);
+        mainPanel.add(PanelAvecLabel, BorderLayout.CENTER);
         add(mainPanel, BorderLayout.CENTER);
 
-        // ----------- FOOTER -----------
-        JPanel bottomPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-        bottomPanel.add(btnDeconnexion);
-        add(bottomPanel, BorderLayout.SOUTH);
+        JPanel basPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        basPanel.add(btnDeconnexion);
+        add(basPanel, BorderLayout.SOUTH);
     }
 
-    // ===== GETTERS =====
     public JButton getDeconnexionButton() { return btnDeconnexion; }
 
     public JButton getAttractionsButton() { return attractionsButton; }

@@ -16,35 +16,34 @@ public class VueAdminRA extends JFrame {
 
     public VueAdminRA(Admin admin) {
         setTitle("Réductions liées aux attractions - Admin");
-        setSize(900, 500);
+        setSize(1250, 680);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLayout(new BorderLayout());
 
-        // TOP PANEL
-        JPanel topPanel = new JPanel(new BorderLayout());
+        JPanel hautPanel = new JPanel(new BorderLayout());
         JPanel buttonBar = new JPanel(new BorderLayout());
 
-        JPanel leftPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        JPanel gauchePanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
 
-        JPanel rightPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        JPanel droitePanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         compteButton = new JButton("Compte");
-        rightPanel.add(compteButton);
+        droitePanel.add(compteButton);
 
-        buttonBar.add(leftPanel, BorderLayout.WEST);
-        buttonBar.add(rightPanel, BorderLayout.EAST);
+        buttonBar.add(gauchePanel, BorderLayout.WEST);
+        buttonBar.add(droitePanel, BorderLayout.EAST);
 
         JPanel titrePanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
         JLabel titreLabel = new JLabel("PalasiLand");
         titreLabel.setFont(new Font("Serif", Font.BOLD, 28));
         titrePanel.add(titreLabel);
 
-        topPanel.add(buttonBar, BorderLayout.NORTH);
-        topPanel.add(titrePanel, BorderLayout.CENTER);
+        hautPanel.add(buttonBar, BorderLayout.NORTH);
+        hautPanel.add(titrePanel, BorderLayout.CENTER);
 
-        add(topPanel, BorderLayout.NORTH);
+        add(hautPanel, BorderLayout.NORTH);
 
-        // TABLE
+        //tableau des reductions des attractions
         String[] columns = {"ID", "Nom", "Pourcentage", "Description", "Attractions Concernées"};
         model = new DefaultTableModel(columns, 0) {
             public boolean isCellEditable(int row, int column) {
@@ -58,7 +57,6 @@ public class VueAdminRA extends JFrame {
         scrollPane.setPreferredSize(new Dimension(800, 300));
         add(scrollPane, BorderLayout.CENTER);
 
-        // BUTTON PANEL
         JPanel buttonPanel = new JPanel();
         ajouterButton = new JButton("Ajouter");
         modifierButton = new JButton("Modifier");

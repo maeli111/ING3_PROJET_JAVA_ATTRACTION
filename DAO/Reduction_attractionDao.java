@@ -11,28 +11,24 @@ import java.util.ArrayList;
 public class Reduction_attractionDao implements Reduction_attractionDaoInt {
     private DaoFactory daoFactory;
 
-    // constructeur dépendant de la classe DaoFactory
     public Reduction_attractionDao(DaoFactory daoFactory) {
         this.daoFactory = daoFactory;
     }
 
     /**
-     * Récupérer de la base de données tous les objets des Reduction_attractions dans une liste
-     * @return : liste retournée des objets des Reduction_attractions récupérés
+     * Cette méthode récupère de la bdd tous les objets des Reduction_attractions dans une liste
+     * return : liste retournée des objets des Reduction_attractions récupérés
      */
     @Override
     public ArrayList<Reduction_attraction> getAll() {
         ArrayList<Reduction_attraction> listeReduction_attraction = new ArrayList<Reduction_attraction>();
 
         try {
-            // connexion
             Connection connexion = daoFactory.getConnection();;
             Statement statement = connexion.createStatement();
 
-            // récupération des produits de la base de données avec la requete SELECT
             ResultSet resultats = statement.executeQuery("select * from reduction_attraction");
 
-            // 	Se déplacer sur le prochain enregistrement : retourne false si la fin est atteinte
             while (resultats.next()) {
                 int id_RA = resultats.getInt(1);
                 int id_attraction = resultats.getInt(2);
@@ -44,7 +40,6 @@ public class Reduction_attractionDao implements Reduction_attractionDaoInt {
             }
         }
         catch (SQLException e) {
-            //traitement de l'exception
             e.printStackTrace();
             System.out.println("Création de la liste de Reduction_attraction impossible");
         }

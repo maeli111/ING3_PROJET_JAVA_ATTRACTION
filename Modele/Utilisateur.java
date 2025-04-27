@@ -1,12 +1,14 @@
 package Modele;
 
 public abstract class Utilisateur {
+    //Attributs
     private int id_utilisateur;
     private String email;
     private String nom;
     private String prenom;
     private String mdp;
 
+    //Constructeur
     public Utilisateur(int id_utilisateur, String email, String nom, String prenom, String mdp) {
         this.id_utilisateur = id_utilisateur;
         this.email = email;
@@ -15,6 +17,7 @@ public abstract class Utilisateur {
         this.mdp = mdp;
     }
 
+    //Getter et setter
     public int getId_utilisateur(){return id_utilisateur;}
     public String getEmail(){return email;}
     public String getNom(){return nom;}

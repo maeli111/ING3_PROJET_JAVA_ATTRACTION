@@ -16,7 +16,7 @@ public class VueAdminClient extends JFrame {
 
     public VueAdminClient(Admin admin) {
         setTitle("Clients - Admin");
-        setSize(900, 500);
+        setSize(1250, 680);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLayout(new BorderLayout());
@@ -24,7 +24,6 @@ public class VueAdminClient extends JFrame {
         DaoFactory daoFactory = DaoFactory.getInstance("java_attraction", "root", "");
         ClientDao clientDao = new ClientDao(daoFactory);
 
-        // --- TOP PANEL ---
         JPanel topPanel = new JPanel(new BorderLayout());
         JPanel buttonBar = new JPanel(new BorderLayout());
         JPanel leftPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
@@ -36,7 +35,6 @@ public class VueAdminClient extends JFrame {
         buttonBar.add(leftPanel, BorderLayout.WEST);
         buttonBar.add(rightPanel, BorderLayout.EAST);
 
-        // --- TITRE ---
         JPanel titrePanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
         JLabel titreLabel = new JLabel("PalasiLand - Gestion des clients");
         titreLabel.setFont(new Font("Serif", Font.BOLD, 24));
@@ -46,13 +44,12 @@ public class VueAdminClient extends JFrame {
         topPanel.add(titrePanel, BorderLayout.CENTER);
         add(topPanel, BorderLayout.NORTH);
 
-        // --- TABLE DES CLIENTS ---
+        //tableau des clients
         tableModel = new DefaultTableModel(new Object[]{"ID", "Nom", "Prénom", "Email", "Âge", "Mot de passe", "Type de client"}, 0);
         table = new JTable(tableModel);
         JScrollPane scrollPane = new JScrollPane(table);
         add(scrollPane, BorderLayout.CENTER);
 
-        // --- BOTTOM PANEL ---
         JPanel bottomPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
         ajouterButton = new JButton("Ajouter");
         modifierButton = new JButton("Modifier");
@@ -62,8 +59,7 @@ public class VueAdminClient extends JFrame {
         bottomPanel.add(supprimerButton);
         add(bottomPanel, BorderLayout.SOUTH);
 
-        // Charger les données des clients
-        chargerClients(new ArrayList<>());  // C'est ici que tu appelles avec un paramètre vide, car ce sera mis à jour par le contrôleur
+        chargerClients(new ArrayList<>());
     }
 
     // Méthode pour charger les clients dans la table
@@ -81,8 +77,6 @@ public class VueAdminClient extends JFrame {
             });
         }
     }
-
-    // Getters pour les boutons
 
     public JButton getCompteButton() {
         return compteButton;

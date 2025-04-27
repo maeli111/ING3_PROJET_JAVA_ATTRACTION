@@ -14,49 +14,45 @@ public class VueClient extends JFrame {
 
     public VueClient(Client client) {
         ReservationDao reservationDao = new ReservationDao(new DaoFactory("jdbc:mysql://localhost:3306/java_attraction", "root", ""));
-        reservationDao.archiverReservationsPassées();  // Appel de la méthode sur l'instance
+        reservationDao.archiverReservationsPassées();
         this.client = client;
         setTitle("Client");
-        setSize(600, 500);
+        setSize(1250, 680);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new BorderLayout(10, 10));
 
-        // Top button panel
-        JPanel topPanel = createTopPanel();
-        // Bottom button panel (Deconnexion)
-        JPanel bottomPanel = createBottomPanel();
-
-        // Main content panel
+        JPanel PanelHaut = createTopPanel();
+        JPanel PanelBas = createBottomPanel();
         JPanel mainPanel = createMainPanel();
 
-        add(topPanel, BorderLayout.NORTH);
+        add(PanelHaut, BorderLayout.NORTH);
         add(mainPanel, BorderLayout.CENTER);
-        add(bottomPanel, BorderLayout.SOUTH);
+        add(PanelBas, BorderLayout.SOUTH);
 
     }
 
     private JPanel createTopPanel() {
-        JPanel topPanel = new JPanel(new BorderLayout());
-        JPanel leftPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        JPanel PanelHaut = new JPanel(new BorderLayout());
+        JPanel PanelGauche = new JPanel(new FlowLayout(FlowLayout.LEFT));
 
-        // Buttons
+        // boutons
         btnAccueil = new JButton("Accueil");
         btnInfo = new JButton("Informations");
         btnCalendrier = new JButton("Calendrier");
 
-        leftPanel.add(btnAccueil);
-        leftPanel.add(btnInfo);
-        leftPanel.add(btnCalendrier);
+        PanelGauche.add(btnAccueil);
+        PanelGauche.add(btnInfo);
+        PanelGauche.add(btnCalendrier);
 
         JPanel rightPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-        btnLoupe = new JButton("🔍");  // Loupe button added to the right
-        rightPanel.add(btnLoupe);  // Added loupe button to the right
-        rightPanel.add(new JButton("Compte"));  // "Compte" button is also on the right
+        btnLoupe = new JButton("🔍");
+        rightPanel.add(btnLoupe);
+        rightPanel.add(new JButton("Compte"));
 
-        topPanel.add(leftPanel, BorderLayout.WEST);
-        topPanel.add(rightPanel, BorderLayout.EAST);
+        PanelHaut.add(PanelGauche, BorderLayout.WEST);
+        PanelHaut.add(rightPanel, BorderLayout.EAST);
 
-        return topPanel;
+        return PanelHaut;
     }
 
     private JPanel createBottomPanel() {
@@ -93,7 +89,6 @@ public class VueClient extends JFrame {
         emailField.setEditable(false);
         infoPanel.add(emailField);
 
-        // Reservations panel
         JPanel reservationsPanel = new JPanel(new BorderLayout(10, 10));
         JLabel reservationsLabel = new JLabel("Mes réservations:");
         reservationsLabel.setBorder(BorderFactory.createEmptyBorder(0, 0, 10, 0));
@@ -101,13 +96,12 @@ public class VueClient extends JFrame {
         JPanel currentReservationsPanel = new JPanel();
         currentReservationsPanel.setBorder(BorderFactory.createTitledBorder("Réservations en cours"));
 
-        // Obtenir les réservations en cours via ClientDao
         ClientDao clientDao = new ClientDao(new DaoFactory("jdbc:mysql://localhost:3306/java_attraction", "root", ""));
         ArrayList<Reservation> reservationsEnCours = clientDao.getReservationsEnCours(client);
 
         currentReservationsPanel.setLayout(new BoxLayout(currentReservationsPanel, BoxLayout.Y_AXIS));
 
-        // Afficher chaque réservation en cours
+        // On affiche chaque réservation en cours
         for (Reservation reservation : reservationsEnCours) {
             JPanel reservationPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
             int id_attraction = reservation.getId_attraction();
@@ -119,15 +113,13 @@ public class VueClient extends JFrame {
             currentReservationsPanel.add(reservationPanel);
         }
 
-        // Historique des réservations panel
         JPanel reservationHistoryPanel = new JPanel();
         reservationHistoryPanel.setBorder(BorderFactory.createTitledBorder("Historique des réservations"));
 
-        // Récupérer les réservations archivées
         ArrayList<Reservation> reservationsArchivees = clientDao.getReservationsArchivees(client);
         reservationHistoryPanel.setLayout(new BoxLayout(reservationHistoryPanel, BoxLayout.Y_AXIS));
 
-        // Afficher chaque réservation archivée
+        // On affiche chaque réservation archivée (historique)
         for (Reservation reservation : reservationsArchivees) {
             JPanel reservationPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
             int id_attraction = reservation.getId_attraction();
@@ -152,8 +144,6 @@ public class VueClient extends JFrame {
         return mainPanel;
     }
 
-
-    // Getters for the buttons to be used in the controller
     public JButton getBtnAccueil() {
         return btnAccueil;
     }
@@ -171,6 +161,6 @@ public class VueClient extends JFrame {
     }
 
     public JButton getBtnLoupe() {
-        return btnLoupe; // Getter for the loupe button
+        return btnLoupe;
     }
 }
