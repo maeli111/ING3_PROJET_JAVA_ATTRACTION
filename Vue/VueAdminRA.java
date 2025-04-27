@@ -71,7 +71,6 @@ public class VueAdminRA extends JFrame {
         table.setSelectionBackground(new Color(255, 192, 203));
         table.setSelectionForeground(Color.BLACK);
 
-
         DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
         centerRenderer.setHorizontalAlignment(JLabel.CENTER);
         for (int i = 0; i < table.getColumnCount(); i++) {
@@ -88,13 +87,17 @@ public class VueAdminRA extends JFrame {
         modifierButton = new JButton("Modifier");
         supprimerButton = new JButton("Supprimer");
 
+        Font buttonFont = new Font("Segoe UI", Font.BOLD, 16);
+        ajouterButton.setFont(buttonFont);
+        modifierButton.setFont(buttonFont);
+        supprimerButton.setFont(buttonFont);
+
         buttonPanel.add(ajouterButton);
         buttonPanel.add(modifierButton);
         buttonPanel.add(supprimerButton);
 
         add(buttonPanel, BorderLayout.SOUTH);
 
-        // Appliquer l'effet hover aux boutons
         applyHoverEffect(compteButton, hoverColor, defaultColor);
         applyHoverEffect(ajouterButton, hoverColor, defaultColor);
         applyHoverEffect(modifierButton, hoverColor, defaultColor);

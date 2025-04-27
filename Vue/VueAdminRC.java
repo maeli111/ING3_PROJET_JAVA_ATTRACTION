@@ -6,7 +6,6 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 
-
 public class VueAdminRC extends JFrame {
 
     private DefaultTableModel model;
@@ -19,6 +18,9 @@ public class VueAdminRC extends JFrame {
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLayout(new BorderLayout());
+
+        Color hoverColor = new Color(255, 182, 193);
+        Color defaultColor = UIManager.getColor("Button.background");
 
         JPanel HautPanel = new JPanel(new BorderLayout());
 
@@ -33,15 +35,18 @@ public class VueAdminRC extends JFrame {
         buttonBar.add(droitePanel, BorderLayout.EAST);
 
         JPanel titrePanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-        JLabel titreLabel = new JLabel("PalasiLand");
-        titreLabel.setFont(new Font("Serif", Font.BOLD, 28));
-        titrePanel.add(titreLabel);
+        JLabel parc = new JLabel("Palasi Land");
+        parc.setHorizontalAlignment(JTextField.CENTER);
+        parc.setFont(new Font("Bodoni MT", Font.BOLD, 32));
+        parc.setBorder(null);
+        parc.setOpaque(false);
+        titrePanel.add(parc);
 
         HautPanel.add(buttonBar, BorderLayout.NORTH);
         HautPanel.add(titrePanel, BorderLayout.CENTER);
         add(HautPanel, BorderLayout.NORTH);
 
-        //tableau réducs liés aux clients
+        // Tableau réductions liés aux clients
         String[] columns = {"ID", "Nom", "Pourcentage", "Description"};
         model = new DefaultTableModel(columns, 0) {
             public boolean isCellEditable(int row, int column) {
@@ -63,6 +68,26 @@ public class VueAdminRC extends JFrame {
         buttonPanel.add(modifier);
         buttonPanel.add(supprimer);
         add(buttonPanel, BorderLayout.SOUTH);
+
+        applyHoverEffect(ajouter, hoverColor, defaultColor);
+        applyHoverEffect(modifier, hoverColor, defaultColor);
+        applyHoverEffect(supprimer, hoverColor, defaultColor);
+        applyHoverEffect(compte, hoverColor, defaultColor);
+    }
+
+    // Ici, en dehors du constructeur
+    private void applyHoverEffect(JButton button, Color hoverColor, Color defaultColor) {
+        button.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                button.setBackground(hoverColor);
+            }
+
+            @Override
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                button.setBackground(defaultColor);
+            }
+        });
     }
 
     public JButton getBtnAjouter() { return ajouter; }
@@ -72,5 +97,4 @@ public class VueAdminRC extends JFrame {
 
     public JTable getTable() { return table; }
     public DefaultTableModel getModel() { return model; }
-
 }
