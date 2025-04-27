@@ -11,7 +11,7 @@ import java.util.ArrayList;
 
 public class VueClient extends JFrame {
     private Client client;
-    private JButton btnAccueil, btnInfo, btnCalendrier, btnDeconnexion, btnLoupe;
+    private JButton btnAccueil, btnInfo, btnCalendrier, btnDeconnexion, btnLoupe, btnCompte; // Ajout de btnCompte
 
     public VueClient(Client client) {
         ReservationDao reservationDao = new ReservationDao(new DaoFactory("jdbc:mysql://localhost:3306/java_attraction", "root", ""));
@@ -42,7 +42,7 @@ public class VueClient extends JFrame {
             }
         });
 
-        JButton[] boutonsRose = {btnAccueil, btnInfo, btnCalendrier, btnLoupe };
+        JButton[] boutonsRose = {btnAccueil, btnInfo, btnCalendrier, btnLoupe};
         for (JButton btn : boutonsRose) {
             btn.addMouseListener(new MouseAdapter() {
                 public void mouseEntered(MouseEvent e) {
@@ -53,6 +53,11 @@ public class VueClient extends JFrame {
                 }
             });
         }
+
+        // Le bouton Compte reste rose en permanence
+        btnCompte.setBackground(Color.PINK);
+        btnCompte.setOpaque(true);
+        btnCompte.setBorderPainted(false);
     }
 
     private JPanel createTopPanel() {
@@ -70,8 +75,9 @@ public class VueClient extends JFrame {
 
         JPanel rightPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         btnLoupe = new JButton("🔍");
+        btnCompte = new JButton("Compte");
         rightPanel.add(btnLoupe);
-        rightPanel.add(new JButton("Compte"));
+        rightPanel.add(btnCompte);
 
         PanelHaut.add(PanelGauche, BorderLayout.WEST);
         PanelHaut.add(rightPanel, BorderLayout.EAST);
@@ -186,5 +192,9 @@ public class VueClient extends JFrame {
 
     public JButton getBtnLoupe() {
         return btnLoupe;
+    }
+
+    public JButton getBtnCompte() {
+        return btnCompte;
     }
 }

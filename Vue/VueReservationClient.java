@@ -1,7 +1,6 @@
 package Vue;
 
 import Modele.Client;
-
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
@@ -9,8 +8,12 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
+// inteface de réservation pour les clients connectés
 public class VueReservationClient extends JFrame {
-    // header
+    // couleur utilisée
+    private final Color ROSE_PRINCIPAL = new Color(255, 105, 180);
+
+    // déclaration des composants
     public JButton accueil = new JButton("Accueil");
     public JButton informations = new JButton("Informations");
     public JButton calendrier = new JButton("Calendrier");
@@ -19,13 +22,10 @@ public class VueReservationClient extends JFrame {
     public JPanel header = new JPanel(new BorderLayout());
     public JLabel titreResa = new JLabel();
 
-    // formulaire principal
     public JPanel formPanel = new JPanel();
-
-    // formulaire client
     public JPanel formClientExistant = new JPanel();
 
-    // champs pour un client existant
+    // champs des types de billets
     public JTextField nbAdultesField = new JTextField("0", 2);
     public JTextField nbEnfantsField = new JTextField("0", 2);
     public JTextField nbEtudiantsField = new JTextField("0", 2);
@@ -34,7 +34,7 @@ public class VueReservationClient extends JFrame {
     public JTextField nbFamNbField = new JTextField("0", 2);
     public JTextField nbEnfantsFamNbField = new JTextField("3", 2);
 
-    // Boutons + et - pour ajuster le nombre de places
+    // boutons plus et moins pou chaque champs
     public JButton plusBtnAdultes = new JButton("+");
     public JButton moinsBtnAdultes = new JButton("-");
     public JButton plusBtnEnfants = new JButton("+");
@@ -50,23 +50,23 @@ public class VueReservationClient extends JFrame {
     public JButton plusBtnEnfantsFamNb = new JButton("+");
     public JButton moinsBtnEnfantsFamNb = new JButton("-");
 
+    // prix total
     public JLabel prixLabelExistant = new JLabel();
 
-    // boutons "?" avec les description des réductions
+    // boutons "?" qui affichent les descriptions des réductions
     public JButton infoBtnEnfant = createImageButton("images/ptInterrogation.png", 15);
     public JButton infoBtnEtudiant = createImageButton("images/ptInterrogation.png", 15);
     public JButton infoBtnSenior = createImageButton("images/ptInterrogation.png", 15);
     public JButton infoBtnFam = createImageButton("images/ptInterrogation.png", 15);
     public JButton infoBtnFamNb = createImageButton("images/ptInterrogation.png", 15);
 
-    // bouton de réservation
+    // valider la réservation
     public JButton reserverButton = new JButton("Valider la réservation");
 
     // constructeur
     public VueReservationClient(Client client) {
-        // config de la fenêtre
         setTitle("Formulaire de Réservation");
-        setSize(900, 600);
+        setSize(1250, 680);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         setLayout(new BorderLayout());
@@ -74,25 +74,27 @@ public class VueReservationClient extends JFrame {
         // header
         parc.setHorizontalAlignment(JTextField.CENTER);
         parc.setEditable(false);
-        parc.setFont(new Font("Bodoni MT", Font.BOLD, 32));
+        parc.setFont(new Font("Bodoni MT", Font.BOLD, 40));
         parc.setBorder(null);
         parc.setOpaque(false);
 
         JPanel Pbarre = new JPanel(new BorderLayout());
+        Pbarre.setOpaque(false);
         JPanel Pnavigation = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 10));
+        Pnavigation.setOpaque(false);
         Pnavigation.add(accueil);
         Pnavigation.add(informations);
         Pnavigation.add(calendrier);
         JPanel Pcompte = new JPanel(new FlowLayout(FlowLayout.RIGHT, 10, 10));
+        Pcompte.setOpaque(false);
         Pcompte.add(compte);
         Pbarre.add(Pnavigation, BorderLayout.WEST);
         Pbarre.add(Pcompte, BorderLayout.EAST);
 
-        // titre
+        // titre de la réservation
         titreResa.setFont(new Font("SansSerif", Font.BOLD, 16));
         titreResa.setHorizontalAlignment(SwingConstants.CENTER);
 
-        // organisation de la page
         JPanel headerCenter = new JPanel();
         headerCenter.setLayout(new BoxLayout(headerCenter, BoxLayout.Y_AXIS));
         headerCenter.setOpaque(false);
@@ -104,23 +106,31 @@ public class VueReservationClient extends JFrame {
         header.add(headerCenter, BorderLayout.CENTER);
         add(header, BorderLayout.NORTH);
 
-        // formulaire
+        // FORMULAIRE
         formPanel.setLayout(new BoxLayout(formPanel, BoxLayout.Y_AXIS));
-        formPanel.setBorder(BorderFactory.createEmptyBorder(20, 100, 20, 100));
+        formPanel.setBorder(BorderFactory.createEmptyBorder(30, 100, 30, 100));
+        formPanel.setBackground(Color.WHITE);
+        formPanel.setOpaque(true);
+        formPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        formPanel.setPreferredSize(new Dimension(1000, 500));
 
-        // Panels client existant
         formPanel.add(formClientExistant);
 
-        // bouton valider la réservation
-        reserverButton.setAlignmentX(Component.CENTER_ALIGNMENT);
-        formPanel.add(Box.createRigidArea(new Dimension(0, 20)));
-        formPanel.add(reserverButton);
+        JPanel centerPanel = new JPanel(new GridBagLayout());
+        centerPanel.setOpaque(false);
+        centerPanel.add(formPanel);
+        add(centerPanel, BorderLayout.CENTER);
 
-        add(formPanel, BorderLayout.CENTER);
-        setVisible(true);
+        // BOUTON VALIDER
+        reserverButton.setFont(new Font("Arial", Font.BOLD, 24));
+        reserverButton.setBackground(ROSE_PRINCIPAL);
+        reserverButton.setForeground(Color.WHITE);
+        reserverButton.setFocusPainted(false);
+        reserverButton.setBorder(BorderFactory.createEmptyBorder(15, 30, 15, 30));
+        reserverButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        add(reserverButton, BorderLayout.SOUTH);
     }
 
-    // création d'un bouton avec une image
     public JButton createImageButton(String imagePath, int size) {
         try {
             BufferedImage img = ImageIO.read(new File(imagePath));
