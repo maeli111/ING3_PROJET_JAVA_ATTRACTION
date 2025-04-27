@@ -58,12 +58,13 @@ public class AttractionDao implements AttractionDaoInt{
      */
     @Override
     public void ajouter(Attraction attraction) {
-        String requete = "INSERT INTO attraction (nom, description, prix, capacite, type_attraction) VALUES ('" +
+        String requete = "INSERT INTO attraction (nom, description, prix, capacite, type_attraction, mois) VALUES ('" +
                 attraction.getNom() + "', '" +
                 attraction.getDescription() + "', " +
                 attraction.getPrix() + ", " +
                 attraction.getCapacite() + ", '" +
-                attraction.getType_attraction() + "')";
+                attraction.getType_attraction() + "', '" +
+                attraction.getMois() + "')";
 
         try (Connection connexion = daoFactory.getConnection();
              Statement statement = connexion.createStatement()) {
@@ -74,23 +75,27 @@ public class AttractionDao implements AttractionDaoInt{
         }
     }
 
+
     /*
      * C'est une méthode qui modifie une attraction existante dans la bdd
      * paramètre attraction : objet Attraction qui va être modifé
      */
     @Override
     public void modifier(Attraction attraction) {
-        String requete = "UPDATE attraction SET " +
-                "nom = '" + attraction.getNom() + "', " +
-                "description = '" + attraction.getDescription() + "', " +
-                "prix = " + attraction.getPrix() + ", " +
-                "capacite = " + attraction.getCapacite() + ", " +
-                "type_attraction = '" + attraction.getType_attraction() + "' " +
-                "WHERE id_attraction = " + attraction.getId_attraction();
+        String requete = "UPDATE attraction SET nom = ?, description = ?, prix = ?, capacite = ?, type_attraction = ?, mois = ? WHERE id_attraction = ?";
 
         try (Connection connexion = daoFactory.getConnection();
-             Statement statement = connexion.createStatement()) {
-            statement.executeUpdate(requete);
+             PreparedStatement preparedStatement = connexion.prepareStatement(requete)) {
+
+            preparedStatement.setString(1, attraction.getNom());
+            preparedStatement.setString(2, attraction.getDescription());
+            preparedStatement.setDouble(3, attraction.getPrix());
+            preparedStatement.setInt(4, attraction.getCapacite());
+            preparedStatement.setString(5, attraction.getType_attraction());
+            preparedStatement.setInt(6, attraction.getMois());
+            preparedStatement.setInt(7, attraction.getId_attraction());
+
+            preparedStatement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
             System.out.println("Modification de l'attraction impossible");

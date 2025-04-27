@@ -56,6 +56,7 @@ public class Attraction {
     public double getPrix(){return prix;}
     public int getCapacite(){return capacite;}
     public String getType_attraction(){return type_attraction;}
+    public int getMois(){return mois;}
 
     // les setters
     public void setNom(String nom){this.nom = nom;}

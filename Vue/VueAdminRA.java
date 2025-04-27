@@ -22,8 +22,9 @@ public class VueAdminRA extends JFrame {
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLayout(new BorderLayout());
 
-        Color hoverColor = new Color(255, 182, 193);
-        Color defaultColor = UIManager.getColor("Button.background");
+        Color hoverColor = new Color(255, 182, 193); // Hover rose clair
+        Color defaultColor = new Color(230, 230, 250); // Lavande clair
+        Color textColor = new Color(60, 60, 60); // Texte gris foncé
 
         // Haut Panel
         JPanel hautPanel = new JPanel(new BorderLayout());
@@ -49,7 +50,7 @@ public class VueAdminRA extends JFrame {
         JLabel gestionLabel = new JLabel("Gestion Réduction Attractions");
         gestionLabel.setHorizontalAlignment(JLabel.CENTER);
         gestionLabel.setFont(new Font("Segoe UI", Font.PLAIN, 20));
-        gestionLabel.setForeground(new Color(100, 100, 100));
+        gestionLabel.setForeground(new Color(0,0,0));
 
         titrePanel.add(parc);
         titrePanel.add(gestionLabel);
@@ -71,8 +72,8 @@ public class VueAdminRA extends JFrame {
         table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
         table.getTableHeader().setFont(new Font("Segoe UI", Font.BOLD, 16));
-        table.getTableHeader().setBackground(new Color(230, 230, 250));
-        table.getTableHeader().setForeground(new Color(60, 60, 60));
+        table.getTableHeader().setBackground(defaultColor);
+        table.getTableHeader().setForeground(textColor);
         table.setFont(new Font("Segoe UI", Font.PLAIN, 14));
         table.setRowHeight(28);
         table.setGridColor(new Color(220, 220, 220));
@@ -98,30 +99,29 @@ public class VueAdminRA extends JFrame {
         supprimerButton = new JButton("Supprimer");
 
         Font buttonFont = new Font("Segoe UI", Font.BOLD, 16);
-        ajouterButton.setFont(buttonFont);
-        modifierButton.setFont(buttonFont);
-        supprimerButton.setFont(buttonFont);
-
-        buttonPanel.add(ajouterButton);
-        buttonPanel.add(modifierButton);
-        buttonPanel.add(supprimerButton);
+        JButton[] boutons = {ajouterButton, modifierButton, supprimerButton};
+        for (JButton btn : boutons) {
+            btn.setFont(buttonFont);
+            btn.setBackground(defaultColor);
+            btn.setForeground(textColor);
+            buttonPanel.add(btn);
+        }
 
         add(buttonPanel, BorderLayout.SOUTH);
 
-        applyHoverEffect(compteButton, hoverColor, defaultColor);
+        // Appliquer hover à tous les boutons
+        applyHoverEffect(compteButton, hoverColor, UIManager.getColor("Button.background")); // Compte reste plus classique
         applyHoverEffect(ajouterButton, hoverColor, defaultColor);
         applyHoverEffect(modifierButton, hoverColor, defaultColor);
         applyHoverEffect(supprimerButton, hoverColor, defaultColor);
     }
 
-    // Méthode pour effet hover
     private void applyHoverEffect(JButton button, Color hoverColor, Color defaultColor) {
         button.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 button.setBackground(hoverColor);
             }
-
             @Override
             public void mouseExited(java.awt.event.MouseEvent evt) {
                 button.setBackground(defaultColor);
@@ -129,7 +129,6 @@ public class VueAdminRA extends JFrame {
         });
     }
 
-    // Getters
     public JButton getAjouterButton() { return ajouterButton; }
     public JButton getModifierButton() { return modifierButton; }
     public JButton getSupprimerButton() { return supprimerButton; }
