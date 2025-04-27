@@ -47,7 +47,7 @@ public class VueAdminRA extends JFrame {
         parc.setBorder(null);
         parc.setOpaque(false);
 
-        JLabel gestionLabel = new JLabel("Gestion Réduction Attractions");
+        JLabel gestionLabel = new JLabel("Gestion Réductions Attractions");
         gestionLabel.setHorizontalAlignment(JLabel.CENTER);
         gestionLabel.setFont(new Font("Segoe UI", Font.PLAIN, 20));
         gestionLabel.setForeground(new Color(0,0,0));
