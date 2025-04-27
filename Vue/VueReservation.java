@@ -9,9 +9,9 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
-
+// interface pour réserver une attraction
 public class VueReservation extends JFrame {
-    // === NAVIGATION & HEADER ===
+    // boutons header
     public JButton accueil = new JButton("Accueil");
     public JButton informations = new JButton("Informations");
     public JButton calendrier = new JButton("Calendrier");
@@ -20,19 +20,19 @@ public class VueReservation extends JFrame {
     public JPanel header = new JPanel(new BorderLayout());
     public JLabel titreResa = new JLabel();
 
-    // === FORMULAIRE PRINCIPAL ===
+    // formulaire
     public JPanel formPanel = new JPanel();
 
-    // === RADIO CLIENTS ===
+    // boutons pour le choix du client
     public JRadioButton rbClient = new JRadioButton("Client existant");
     public JRadioButton rbInvite = new JRadioButton("Nouveau client");
     public ButtonGroup groupClientType = new ButtonGroup();
 
-    // === FORM CLIENTS ===
+    // formulaires pour les deux types de clients (nouveau ou existant)
     public JPanel formNouveauClient = new JPanel();
     public JPanel formClientExistant = new JPanel();
 
-    // === Champs Nouveau Client ===
+    // champs à remplir dans le cas d'un nouveau client
     public JTextField nomField = new JTextField(15);
     public JTextField prenomField = new JTextField(15);
     public JTextField emailFieldNouveau = new JTextField(15);
@@ -41,8 +41,10 @@ public class VueReservation extends JFrame {
     public JButton moinsBtnNouveau = new JButton("-");
     public JLabel prixLabelNouveau = new JLabel();
 
-    // === Champs Client Existant ===
+
+    // champs à remplir dans le cas d'un client existant
     public JTextField emailFieldExistant = new JTextField(10);
+    // le nombre de billets par catégorie
     public JTextField nbAdultesField = new JTextField("0", 2);
     public JTextField nbEnfantsField = new JTextField("0", 2);
     public JTextField nbEtudiantsField = new JTextField("0", 2);
@@ -51,6 +53,7 @@ public class VueReservation extends JFrame {
     public JTextField nbFamNbField = new JTextField("0", 2);
     public JTextField nbEnfantsFamNbField = new JTextField("3", 2);
 
+    // boutons plus et moins
     public JButton plusBtnAdultes = new JButton("+");
     public JButton moinsBtnAdultes = new JButton("-");
     public JButton plusBtnEnfants = new JButton("+");
@@ -68,8 +71,7 @@ public class VueReservation extends JFrame {
 
     public JLabel prixLabelExistant = new JLabel();
 
-    // === BOUTONS "?" POUR INFO RÉDUCTION ===
-
+    // boutons "?" pour afficher la description des réductions
     public JButton infoBtnEnfant = createImageButton("images/ptInterrogation.png", 15);
     public JButton infoBtnEtudiant = createImageButton("images/ptInterrogation.png", 15);
     public JButton infoBtnSenior = createImageButton("images/ptInterrogation.png", 15);
@@ -77,17 +79,18 @@ public class VueReservation extends JFrame {
     public JButton infoBtnFamNb = createImageButton("images/ptInterrogation.png", 15);
 
 
-    // === BOUTON DE RÉSERVATION ===
+    // bouton valider la résrevation
     public JButton reserverButton = new JButton("Valider la réservation");
 
     public VueReservation(Client client) {
+        // paramètres de la fenêtre
         setTitle("Formulaire de Réservation");
         setSize(900, 600);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         setLayout(new BorderLayout());
 
-        // HEADER
+        // header
         parc.setHorizontalAlignment(JTextField.CENTER);
         parc.setEditable(false);
         parc.setFont(new Font("Bodoni MT", Font.BOLD, 32));
@@ -103,11 +106,12 @@ public class VueReservation extends JFrame {
         Pcompte.add(compte);
         Pbarre.add(Pnavigation, BorderLayout.WEST);
         Pbarre.add(Pcompte, BorderLayout.EAST);
-        // Titre "Réserver l'attraction ..."
+
+        // contenu principal
         titreResa.setFont(new Font("SansSerif", Font.BOLD, 16));
         titreResa.setHorizontalAlignment(SwingConstants.CENTER);
 
-        // Organisation verticale
+        // organisation de la page
         JPanel headerCenter = new JPanel();
         headerCenter.setLayout(new BoxLayout(headerCenter, BoxLayout.Y_AXIS));
         headerCenter.setOpaque(false);
@@ -119,11 +123,11 @@ public class VueReservation extends JFrame {
         header.add(headerCenter, BorderLayout.CENTER);
         add(header, BorderLayout.NORTH);
 
-        // FORMULAIRE
+        // formulaire
         formPanel.setLayout(new BoxLayout(formPanel, BoxLayout.Y_AXIS));
         formPanel.setBorder(BorderFactory.createEmptyBorder(20, 100, 20, 100));
 
-        // Boutons radio
+        // boutons radio
         JPanel choixPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         groupClientType.add(rbClient);
         groupClientType.add(rbInvite);
@@ -131,11 +135,11 @@ public class VueReservation extends JFrame {
         choixPanel.add(rbInvite);
         formPanel.add(choixPanel);
 
-        // Panels clients init (contenu complété par le contrôleur)
+        // panels vides à remplir selon le client choisi
         formPanel.add(formClientExistant);
         formPanel.add(formNouveauClient);
 
-        // Bouton réserver
+        // bouton réserver
         reserverButton.setAlignmentX(Component.CENTER_ALIGNMENT);
         formPanel.add(Box.createRigidArea(new Dimension(0, 20)));
         formPanel.add(reserverButton);
