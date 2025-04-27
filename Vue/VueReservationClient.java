@@ -8,12 +8,12 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
+// inteface de réservation pour les clients connectés
 public class VueReservationClient extends JFrame {
+    // couleur utilisée
     private final Color ROSE_PRINCIPAL = new Color(255, 105, 180);
-    private final Color ROSE_FONCE = new Color(255, 20, 147);
-    private final Color ROSE_SURVOL = new Color(255, 182, 193);
-    private final Color ROSE_FOND = new Color(255, 240, 245);
 
+    // déclaration des composants
     public JButton accueil = new JButton("Accueil");
     public JButton informations = new JButton("Informations");
     public JButton calendrier = new JButton("Calendrier");
@@ -25,6 +25,7 @@ public class VueReservationClient extends JFrame {
     public JPanel formPanel = new JPanel();
     public JPanel formClientExistant = new JPanel();
 
+    // champs des types de billets
     public JTextField nbAdultesField = new JTextField("0", 2);
     public JTextField nbEnfantsField = new JTextField("0", 2);
     public JTextField nbEtudiantsField = new JTextField("0", 2);
@@ -33,6 +34,7 @@ public class VueReservationClient extends JFrame {
     public JTextField nbFamNbField = new JTextField("0", 2);
     public JTextField nbEnfantsFamNbField = new JTextField("3", 2);
 
+    // boutons plus et moins pou chaque champs
     public JButton plusBtnAdultes = new JButton("+");
     public JButton moinsBtnAdultes = new JButton("-");
     public JButton plusBtnEnfants = new JButton("+");
@@ -48,16 +50,20 @@ public class VueReservationClient extends JFrame {
     public JButton plusBtnEnfantsFamNb = new JButton("+");
     public JButton moinsBtnEnfantsFamNb = new JButton("-");
 
+    // prix total
     public JLabel prixLabelExistant = new JLabel();
 
+    // boutons "?" qui affichent les descriptions des réductions
     public JButton infoBtnEnfant = createImageButton("images/ptInterrogation.png", 15);
     public JButton infoBtnEtudiant = createImageButton("images/ptInterrogation.png", 15);
     public JButton infoBtnSenior = createImageButton("images/ptInterrogation.png", 15);
     public JButton infoBtnFam = createImageButton("images/ptInterrogation.png", 15);
     public JButton infoBtnFamNb = createImageButton("images/ptInterrogation.png", 15);
 
+    // valider la réservation
     public JButton reserverButton = new JButton("Valider la réservation");
 
+    // constructeur
     public VueReservationClient(Client client) {
         setTitle("Formulaire de Réservation");
         setSize(1250, 680);
@@ -65,7 +71,7 @@ public class VueReservationClient extends JFrame {
         setLocationRelativeTo(null);
         setLayout(new BorderLayout());
 
-        // HEADER
+        // header
         parc.setHorizontalAlignment(JTextField.CENTER);
         parc.setEditable(false);
         parc.setFont(new Font("Bodoni MT", Font.BOLD, 40));
@@ -85,6 +91,7 @@ public class VueReservationClient extends JFrame {
         Pbarre.add(Pnavigation, BorderLayout.WEST);
         Pbarre.add(Pcompte, BorderLayout.EAST);
 
+        // titre de la réservation
         titreResa.setFont(new Font("SansSerif", Font.BOLD, 16));
         titreResa.setHorizontalAlignment(SwingConstants.CENTER);
 

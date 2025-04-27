@@ -8,12 +8,14 @@ import java.io.File;
 import javax.imageio.ImageIO;
 import java.io.IOException;
 
+// interface de réservation pour les clients non connectés
 public class VueReservationInvite extends JFrame {
+    //définition des couleurs
     private final Color ROSE_PRINCIPAL = new Color(255, 105, 180);
     private final Color ROSE_FONCE = new Color(255, 20, 147);
     private final Color ROSE_SURVOL = new Color(255, 182, 193);
-    private final Color ROSE_FOND = new Color(255, 240, 245);
 
+    // déclaration des composants
     public JTextField nbPersonneFieldNouveau;
     public JButton moinsBtnNouveau, plusBtnNouveau;
     public JLabel prixLabelNouveau;
@@ -23,6 +25,7 @@ public class VueReservationInvite extends JFrame {
 
     public JButton btnAccueil, btnInformations, btnCalendrier, btnCompte, loupeBtn;
 
+    // constructeur
     public VueReservationInvite() {
         setTitle("Réservation");
         setSize(1250, 680);
@@ -33,6 +36,7 @@ public class VueReservationInvite extends JFrame {
         Color hoverColor = ROSE_SURVOL;
         Color defaultColor = UIManager.getColor("Button.background");
 
+        // barre de navigation en haut
         JPanel Pbarre = new JPanel(new BorderLayout());
         Pbarre.setOpaque(false);
 
@@ -54,6 +58,7 @@ public class VueReservationInvite extends JFrame {
         btnCompte = createStyledButton("Compte");
         applyHoverEffect(btnCompte, hoverColor, defaultColor);
 
+        // chargement de l'image
         try {
             BufferedImage loupeImage = ImageIO.read(new File("images/loupe.png"));
             Image scaledLoupe = loupeImage.getScaledInstance(20, 20, Image.SCALE_SMOOTH);
@@ -86,6 +91,7 @@ public class VueReservationInvite extends JFrame {
         Pbarre.add(Pnavigation, BorderLayout.WEST);
         Pbarre.add(Pdroite, BorderLayout.EAST);
 
+        // titre
         JTextField parc = new JTextField("Palasi Land");
         parc.setHorizontalAlignment(JTextField.CENTER);
         parc.setEditable(false);
@@ -93,14 +99,18 @@ public class VueReservationInvite extends JFrame {
         parc.setBorder(null);
         parc.setOpaque(false);
 
+        // header
         JPanel header = new JPanel(new BorderLayout());
         header.setOpaque(false);
         header.add(Pbarre, BorderLayout.NORTH);
         header.add(parc, BorderLayout.CENTER);
+        titreResa.setHorizontalAlignment(SwingConstants.LEFT);
+        titreResa.setFont(new Font("Arial", Font.BOLD, 22));
+        titreResa.setForeground(new Color(255, 105, 180));
+        header.add(titreResa, BorderLayout.SOUTH);
         add(header, BorderLayout.NORTH);
 
-
-
+        // formulaire de réservation
         JPanel formPanel = new JPanel();
         formPanel.setLayout(new BoxLayout(formPanel, BoxLayout.Y_AXIS));
         formPanel.setBorder(BorderFactory.createEmptyBorder(30, 100, 30, 100));
@@ -111,6 +121,7 @@ public class VueReservationInvite extends JFrame {
 
         Font fieldFont = new Font("Arial", Font.PLAIN, 18);
 
+        // ajout des champs du formulaire
         formPanel.add(createFormField("Nom :", fieldFont));
         nomField = new JTextField(20);
         styleTextField(nomField, fieldFont);
@@ -126,6 +137,7 @@ public class VueReservationInvite extends JFrame {
         styleTextField(emailFieldNouveau, fieldFont);
         formPanel.add(emailFieldNouveau);
 
+        // gestion du nombre de personnes avec boutons + et -
         formPanel.add(createFormField("Nombre de personnes :", fieldFont));
         JPanel panelNb = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
         panelNb.setOpaque(false);
@@ -141,6 +153,7 @@ public class VueReservationInvite extends JFrame {
         panelNb.add(plusBtnNouveau);
         formPanel.add(panelNb);
 
+        // affichage du prix total
         prixLabelNouveau = new JLabel("Prix total: 0.00 €", SwingConstants.CENTER);
         prixLabelNouveau.setFont(new Font("Arial", Font.BOLD, 22));
         prixLabelNouveau.setForeground(ROSE_FONCE);
@@ -157,6 +170,7 @@ public class VueReservationInvite extends JFrame {
 
         add(centerPanel, BorderLayout.CENTER);
 
+        // bouton pour reserver
         reserverButton = new JButton("Réserver");
         reserverButton.setFont(new Font("Arial", Font.BOLD, 24));
         reserverButton.setBackground(ROSE_PRINCIPAL);
@@ -182,6 +196,7 @@ public class VueReservationInvite extends JFrame {
         });
     }
 
+    // création d'un bouton personalisé
     private JButton createStyledButton(String text) {
         JButton button = new JButton(text);
         button.setFocusPainted(false);
@@ -191,6 +206,7 @@ public class VueReservationInvite extends JFrame {
         return button;
     }
 
+    // création d'un champ personalisé
     private JLabel createFormField(String text, Font font) {
         JLabel label = new JLabel(text);
         label.setFont(new Font("Arial", Font.BOLD, 18));
@@ -199,6 +215,7 @@ public class VueReservationInvite extends JFrame {
         return label;
     }
 
+    // style appliqué aux champs de texte
     private void styleTextField(JTextField textField, Font font) {
         textField.setMaximumSize(new Dimension(300, 35));
         textField.setFont(font);
@@ -207,6 +224,7 @@ public class VueReservationInvite extends JFrame {
                 BorderFactory.createEmptyBorder(5, 10, 5, 10)));
     }
 
+    // ajout des listeners
     public void addListeners(ActionListener listener) {
         btnAccueil.addActionListener(listener);
         btnInformations.addActionListener(listener);
