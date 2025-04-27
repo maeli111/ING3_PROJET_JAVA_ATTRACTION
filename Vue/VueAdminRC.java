@@ -45,6 +45,16 @@ public class VueAdminRC extends JFrame {
 
         HautPanel.add(buttonBar, BorderLayout.NORTH);
         HautPanel.add(titrePanel, BorderLayout.CENTER);
+
+        // On ajoute le titre "Gestion Réduction Client" sous Palasi Land
+        JPanel gestionPanel = new JPanel();
+        JLabel gestionLabel = new JLabel("Gestion Réduction Client");
+        gestionLabel.setHorizontalAlignment(JTextField.CENTER);
+        gestionLabel.setFont(new Font("Segoe UI", Font.PLAIN, 18));
+        gestionLabel.setForeground(new Color(100, 100, 100));  // Gris foncé pour le texte
+        gestionPanel.add(gestionLabel);
+        HautPanel.add(gestionPanel, BorderLayout.SOUTH);
+
         add(HautPanel, BorderLayout.NORTH);
 
         // Tableau réductions liés aux clients
@@ -58,7 +68,6 @@ public class VueAdminRC extends JFrame {
         table = new JTable(model);
         table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
-        // Style du tableau
         table.getTableHeader().setFont(new Font("Segoe UI", Font.BOLD, 16));
         table.getTableHeader().setBackground(new Color(230, 230, 250)); // Fond header
         table.getTableHeader().setForeground(new Color(60, 60, 60)); // Couleur texte header
@@ -69,7 +78,7 @@ public class VueAdminRC extends JFrame {
         table.setSelectionBackground(new Color(255, 192, 203)); // Fond sélection
         table.setSelectionForeground(Color.BLACK); // Texte sélectionné
 
-        // Centrer le texte dans les cellules
+        // Pour centrer le texte dans les cellules
         DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
         centerRenderer.setHorizontalAlignment(JLabel.CENTER);
         for (int i = 0; i < table.getColumnCount(); i++) {
@@ -95,7 +104,6 @@ public class VueAdminRC extends JFrame {
         modifier.setFont(boutonFont);
         supprimer.setFont(boutonFont);
 
-        // Appliquer l'effet hover aux boutons
         applyHoverEffect(ajouter, hoverColor, defaultColor);
         applyHoverEffect(modifier, hoverColor, defaultColor);
         applyHoverEffect(supprimer, hoverColor, defaultColor);
